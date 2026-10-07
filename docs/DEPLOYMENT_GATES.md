@@ -330,6 +330,25 @@ Local Chromium served both frozen pages with the strict disabled-page CSP above:
 
 ### Gate decision, exact input and STOP
 
+#### Published-setting retry — 2026-10-07 22:46:16 +08:00
+
+After the user reported applying/publishing environment settings, synced main
+at `d0e64bf4f84f9a407aae08cde116b60af49f0a85` and retried root HEAD and public
+SDK GET. Both still failed with proxy CONNECT HTTP 403 (curl exit 56) before
+reaching the origins. No SDK bytes or agency response headers were obtained.
+
+Managed-environment observations are current, desired/observed revisions both
+`8` (previously `6`), with enforced restricted networking. Its custom
+`allowed_hosts` remains `[]`; neither requested hostname is in the effective
+allowlist. The executor's policy snapshot also lacks both entries. The published
+revision is observed, but access to these destinations is not established.
+
+Asked the user to identify the attached environment name and its network
+allowed-domain entries, and verify the two pure hostnames there. Do not infer
+what setting was changed or mark this as an origin CSP/IAM rejection. Gate 3
+remains BLOCKED. No frontend/config/backend/integration change or Production
+query occurred; no broadening or bypass of the proxy was attempted.
+
 **Gate 3 BLOCKED**, because a minimum live allowlist cannot yet be substantiated.
 Local frontend audit is complete. Root response headers and current SDK
 dependency/connection inventory are missing; the failure is environmental.

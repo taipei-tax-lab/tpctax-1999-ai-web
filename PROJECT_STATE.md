@@ -750,6 +750,18 @@ Only three documentation files changed. Frozen frontend, `assets/config.js`,
 domain and all backend/Production contents remain unchanged. No Production
 query or deployment. Gate 2A stays PASS. Commit/push and STOP for review.
 
+## Gate 3 published-setting retry — 2026-10-07
+
+The user reported applying/publishing settings and confirmed the intended
+environment/network entries. At 22:46:16 +08:00, root HEAD and SDK GET still
+failed at the proxy with CONNECT HTTP 403. Runtime observations are current and
+restricted networking is enforced at desired/observed revision `8`, but custom
+`allowed_hosts=[]` and neither requested hostname appears in the effective
+policy or executor snapshot. No SDK/agency headers were read; Gate 3 remains
+BLOCKED. The discrepancy between the user-reported configuration and observed
+access requires the actual environment name/domain-list readback or current
+non-secret SDK/header evidence. No Production query or configuration change.
+
 ## Backend contract
 
 - project: `serviceagent-1150909`

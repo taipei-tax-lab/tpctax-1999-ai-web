@@ -32,6 +32,14 @@ Apply managed-environment network access for:
 
 Current proxy denies both with CONNECT HTTP 403; this is not an agency CSP or
 GCP IAM failure. No GCP credential is needed for public GET/HEAD.
+
+Published-setting retry at 2026-10-07 22:46:16 +08:00 also failed. The user
+confirmed the intended environment/settings, but current observed revision `8`
+still has no custom allowed hosts and excludes both requested destinations.
+Next input must be the actual environment name and allowed-domain list (or
+non-secret header/SDK readback), so this configuration/readiness discrepancy can
+be diagnosed. A publish confirmation alone does not establish network access.
+
 Alternatively provide current non-secret origin headers and SDK dependency/
 network evidence. Do not include Cookie/token/query payloads.
 

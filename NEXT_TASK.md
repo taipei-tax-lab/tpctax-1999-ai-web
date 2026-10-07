@@ -2,49 +2,78 @@
 
 ## Active task
 
-**V1.2 Web ChatGPT review and official TRS asset completion**
+**Complete official TRS logo integration on the accepted V1.2 visual baseline**
 
-Do not deploy live. Functional V1 remains frozen.
+Do not deploy live. Do not redesign the page.
 
-## Completed work
+## Human decision
 
-V1.2 now uses the retrieved official FAQ/page-search CSS as its visual reference:
-white/neutral surfaces, Arial / 微軟正黑體 direction, a normal unit heading,
-a small official-style gold submit button, dark underlined official-site links,
-secondary example/reset controls and simple form/content separators.
+Web review accepts the current V1.2 reference-driven palette, typography, form styling, spacing direction and result presentation.
 
-10 Node tests, 9 existing offline Chromium checks and 5 focused visual browser
-checks passed. Desktop, 390px and 320px screenshots and deterministic packages
-are available. See `PROJECT_STATE.md` and `docs/VISUAL_REFERENCE.md` for evidence,
-source values, adaptations and exact artifact paths.
+This task is intentionally narrow:
 
-## Remaining required asset work
+> add the correct official TRS logo/agency identity, verify layout, then return for final visual review.
 
-The official logo-download page was read successfully, but its actual TRS image
-files are on `www-ws.gov.taipei`, which the cloud proxy blocked with `CONNECT 403`.
-The network draft adds that hostname while retaining `tpctax.gov.taipei`.
-The plain agency-name text in the header is a documented temporary placeholder;
-no official TRS asset has been added to Git or the static packages yet.
+Do not perform another general styling pass.
 
-1. Have Web ChatGPT review the three current screenshots and offline demo.
-2. Save the `www-ws.gov.taipei` network addition in environment settings (or
-   provide the unchanged official asset securely as a file), then retry the
-   exact asset URLs recorded in `docs/VISUAL_REFERENCE.md`.
-3. Inspect and select the official TRS logo/wordmark. Save the original bytes
-   locally under `assets/`, record the exact source, dimensions and SHA-256,
-   and use the logo plus meaningful agency identification in both HTML pages.
-   Do not redraw, recolor or substitute Taipei City Government identity.
-4. Add the asset to both hosting/demo packages. Recheck proportions, accessible
-   image/link names, local-only image loading and layout at desktop/390px/320px.
-5. Rerun affected offline tests, regenerate screenshots and deterministic
-   packages, update state, commit/push and STOP for Web ChatGPT review.
+## Required work
+
+1. Sync latest `main`.
+2. Read:
+   - `AGENTS.md`
+   - `README.md`
+   - `PROJECT_STATE.md`
+   - `NEXT_TASK.md`
+   - `docs/PRODUCT_PLAN.md`
+   - `docs/RESULT_CONTRACT.md`
+   - `docs/VISUAL_REFERENCE.md`
+3. Retrieve the official Taipei City Revenue Service / TRS logo from the agency-controlled source already documented in `docs/VISUAL_REFERENCE.md`.
+4. Select the most suitable official asset for a compact web header.
+5. Save the original asset bytes unchanged under `assets/`.
+6. Record in `docs/VISUAL_REFERENCE.md`:
+   - exact source URL;
+   - local filename;
+   - image dimensions;
+   - SHA-256;
+   - short rationale for the chosen asset.
+7. Update `index.html` and `demo.html` so the header uses:
+   - official TRS logo;
+   - visible `臺北市稅捐稽徵處` text or equivalent meaningful accessible identification;
+   - existing return link to `本府1999常見問答`.
+8. Make only the minimum CSS adjustments needed for logo sizing/alignment/responsive behavior.
+9. Do not redraw, recolor, distort, stylize, trace or replace the logo with another Taipei City Government identity.
+10. Do not add remote runtime dependencies for the logo.
+11. Keep the accepted V1.2 styling baseline unchanged unless a concrete logo-layout issue requires a local adjustment.
+12. Run:
+   - existing Node tests;
+   - existing offline Chromium suite;
+   - focused responsive checks at desktop, 390px and 320px.
+13. Regenerate:
+   - desktop screenshot;
+   - 390px screenshot;
+   - 320px screenshot;
+   - deterministic hosting/demo packages.
+14. Confirm the local logo asset is included in both packages.
+15. Update `PROJECT_STATE.md` and `NEXT_TASK.md`.
+16. Commit/push and STOP for Web ChatGPT review.
+
+## If the asset is still inaccessible
+
+Do not invent or substitute a logo.
+
+Report the exact blocked URL / error and STOP. The user can then provide the official asset manually.
 
 ## Functional freeze
 
-Preserve Messenger transport, one-shot `currentPlaybook`, session/reset/expiry,
-request locking/timeout, normalized result model and answer/source/FAQ logic.
-Keep `assets/config.js` with `liveEnabled=false`.
+Do not change:
 
-No Production questions, live deployment, CX/GCP/Messenger integration,
-Production Environment or official-site modifications are authorized.
-Do not claim complete official TRS branding while the asset prerequisite remains.
+- Dialogflow Messenger transport;
+- one-shot `currentPlaybook`;
+- session/reset/expiry/timeout behavior;
+- normalized result model;
+- answer/source/FAQ extraction/rendering;
+- CX/GCP/Messenger integration settings;
+- Production Environment;
+- `assets/config.js` `liveEnabled=false`.
+
+No Production questions, deployment, official-site modification or backend work are authorized.

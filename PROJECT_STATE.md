@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**UI FROZEN — GATE 2A PASS — GATE 3 BLOCKED ON SDK/HEADER ACCESS — NO LIVE DEPLOYMENT**
+**UI FROZEN — GATE 2A PASS — GATE 3 CONDITIONAL PASS — PRE-DEPLOYMENT PACKAGE NEXT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -768,6 +768,26 @@ sync/read the project documents, verify actual refreshed network readiness,
 resume only the SDK/root-header audit, and retain all frozen configuration and
 no-query/no-deployment restrictions. New-session creation is not proof that
 network access is fixed; Gate 3 stays BLOCKED until readback succeeds.
+
+## Gate 3 Web review decision
+
+Web review reclassifies Gate 3 from BLOCKED to **CONDITIONAL PASS**.
+
+Reason:
+
+- frontend-local CSP/resource requirements are fully audited;
+- no wildcard, iframe, unsafe-eval, remote font, custom backend, or broad cross-origin allowance is required by the application code;
+- the only proven external runtime entry is the official Dialogflow Messenger SDK at `www.gstatic.com`;
+- exact Messenger connect/style/subresource behavior and actual production-path response headers are inherently best verified on the hosted candidate page;
+- the failed reads were caused by the Codex Cloud environment proxy and are not evidence of a Revenue Service server or Messenger failure.
+
+Therefore Gate 3 should not block preparing and handing a deployment candidate to IT.
+
+Remaining conditions to close Gate 3:
+1. host the candidate under the confirmed production origin;
+2. inspect the actual page response headers;
+3. capture real Messenger SDK/network/CSP behavior in browser;
+4. apply only the exact CSP/resource allowances demonstrated by that evidence.
 
 ## Backend contract
 

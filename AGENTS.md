@@ -226,6 +226,21 @@ At each gate, record:
 
 Never guess a production hostname, CSP policy, allowed domain, integration binding, or CMS capability.
 
+## Task checklist reporting rule
+
+For execution tasks, `NEXT_TASK.md` is the operational checklist and handoff truth.
+
+Agents must:
+- check off completed items directly in `NEXT_TASK.md`;
+- leave blocked/uncompleted items unchecked;
+- add concise evidence/results beside or beneath the relevant checklist section;
+- add a short completion summary at the bottom;
+- update `PROJECT_STATE.md` only for durable project-state changes;
+- commit/push the checklist update before stopping.
+
+Web ChatGPT review should be able to determine progress from `NEXT_TASK.md`
+without reconstructing work from chat prose.
+
 ## Workflow
 
 - Project state lives in Git, not in the current session.

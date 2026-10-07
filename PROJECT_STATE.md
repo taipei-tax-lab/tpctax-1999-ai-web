@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**V1.1 CONSERVATIVE VISUAL DRAFT VERIFIED — V1.2 REFERENCE-DRIVEN OFFICIAL-SITE ALIGNMENT PLANNED — NO LIVE DEPLOYMENT**
+**V1.2 REFERENCE-DRIVEN STYLES VERIFIED OFFLINE — OFFICIAL TRS ASSET ACCESS PENDING — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -172,6 +172,87 @@ The target for V1.2 is not a visual clone of the entire government website. It i
 The current V1.1 blue-gray color is explicitly provisional and may be replaced.
 
 Functional architecture remains frozen. This next iteration is visual-only and must preserve all verified Messenger/session/result-contract behavior and `liveEnabled=false`.
+
+## V1.2 reference-driven implementation — 2026-10-07
+
+Synced `origin/main` at `abd800d` and read the six required documents in order.
+The official FAQ and logo-download pages, `global.css`, `page.css` and
+`sys_detail.css` were successfully retrieved over verified HTTPS this time.
+Official HTML/CSS were inspected and rendered locally with scripts removed
+and all network requests blocked. Reference sources and adaptation decisions
+are recorded in `docs/VISUAL_REFERENCE.md`.
+
+Implemented visual changes:
+
+- Removed provisional `#40596c` and the colored header band. Kept white /
+  neutral surfaces and `#343434` agency-site body text.
+- Matched the Arial / 微軟正黑體 system-font direction, retaining PingFang TC
+  fallback without a remote font. Heading is a plain 26px desktop / 24px mobile
+  unit title; helper copy is at least 14px.
+- Query block uses the official page-search `#fafafa` surface. The small
+  submit button uses official CSS `#ffc800` / `#1a1a1a`, with `#cca000` hover.
+  Gold is confined to the primary action; no blue/gold promotional theme.
+- Underlined links use official content-link hover color `#045b87` to maintain
+  readable contrast; examples and reset are secondary underlined buttons.
+- Answer area is a white content block with separators rather than a floating
+  card. FAQ/source support is neutral, with no decorative shadow.
+- Header/footer remain minimal. The canonical return link, keyboard skip link,
+  focus outlines, live regions, result focus, textarea resizing and 44px minimum
+  button heights remain intact.
+- Static packaging includes the visual-reference document. No framework,
+  backend, remote font or runtime branding dependency was added.
+
+### Remaining official TRS asset blocker
+
+The official logo page's GIF and logo-with-text PNG are hosted at
+`www-ws.gov.taipei`. Fetches were blocked; a header check confirmed an Envoy
+`CONNECT 403`, rather than a missing asset or an application defect.
+The network draft now preserves `tpctax.gov.taipei` and adds only
+`www-ws.gov.taipei`; the user must save that change in environment settings
+before retry. Saving the draft did not apply or publish it.
+
+Following the explicit inaccessible-asset fallback in `NEXT_TASK.md`, both HTML
+pages retain a documented plain agency-name placeholder. No TRS logo was
+fabricated or downloaded, and no logo image is in either package yet. The
+generic local `/Images/major_logo.png` was inspected but is Taipei City Government
+identity rather than TRS, so it was not used. Exact official TRS candidate URLs
+and the completion steps are in `docs/VISUAL_REFERENCE.md`.
+
+The CSS reference work is complete; official TRS identity remains incomplete.
+Do not describe this as fully completed official-site branding until the actual
+asset is acquired, packaged and checked at all three widths.
+
+### Validation and review artifacts
+
+- `npm test`: 10 passed, 0 failed, 0 skipped.
+- Existing offline Chromium suite on local port 8767: PASS, 9 checks,
+  no page errors, no external requests, 0 Production requests.
+- Focused visual browser inspection: 5 checks passed, covering keyboard
+  skip-link focus, 1280px/390px/320px layouts, 44px buttons, resizable textarea,
+  one H1, canonical return link and 640px reflow representing a desktop 200%
+  zoom viewport. This is not a full accessibility audit.
+- Main text/link/action contrast is at least 4.5:1; textarea border against
+  its form surface exceeds 3:1. Reduced-motion support remains unchanged.
+- Hosting/demo packaging passed ZIP integrity and manifest-hash validation;
+  second builds were byte-identical. Packages include `docs/VISUAL_REFERENCE.md`.
+- Messenger transport, `currentPlaybook`, session/reset/expiry/timeout logic,
+  normalized result model, renderer, demo fixtures and existing tests remain
+  byte-for-byte unchanged from `abd800d`. `config.liveEnabled === false`.
+
+Review artifacts are outside Git at `/workspace/visual-review/v1.2-2026-10-07/`:
+
+- `desktop-review.png`, `mobile-390-review.png`, `mobile-320-review.png`:
+  current local synthetic multi-source answer demo.
+- `desktop-disabled.png`, `desktop-idle.png`, `browser/desktop-faq.png`:
+  disabled/idle/FAQ views.
+- `browser/browser_validation.json`, `visual_checks.json`, `node-tests.txt`.
+- `packages/hosting.zip`, `packages/demo.zip` and `packages/package_summary.json`.
+- Reference HTML/CSS, `reference-styles.json` and the offline reference capture.
+
+No evidence was uploaded to Drive. No Production questions, live deployment,
+CX/GCP/Messenger integration, Production Environment or official-site changes
+occurred. Commit/push and STOP for Web ChatGPT review; the next work is official
+TRS asset completion once the access prerequisite is supplied.
 
 ## Backend contract
 

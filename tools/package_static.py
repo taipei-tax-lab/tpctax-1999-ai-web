@@ -8,7 +8,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT
 ASSETS = ['config.js', 'styles.css', 'app.js', 'result-model.js', 'messenger-transport.js']
-DOCS = ['README.md', 'docs/HOSTING.md', 'docs/RESULT_CONTRACT.md', 'docs/OFFICIAL_SITE_HANDOFF.md']
+DOCS = ['README.md', 'docs/HOSTING.md', 'docs/RESULT_CONTRACT.md', 'docs/OFFICIAL_SITE_HANDOFF.md', 'docs/VISUAL_REFERENCE.md']
 
 def digest(data):
     return hashlib.sha256(data).hexdigest()

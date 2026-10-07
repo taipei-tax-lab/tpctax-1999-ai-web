@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**STANDALONE MIGRATION VERIFIED OFFLINE — OFFICIAL-SITE VISUAL ALIGNMENT REVISION PLANNED — NO LIVE DEPLOYMENT**
+**CONSERVATIVE VISUAL DRAFT VERIFIED OFFLINE — OFFICIAL REFERENCE/LOGO ACCESS PENDING — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -83,6 +83,68 @@ Official visual reference:
 The official Revenue Service logo is published on the agency site. The implementation should prefer a local approved asset rather than an invented `1999` mark or an unnecessary runtime hotlink.
 
 This revision must not change CX backend resources, Messenger integration settings, Production binding, hosting, or `liveEnabled=false`.
+
+## Visual revision draft — 2026-10-07
+
+Synced latest `main` at `163fe69` and read the six required project documents.
+The conservative visual draft changes only `index.html`, `demo.html` and
+`assets/styles.css`, plus these project-state documents:
+
+- Removed the invented green `1999` badge; the header now uses the agency's
+  full name as ordinary text, not an invented replacement logo.
+- White background, dark gray body text, provisional subdued blue-gray links
+  and primary button, simple gray borders, 2px corners, no card shadows.
+- Traditional Chinese system font stack begins with Microsoft JhengHei and
+  PingFang TC; no remote font dependency.
+- Replaced the marketing headline with `1999 AI 智慧問答` at 28px desktop /
+  24px mobile; reduced spacing and removed the promotional footer tagline.
+- Kept the normal canonical return link, visible labels, live regions and
+  result focus target. Added a keyboard skip link, visible focus outlines,
+  at least 44px button heights and resizable mobile textarea.
+- Messenger transport, one-shot Playbook/session logic, normalized model,
+  renderer, mock transport and existing tests are unchanged. `liveEnabled=false`.
+
+### Reference access limitation
+
+The supplied official FAQ URL could not be inspected: the cloud network proxy
+returned `CONNECT 403`. The running environment's restricted network policy
+had no custom rule for `tpctax.gov.taipei`; a draft adding only that hostname
+was saved. Saving the draft does not apply or publish it. The user must save
+the network change in environment settings before reference retrieval can resume.
+
+No official logo asset was downloaded or fabricated. The current palette,
+font stack and header are a restrained provisional treatment based on the human
+brief, not measured official-site styles. Official reference comparison and
+local logo acquisition/source recording remain outstanding. Do not describe
+this draft as completed official-site visual alignment.
+
+### Offline validation and review artifacts
+
+- `npm test`: 10 passed, 0 failed, 0 skipped.
+- Existing `tests/phase7e3a_browser.py`, with local server port 8766:
+  9 checks passed, no page errors/external requests, 0 Production requests.
+  An old listener on port 8765 returned an empty response; a fresh local
+  server on 8766 resolved that validation prerequisite.
+- Additional browser inspection passed keyboard skip-link navigation,
+  one main heading, 44px button heights, textarea resizing and no horizontal
+  overflow at 1280px, 390px and 320px.
+- Main body/link/button/muted text contrast is at least 4.5:1 against its
+  relevant white/light gray surface; reduced-motion behavior is retained.
+  This is focused verification, not a full accessibility audit.
+- `tools/package_static.py`: hosting/demo ZIP integrity and hashes passed;
+  repeat builds are byte-identical and include the revised markup/styles.
+
+Local review artifacts (outside Git, not uploaded to Drive):
+`/workspace/visual-review/2026-10-07/desktop-review.png`,
+`mobile-390-review.png`, `mobile-320-review.png`, `desktop-idle.png`,
+`browser/desktop-faq.png`, `browser/browser_validation.json` and
+`packages/demo.zip` / `packages/hosting.zip`.
+
+Start review with the desktop and 390px mobile screenshots, then extract the
+demo ZIP and serve it over HTTP to inspect `demo.html`. The yellow demo panel
+and all answers are offline fixtures. No live deployment or CX/GCP/Messenger/
+Production/official-site modification occurred. Stop for Web ChatGPT review;
+resume official reference work only when access or supplied assets are available.
 
 ## Backend contract
 

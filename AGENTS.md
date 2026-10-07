@@ -76,6 +76,22 @@ Design direction for the next visual revision:
 - avoid decorative AI iconography, gradients, floating cards and oversized empty space;
 - the page may be cleaner than the legacy official page, but should not look like a separate branded product.
 
+## Branding asset completion rule
+
+The V1.2 palette/layout is now the accepted visual baseline. Do not keep retuning colors, spacing or typography unless a concrete screenshot review identifies a problem.
+
+The remaining branding task is limited to official TRS identity completion:
+
+- use an unchanged official Taipei City Revenue Service / TRS logo asset;
+- store the selected logo locally under `assets/`;
+- record exact source URL, dimensions and SHA-256 in `docs/VISUAL_REFERENCE.md`;
+- use the asset in both `index.html` and `demo.html`;
+- preserve meaningful adjacent agency-name text for accessibility and recognition;
+- do not redraw, recolor, crop aggressively, stylize or substitute another Taipei City Government mark;
+- do not add remote image/font runtime dependencies;
+- verify desktop, 390px and 320px layout after insertion;
+- if the official asset cannot be retrieved in the execution environment, STOP and report the exact blocker instead of inventing a replacement.
+
 ## Workflow
 
 - Project state lives in Git, not in the current session.

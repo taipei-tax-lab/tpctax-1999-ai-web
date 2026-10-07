@@ -12,12 +12,12 @@
   <header class="site-header"><div class="header-inner"><a class="brand" href="./index.html"><img class="brand-logo" src="./assets/trs-header.png" width="1200" height="256" alt="TRS"><span class="agency-name">臺北市稅捐稽徵處</span></a></div></header>
   <main id="main-content" tabindex="-1">
     <nav class="page-navigation" aria-label="頁面導覽"><a data-back class="back-link" href="https://tpctax.gov.taipei/News.aspx?n=BB8B93F0A49EAB80&amp;sms=87415A8B9CE81B16">返回本府1999常見問答</a></nav>
-    <section class="hero" aria-labelledby="page-title"><h1 id="page-title">1999 AI 智慧問答</h1><p class="intro">用自己的話描述問題，從官方資訊中尋找解答。</p></section>
+    <section class="hero" aria-labelledby="page-title"><h1 id="page-title">1999 AI 智慧問答</h1></section>
     <section class="search-card" aria-label="稅務問題搜尋">
-      <form id="search-form"><label for="query">您想了解什麼？</label><div class="input-wrap"><textarea id="query" name="query" rows="2" maxlength="1000" placeholder="例如：銀錢收據的印花稅稅率是多少？" required></textarea><button id="submit" type="submit" disabled>查詢解答</button></div><p class="input-note">Enter 查詢 · Shift + Enter 換行<span id="counter">0 / 1000</span></p></form>
-      <div class="suggestions" aria-label="問題範例"><span>試著詢問</span><button type="button" data-example="銀錢收據的印花稅稅率是多少？">印花稅稅率</button><button type="button" data-example="租賃住宅可以適用哪些稅務優惠？">租賃住宅稅務</button></div>
+      <p class="suggestions"><span>您可詢問</span> <button type="button" data-example="房屋稅自住住家用稅率怎麼申請？">「房屋稅自住住家用稅率怎麼申請？」</button> <button type="button" data-example="地價稅自用住宅用地優惠稅率怎麼申請？">「地價稅自用住宅用地優惠稅率怎麼申請？」</button></p>
+      <form id="search-form"><label for="query">您想了解什麼？</label><div class="input-wrap"><textarea id="query" name="query" rows="2" maxlength="1000" placeholder="例如：房屋稅自住住家用稅率如何申請？" required></textarea><button id="submit" type="submit" disabled>查詢解答</button></div><p class="input-note">Enter 查詢 · Shift + Enter 換行<span id="counter">0 / 1000</span></p></form>
     </section>
-    <div class="session-bar"><p>可接著詢問；開始新查詢會重設查詢脈絡。</p><button id="reset" type="button" disabled>開始新查詢</button></div>
+    <div class="session-bar" hidden><button id="reset" type="button" disabled>清除前次問答，重新提問</button></div>
     <section id="status" class="status-panel" aria-live="polite" aria-atomic="true"><span class="status-icon" aria-hidden="true"></span><h2 id="status-title">準備查詢服務</h2><p id="status-description">請稍候。</p></section>
     <section id="result" class="result-card" hidden aria-labelledby="result-title"><div class="result-heading"><p class="eyebrow">您的查詢結果</p><h2 id="result-title" tabindex="-1">查詢結果</h2><p id="result-query"></p></div><div data-answer class="answer"></div><aside data-faq class="faq-card" hidden></aside><section data-source-section class="sources" hidden><h3>參考資料</h3><ul data-sources></ul></section></section>
     <p class="service-note">AI 回答供參考；申辦條件與適用規定，請以官方公告及主管機關說明為準。</p>

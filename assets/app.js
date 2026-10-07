@@ -5,9 +5,8 @@ import {MessengerTransport, loadMessenger} from './messenger-transport.js';
 const form = document.querySelector('#search-form'), input = document.querySelector('#query');
 const submit = document.querySelector('#submit'), reset = document.querySelector('#reset');
 const status = document.querySelector('#status'), result = document.querySelector('#result');
-let transport, ready = false, busy = false, composing = false;
+let transport, ready = false, busy = false, composing = false, hasAnswer = false;
 const states = {
-  idle: ['您的問題，從這裡開始', '輸入稅務問題，查看回答及可用的官方參考資料。'],
   loading: ['正在查詢解答', '正在整理本次回答，請稍候。'],
   empty: ['尚未取得解答', '您可以補充問題的條件，再手動送出查詢。'],
   error: ['暫時無法取得解答', '請稍後再手動查詢；若查詢尚未結束，按鈕將暫時停用。'],
@@ -15,13 +14,15 @@ const states = {
   unavailable: ['服務準備中', '查詢服務尚未開放。您可以先查看本府1999常見問答。'],
 };
 function showState(name) {
-  result.hidden = true;status.hidden = false;status.dataset.state = name;
+  result.hidden = true;status.hidden = name === 'idle';status.dataset.state = name;
+  if (status.hidden) return;
   const [title, description] = states[name];
   document.querySelector('#status-title').textContent = title;
   document.querySelector('#status-description').textContent = description;
   status.setAttribute('role', ['error','session'].includes(name) ? 'alert' : 'status');
 }
 function controls() {
+  reset.parentElement.hidden = !hasAnswer;
   submit.disabled = !ready || busy || !!transport?.locked;
   reset.disabled = !ready || busy || !!transport?.locked;
   form.setAttribute('aria-busy', String(busy));
@@ -47,12 +48,12 @@ form.addEventListener('submit', async event => {
     const model = normalizeResult(detail, config.officialFaqOrigins);
     if (!model.answer.trim()) {showState('empty');return;}
     renderResult(model, result);document.querySelector('#result-query').textContent = query;
-    status.hidden = true;result.hidden = false;document.querySelector('#result-title').focus({preventScroll:true});
+    hasAnswer = true;status.hidden = true;result.hidden = false;document.querySelector('#result-title').focus({preventScroll:true});
   } catch (error) {showState(error.message === 'session' ? 'session' : error.message === 'empty' ? 'empty' : 'error');}
   finally {busy = false;controls();}
 });
 reset.addEventListener('click', () => {
-  try {transport.reset();input.value = '';input.dispatchEvent(new Event('input'));showState('idle');input.focus();}
+  try {transport.reset();hasAnswer = false;input.value = '';input.dispatchEvent(new Event('input'));showState('idle');input.focus();}
   catch {showState('error');}
   controls();
 });

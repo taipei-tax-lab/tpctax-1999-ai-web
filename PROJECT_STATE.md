@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**RESTRAINED OFFICIAL RED ACCENTS VERIFIED OFFLINE — AWAITING WEB CHATGPT REVIEW — NO LIVE DEPLOYMENT**
+**FINAL UI-FREEZE CANDIDATE VERIFIED OFFLINE — AWAITING WEB CHATGPT REVIEW — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -24,6 +24,8 @@ Dialogflow CX backend source of truth:
 - Current official TRS header wordmark stored unchanged as `assets/trs-header.png` in both headers; local official city background in `assets/official-page-bg.png`.
 - Earlier `assets/trs-logo.gif` retained unchanged as the original standalone-mark source.
 - Shared CSS adds a slim official-red H1 marker and a smaller query-label marker; both text colors remain `#343434`.
+- Intro removed; common-tax examples are plain clickable quoted text above the form, with red `您可詢問` and a restrained red query top rule.
+- Ready state hides the idle panel. Reset appears only after a successful answer, labeled `清除前次問答，重新提問`; it uses the existing real session reset, clears/focuses input and hides again until another successful answer.
 - No custom backend.
 - Dialogflow Messenger is the intended browser transport.
 - `liveEnabled=false`.
@@ -494,6 +496,69 @@ Recommended placeholder:
 `例如：房屋稅自住住家用稅率如何申請？`
 
 This is the final UI-freeze candidate. Functional architecture remains frozen.
+
+## Final UI-freeze candidate implemented — 2026-10-07
+
+Pulled latest `main` at `cc651e322762bad9c1767c4336f6d52a1430fec7` and read
+all seven requested project documents in order.
+
+- Both HTML pages remove the title intro and session explanation, move the
+  exact two quoted housing/land-tax examples above the form, and use
+  `例如：房屋稅自住住家用稅率如何申請？` as the placeholder.
+- Examples are native text buttons with underlining, no chip border/background,
+  and preserved 44px targets. The desktop sentence fits one line; narrow
+  screens wrap naturally. Clicking or keyboard activation uses the existing
+  input-fill/focus handler and does not submit a query.
+- H1 marker is modestly widened from 3px to 4px; title text remains gray.
+  `您可詢問` is bold `#d4222d`; query section has a 2px `#de313c` top rule.
+  Query-label marker, result red bar, global `#de313c` link hover/footer rule,
+  and yellow `#ffc800` / `#cca000` query action remain intact.
+- Only the new transparent text examples use `#d4222d` on hover: 4.95:1
+  against the `#fafafa` search surface. This avoids the weaker `#de313c`
+  contrast on that surface while keeping official reds. Existing link hover
+  on white remains 4.55:1. Gray example text exceeds 11:1.
+- `assets/app.js` changes only UI state wiring: hide idle status and reveal
+  reset after a nonempty successful rendered answer. Empty/error before any
+  success do not reveal reset. Loading, unavailable, empty/error and session
+  feedback handling remain available.
+- Exact reset action invokes unchanged `transport.reset()`, then clears the
+  textarea/counter, hides result/idle/reset UI and focuses the textarea.
+  The SDK starts a new session with `retainHistory:false`; the next request
+  receives the first-turn 1999 Playbook override again. Same-session followups
+  still omit that override. No reset/expiry/timeout semantics changed.
+- `npm test`: 10 passed, 0 failed/skipped.
+- Expanded existing offline Chromium suite: 12 grouped checks passed, zero
+  external requests, page errors and Production requests. Focused assertions
+  cover ready visibility, exact examples/order/fill, reset gating/copy, real
+  new-session/re-arm via both mock and intercepted SDK, plus loading/error/
+  unavailable. The SDK remains a local synthetic stub.
+- Both pages at 1280px/390px/320px passed keyboard skip/focus/labels, 44px
+  targets, textarea resizing and horizontal-overflow checks. Both also passed
+  320px at 200% text size. Sampled official header/background/font/content-width/
+  query-button/result styles match the synchronized baseline. Focused
+  accessibility checks passed; no full accessibility audit is claimed.
+- Transport, normalized model and answer/source/FAQ renderer, config, official
+  image bytes, demo fixtures and Node tests are byte-for-byte unchanged.
+  `config.liveEnabled === false`.
+
+Review evidence is outside Git at
+`/workspace/visual-review/ui-freeze-2026-10-07/`:
+
+- `desktop-ready.png`, `mobile-390-ready.png`, `mobile-320-ready.png`:
+  ready UI in the clearly labeled offline demo, without idle/reset panels.
+- `desktop-review.png`, `mobile-390-review.png`, `mobile-320-review.png`:
+  synthetic result with the exact secondary reset action.
+- `desktop-unavailable.png`, `mobile-390-unavailable.png`,
+  `mobile-320-unavailable.png`: actual disabled hosting configuration.
+- `mobile-320-text-200-demo.png`, `mobile-320-text-200-index.png`:
+  enlarged-text result/unavailable reflow.
+- `node-tests.txt`, `browser/browser_validation.json`, `visual_validation.json`.
+
+The attached environment still uses the workspace evidence directory because
+the designated projectless output directory is not writable here. No evidence
+upload or live deployment occurred; no CX/GCP/Messenger/Production Environment
+settings changed and no Production query was sent. STOP after commit/push and
+wait for Web ChatGPT review before calling the UI frozen.
 
 ## Backend contract
 

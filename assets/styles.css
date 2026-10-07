@@ -36,11 +36,10 @@ main { max-width: 748px; margin: 15px auto 30px; padding: 10px; background: #fff
 .hero { margin-bottom: 8px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
 .hero h1 { font-size: 1.4em; font-weight: 400; line-height: normal; margin: 0; padding: 3px; }
 /* Restrained official red markers; heading/label text keeps its native color. */
-.hero h1 { position: relative; padding-left: 13px; }
-.hero h1::before { content: ""; position: absolute; left: 3px; top: 50%; transform: translateY(-50%); width: 3px; height: .9em; background: #d4222d; }
-.intro { margin: 5px 3px 0; line-height: 1.7; }
+.hero h1 { position: relative; padding-left: 14px; }
+.hero h1::before { content: ""; position: absolute; left: 3px; top: 50%; transform: translateY(-50%); width: 4px; height: .9em; background: #d4222d; }
 .eyebrow { color: var(--muted); font-size: 14px; margin: 0 0 4px; }
-.search-card { background: #fafafa; margin-top: 5px; padding: 5px; }
+.search-card { background: #fafafa; margin-top: 5px; padding: 5px; border-top: 2px solid #de313c; }
 #search-form { margin: 5px; }
 label { display: block; font-weight: 400; margin-bottom: 5px; }
 #search-form label[for="query"] { position: relative; padding-left: 8px; }
@@ -52,12 +51,11 @@ textarea::placeholder { color: var(--muted); }
 #submit { background: var(--action); color: #1a1a1a; border: 0; padding: 8px; min-height: 44px; font-weight: 400; line-height: 1; margin-top: 5px; }
 #submit:hover:not(:disabled) { background: #cca000; color: #1a1a1a; }
 .input-note { display: flex; justify-content: space-between; font-size: 14px; line-height: 1.5; color: var(--muted); margin: 5px 0; gap: 8px; }
-.suggestions { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin: 5px; font-size: 16px; }
-.suggestions > span { color: var(--muted); }
-.suggestions button { background: #fff; color: #343434; border: 1px solid var(--line); padding: 8px; min-height: 44px; }
-.suggestions button:hover { background: #f5f5f5; color: var(--link-hover); }
+.suggestions { margin: 5px; font-size: 16px; line-height: 1.7; }
+.suggestions > span { color: #d4222d; font-weight: 700; }
+.suggestions button { background: transparent; color: #343434; border: 0; padding: 0; min-height: 44px; max-width: 100%; text-align: left; vertical-align: middle; text-decoration: underline; line-height: inherit; }
+.suggestions button:hover { color: #d4222d; text-decoration: none; }
 .session-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 8px 0; font-size: 14px; line-height: 1.7; color: var(--muted); }
-.session-bar p { margin: 0; }
 .session-bar button { border: 0; background: #646464; color: #fff; white-space: nowrap; padding: 8px; min-height: 44px; font-size: 16px; line-height: 1; }
 .session-bar button:hover:not(:disabled) { background: #343434; }
 .status-panel { padding: 8px; border: 1px solid var(--line); background: #f5f5f5; line-height: 1.7; }

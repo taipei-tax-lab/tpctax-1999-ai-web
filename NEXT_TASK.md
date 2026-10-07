@@ -2,162 +2,80 @@
 
 ## Active task
 
-**Final UI-freeze candidate: simplify citizen interaction and strengthen official red accents**
+**STOP — Web ChatGPT review of the final UI-freeze candidate**
 
-Do not deploy live. Preserve the high-fidelity official-site foundation.
+Implementation and offline verification are complete. The high-fidelity official
+visual foundation is preserved. Wait for human review before declaring the UI
+frozen or starting another revision. Do not deploy Production.
 
-## Human decision
+## Review target
 
-Implement the following final citizen-facing refinements.
+Confirm the final citizen interaction:
 
-### Remove redundant intro
+1. Title intro removed, with no replacement copy.
+2. Above-form sentence uses red `您可詢問`, followed by plain clickable text:
+   `「房屋稅自住住家用稅率怎麼申請？」`
+   `「地價稅自用住宅用地優惠稅率怎麼申請？」`.
+   Examples fill/focus the textarea without submitting; mobile wraps naturally.
+3. Placeholder: `例如：房屋稅自住住家用稅率如何申請？`.
+4. Ready state has no idle panel or reset row before a successful answer.
+5. After success, the exact secondary action is `清除前次問答，重新提問`.
+   It performs the existing real new-session reset/re-arm, clears the input and
+   counter, focuses the textarea, and hides result/reset until another success.
+6. Loading, unavailable/live-disabled, empty/error and session feedback remain.
+7. Gray H1 text with 4px red marker; red example emphasis and 2px query top rule.
+   Official header/logo/background, font stack/content width, yellow query
+   button, result/source structure and red link hover/footer separator remain.
 
-Remove:
+The new transparent example text uses official `#d4222d` for hover to preserve
+4.95:1 contrast on the light gray search surface; normal content-link hover
+remains `#de313c`.
 
-`用自己的話描述問題，從官方資訊中尋找解答。`
+## Review artifacts
 
-The page title and query UI are sufficient.
+Evidence root outside Git:
+`/workspace/visual-review/ui-freeze-2026-10-07/`.
 
-### Move and rewrite example questions
+- `desktop-ready.png`, `mobile-390-ready.png`, `mobile-320-ready.png`:
+  clearly labeled offline demo showing ready UI.
+- `desktop-review.png`, `mobile-390-review.png`, `mobile-320-review.png`:
+  synthetic result and reset control.
+- `desktop-unavailable.png`, `mobile-390-unavailable.png`,
+  `mobile-320-unavailable.png`: actual hosting configuration (`liveEnabled=false`).
+- `mobile-320-text-200-demo.png`, `mobile-320-text-200-index.png`:
+  200% text-size captures.
+- `node-tests.txt`, `browser/browser_validation.json`, `visual_validation.json`.
 
-Remove the current:
+The projectless output directory is not writable in the attached environment;
+artifacts use the existing workspace evidence convention. Nothing was uploaded.
 
-`試著詢問 / 印花稅稅率 / 租賃住宅稅務`
+## Completed verification
 
-Replace it with one simple line **above the query form**:
-
-`您可詢問` + two clickable quoted example questions.
-
-Use:
-
-- `房屋稅自住住家用稅率怎麼申請？`
-- `地價稅自用住宅用地優惠稅率怎麼申請？`
-
-Suggested visual form:
-
-`您可詢問 「房屋稅自住住家用稅率怎麼申請？」 「地價稅自用住宅用地優惠稅率怎麼申請？」`
-
-The quoted questions should remain clickable and populate the textarea.
-
-### Placeholder
-
-Use:
-
-`例如：房屋稅自住住家用稅率如何申請？`
-
-### Reset/session control
-
-Remove the current explanatory row:
-
-`可接著詢問；開始新查詢會重設查詢脈絡。`
-
-Do not show any reset control before the first successful answer.
-
-After a successful answer, show one secondary action with the exact label:
-
-`清除前次問答，重新提問`
-
-Behavior:
-
-- execute the existing real session reset;
-- re-arm the first-turn 1999 Playbook behavior exactly as today;
-- clear the input;
-- return focus to the textarea;
-- do not merely clear visible content while keeping the same session.
-
-### Normal ready state
-
-Do not show the normal idle/status panel when the service is ready.
-
-The normal ready page should be:
-
-- official header;
-- return link;
-- page title;
-- `您可詢問 ...`;
-- query form;
-- submit button.
-
-Status UI should appear only when needed for:
-
-- loading;
-- unavailable/live-disabled;
-- empty answer;
-- error;
-- reset/session feedback if necessary.
-
-Do not remove unavailable/error/loading handling.
-
-### Red identity
-
-Red is still judged slightly too weak.
-
-Increase official-red presence modestly using only verified official colors:
-
-- `#d4222d`
-- `#de313c`
-
-Approved places:
-
-1. retain/enhance the H1 red accent;
-2. make `您可詢問` visibly red or use an official-red marker;
-3. add a restrained red accent/top rule to the query section if it improves continuity;
-4. keep existing red result heading;
-5. keep red hover states;
-6. keep footer red separator.
-
-Do not:
-
-- recolor the global header;
-- recolor the TRS logo;
-- recolor the yellow submit button;
-- make all borders red;
-- create large red surfaces;
-- add gradients/banners.
-
-### Preserve
-
-Keep unchanged unless strictly required for this UI behavior:
-
-- official TRS header image;
-- official page background;
-- official font stack;
-- official content width/density;
-- official yellow query button;
-- result/source visual structure.
+- Node: 10 passed, zero failures/skips.
+- Expanded offline Chromium suite: 12 grouped checks passed, zero external
+  requests, page errors and Production requests. Focused assertions cover
+  ready/idle visibility, examples above form, exact text/input fill/focus,
+  reset hidden before success (including empty/error), exact reset copy,
+  loading/unavailable/error handling, new session/re-arm and SDK reset options.
+- Both pages at 1280px/390px/320px: preserved official visual values, no overflow,
+  keyboard navigation/focus, accessible names, 44px targets and resizable input.
+  Both pages at 320px with 200% text size also passed; focused contrast passed.
+- Application JavaScript changes are limited to UI visibility/gating. Transport,
+  Playbook/session semantics, model/renderer, config, official assets, demo
+  fixtures and Node tests remain unchanged.
 
 ## Functional freeze
 
-Do not change:
+Do not change without a new explicit human instruction:
 
 - Dialogflow Messenger transport;
 - one-shot `currentPlaybook`;
 - session/reset/expiry/timeout semantics;
 - normalized result model;
 - answer/source/FAQ extraction/rendering;
-- CX/GCP/Messenger integration settings;
+- CX/GCP/Messenger integration;
 - Production Environment;
 - `assets/config.js` `liveEnabled=false`.
 
-The only allowed JavaScript behavior change is the minimum UI state wiring needed to:
-- hide idle status in ready state;
-- reveal the reset action only after a successful answer;
-- keep the existing reset behavior intact.
-
-## Verification
-
-1. Run existing Node tests.
-2. Run existing offline Chromium suite.
-3. Add/update focused tests for:
-   - no idle status panel in ready state;
-   - examples appear above the form and populate the textarea;
-   - reset action absent before first answer;
-   - exact reset label after successful answer;
-   - reset still starts a true new session/re-arms first-turn behavior;
-   - no regression to loading/error/unavailable states.
-4. Generate desktop, 390px and 320px screenshots.
-5. Confirm no overflow/accessibility regression.
-6. Update `PROJECT_STATE.md` and `NEXT_TASK.md`.
-7. Commit/push and STOP for Web ChatGPT review.
-
-No Production questions or deployment are authorized.
+No Production query or deployment is authorized. Offline fixtures and the
+intercepted SDK stub do not establish Production behavior or tax-answer quality.

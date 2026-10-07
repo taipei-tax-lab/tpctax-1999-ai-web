@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**UI FROZEN — GATE 1 PARTIALLY PASSED — GATE 2A PASS — NO LIVE DEPLOYMENT**
+**UI FROZEN — GATE 2A PASS — GATE 3 CSP/RESOURCE AUDIT NEXT — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -703,6 +703,19 @@ See `docs/DEPLOYMENT_GATES.md` for the UI transcription and evidence limits.
 Only the three project documents changed. Frozen UI, frontend configuration
 and CX/Production settings remain unchanged; `liveEnabled=false`.
 No Production query or deployment occurred. Commit/push and STOP for review.
+
+## Gate 2A review decision
+
+Web review accepts Gate 2A as PASS:
+
+- Messenger integration is bound to the expected Production Environment:
+  `a0c712e8-ab0c-4520-b100-d2abcfc85868`;
+- allowed domains already include:
+  `services.arpa.tpctax.dof.gov.taipei`;
+- no Messenger binding/domain mutation is required;
+- final page path is not required for this hostname-level check.
+
+Next work moves to CSP/resource-loading readiness. Do not reopen Messenger binding or allowed-domain work unless later live E2E disproves the current readback.
 
 ## Backend contract
 

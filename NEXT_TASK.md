@@ -2,57 +2,91 @@
 
 ## Active task
 
-**STOP — Web ChatGPT review of the final placement-only refinement**
+**Deployment Gate 1 — Hosting / URL discovery and deployment-readiness audit**
 
-The accepted UI now has the required query-area order:
+Do not deploy. Do not enable live mode. Do not change CX/GCP/Messenger settings.
 
-1. `您想了解什麼？`
-2. textarea
-3. `您可詢問 「房屋稅自住住家用稅率怎麼申請？」 「地價稅自用住宅用地優惠稅率怎麼申請？」`
-4. yellow `查詢解答`
+## Goal
 
-Only the existing example paragraph was moved in both HTML pages. No copy,
-application CSS or JavaScript changed. Wait for human review before further work.
+Determine exactly where/how this frozen static frontend is intended to be hosted and identify the minimum human inputs required before any production-domain or Messenger configuration work.
 
-## Review artifacts
+This is an audit/planning gate, not an implementation/deployment gate.
 
-Evidence root outside Git:
-`/workspace/visual-review/placement-2026-10-07/`.
+## Required work
 
-- `desktop-ready.png`, `mobile-390-ready.png`, `mobile-320-ready.png`:
-  clearly labeled offline demo, ready state.
-- `desktop-review.png`, `mobile-390-review.png`, `mobile-320-review.png`:
-  synthetic result with existing reset action.
-- `desktop-unavailable.png`, `mobile-390-unavailable.png`,
-  `mobile-320-unavailable.png`: actual disabled hosting configuration.
-- `mobile-320-text-200-demo.png`, `mobile-320-text-200-index.png`:
-  200% text-size captures.
-- `node-tests.txt`, `browser/browser_validation.json`, `visual_validation.json`.
+1. Sync latest `main`.
+2. Read:
+   - `AGENTS.md`
+   - `README.md`
+   - `PROJECT_STATE.md`
+   - `NEXT_TASK.md`
+   - `docs/PRODUCT_PLAN.md`
+   - `docs/RESULT_CONTRACT.md`
+   - `docs/VISUAL_REFERENCE.md`
+3. Inspect all frontend/config/package/deployment-related files.
+4. Confirm every current placeholder or environment-specific value, especially:
+   - `assets/config.js hostingUrl`;
+   - `liveEnabled`;
+   - asset/path assumptions;
+   - relative URLs;
+   - Messenger SDK resource URL;
+   - official FAQ return URL;
+   - package contents and expected web-root layout.
+5. Determine which hosting shapes the current static package supports without code changes, for example:
+   - same existing agency web host under a subpath;
+   - separate static subdomain/host;
+   - CMS/static-file hosting.
+   Do not choose one without evidence.
+6. Search project history/docs for any already-recorded intended production URL, hostname, CMS path, server ownership or publishing mechanism.
+7. Produce a concise deployment Gate 1 report in a new file:
+   `docs/DEPLOYMENT_GATES.md`
 
-Artifacts use the existing workspace evidence convention; nothing was uploaded.
+## docs/DEPLOYMENT_GATES.md requirements
 
-## Completed verification
+Create a gate table with:
 
-- Node: 10 passed, zero failures/skips.
-- Offline Chromium: 12 grouped checks passed, zero external requests,
-  page errors and Production requests. Updated the superseded above-form
-  assertion to check visual/DOM textarea → examples → submit placement.
-- Both pages at 1280px/390px/320px: required placement, both examples' fill/focus
-  without submission, yellow submit styling, no overflow and focused keyboard/
-  accessibility checks passed. Both pages at 320px with 200% text size passed.
-- Original wording, placeholder/reset action, all application JS/CSS, official
-  images and `liveEnabled=false` remain unchanged.
+- Gate
+- Purpose
+- Verified facts
+- Unknowns
+- Human input required
+- Proposed next action
+- Status
 
-## Functional freeze
+Populate all seven gates, but only Gate 1 may be actively analyzed now. Later gates must remain pending.
 
-Do not change without a new explicit human instruction:
+For Gate 1, explicitly answer:
 
-- Messenger transport or one-shot `currentPlaybook`;
-- session/reset/expiry/timeout semantics;
-- normalized model or answer/source/FAQ renderer;
-- ready/unavailable/loading/empty/error/session behavior;
-- CX/GCP/Messenger integration or Production Environment;
-- `assets/config.js` `liveEnabled=false`.
+1. Is a final/public hosting hostname already known anywhere in the repo/history?
+2. Is a final path such as `/1999-ai/` confirmed or only a placeholder?
+3. Does the package assume it is served from a subdirectory, and are all asset/module paths compatible?
+4. Is HTTPS required/assumed?
+5. Does the current frontend require any server-side feature? (Expected: static only; verify.)
+6. What exact information must the user/agency provide before Gate 1 can pass?
+7. Can a non-production temporary host be used safely for integration testing, and if so what constraints would apply? Do not create one.
 
-No Production query or deployment is authorized. Offline fixtures and the
-intercepted SDK stub do not establish Production behavior or tax-answer quality.
+## Important
+
+Do not:
+- invent a production hostname;
+- modify `hostingUrl`;
+- change `liveEnabled=false`;
+- change allowed domains;
+- change CSP;
+- change Messenger integration;
+- change Production Environment;
+- deploy files;
+- send Production questions;
+- modify the frozen UI.
+
+## Verification
+
+Run the existing offline tests/package verification only if needed to confirm path/packaging assumptions.
+
+Update:
+- `PROJECT_STATE.md`
+- `NEXT_TASK.md`
+
+Commit/push and STOP.
+
+The final response must clearly list **only the human inputs that are actually needed next** to pass Gate 1.

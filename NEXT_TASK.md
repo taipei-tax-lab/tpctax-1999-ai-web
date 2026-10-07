@@ -2,69 +2,55 @@
 
 ## Active task
 
-**Add restrained official red accents to the accepted high-fidelity visual reproduction**
+**STOP — Web ChatGPT review of restrained official red accents**
 
-Do not deploy live. Do not redesign the page.
+The accepted high-fidelity layout now includes the requested two small red
+markers. Implementation and offline verification are complete. Wait for a new
+human instruction before further visual work or deployment.
 
-## Human decision
+## Review target
 
-The current high-fidelity reproduction is accepted overall.
+Confirm the new accents remain restrained on desktop, 390px and 320px:
 
-One small visual refinement is requested:
+1. `1999 AI 智慧問答`: gray text with a 3px × .9em `#d4222d` left marker.
+2. `您想了解什麼？`: unchanged text with a smaller 2px × .75em `#de313c` marker.
+3. Existing `#d4222d` result heading, `#de313c` link hover/footer separator,
+   official TRS logo/background, fonts/sizes/content width and yellow
+   `#ffc800` / `#cca000` submit button remain unchanged.
 
-> introduce a few more official red accents so the page carries more of the existing Revenue Service identity, without making red the dominant color.
+Only five CSS lines were added; HTML, JavaScript and original assets are unchanged.
 
-## Official red values
+## Review artifacts
 
-Use the already verified official values:
+Evidence root outside Git:
+`/workspace/visual-review/red-accents-2026-10-07/`.
 
-- `#d4222d`
-- `#de313c`
+- `desktop-review.png`, `mobile-390-review.png`, `mobile-320-review.png`:
+  offline demo with synthetic multi-source answer.
+- `desktop-idle.png`, `mobile-390-idle.png`, `mobile-320-idle.png`:
+  actual hosting configuration with live service disabled.
+- `mobile-320-idle-text-200.png`, `mobile-320-review-text-200.png`:
+  200% text-size captures.
+- `node-tests.txt`, `browser/browser_validation.json`, `visual_validation.json`.
 
-## Required changes
+The attached environment could not create the designated projectless output
+directory; screenshots use the existing workspace evidence convention.
 
-1. Keep the main `1999 AI 智慧問答` heading text in the existing official dark gray.
-2. Add a slim red accent to the main heading, preferably a left border/marker rather than recoloring the full heading.
-3. Add a small red accent to the query label `您想了解什麼？`, again using a minimal marker/left border.
-4. Keep the existing red result heading block `#d4222d`.
-5. Keep link hover red `#de313c`.
-6. Keep the footer red separator `#de313c`.
-7. Keep the official yellow submit button exactly as the current evidence-based implementation unless a layout-only adjustment is required.
-8. Keep the official TRS logo and official background unchanged.
+## Completed verification
 
-## Do not
-
-- do not make the global header red;
-- do not recolor or redraw the logo;
-- do not change the yellow submit button to red;
-- do not make all headings red;
-- do not add red borders to every section;
-- do not introduce large red surfaces, gradients or decorative banners;
-- do not change any Messenger/session/result logic.
-
-## Scope
-
-This is a CSS/markup micro-adjustment only.
-
-Use the smallest implementation needed to achieve:
-
-- H1 red accent;
-- query-label red accent;
-- preserve existing official red result/hover/footer treatment.
-
-## Verification
-
-1. Run existing Node tests.
-2. Run existing offline Chromium suite.
-3. Regenerate desktop, 390px and 320px screenshots.
-4. Confirm the red accents remain visually restrained at all three widths.
-5. Confirm no horizontal overflow or accessibility regression.
-6. Update `PROJECT_STATE.md` and `NEXT_TASK.md`.
-7. Commit/push and STOP for Web ChatGPT review.
+- Node: 10 passed, zero failures/skips.
+- Existing offline Chromium: nine checks passed, zero external requests,
+  page errors and Production requests; SDK check uses an intercepted local stub.
+- Both pages at 1280px/390px/320px: baseline geometry and sampled existing styles
+  unchanged, markers correctly sized, no horizontal overflow, keyboard skip
+  link/focus, accessible names, result focus, 44px actions and textarea resizing
+  passed. Both pages at 320px with 200% text size also passed.
+- Three result screenshots visually inspected; query marker remains less
+  prominent than the H1 marker. Frozen files/assets remain byte-for-byte unchanged.
 
 ## Functional freeze
 
-Do not change:
+Do not change without a new explicit human instruction:
 
 - Dialogflow Messenger transport;
 - one-shot `currentPlaybook`;
@@ -75,4 +61,5 @@ Do not change:
 - Production Environment;
 - `assets/config.js` `liveEnabled=false`.
 
-No Production questions or deployment are authorized.
+No Production question or deployment is authorized. Offline passing results
+do not establish live SDK behavior, Production routing or tax-answer quality.

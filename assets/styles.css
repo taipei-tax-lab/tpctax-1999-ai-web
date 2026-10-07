@@ -35,11 +35,16 @@ main { max-width: 748px; margin: 15px auto 30px; padding: 10px; background: #fff
 .back-link { display: inline-flex; align-items: center; min-height: 44px; font-size: 16px; }
 .hero { margin-bottom: 8px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
 .hero h1 { font-size: 1.4em; font-weight: 400; line-height: normal; margin: 0; padding: 3px; }
+/* Restrained official red markers; heading/label text keeps its native color. */
+.hero h1 { position: relative; padding-left: 13px; }
+.hero h1::before { content: ""; position: absolute; left: 3px; top: 50%; transform: translateY(-50%); width: 3px; height: .9em; background: #d4222d; }
 .intro { margin: 5px 3px 0; line-height: 1.7; }
 .eyebrow { color: var(--muted); font-size: 14px; margin: 0 0 4px; }
 .search-card { background: #fafafa; margin-top: 5px; padding: 5px; }
 #search-form { margin: 5px; }
 label { display: block; font-weight: 400; margin-bottom: 5px; }
+#search-form label[for="query"] { position: relative; padding-left: 8px; }
+#search-form label[for="query"]::before { content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 2px; height: .75em; background: #de313c; }
 .input-wrap { display: block; }
 /* Higher-contrast control edge and 44px actions are accessibility exceptions. */
 textarea { display: block; width: 100%; min-width: 0; min-height: 80px; max-height: 240px; resize: vertical; border: 1px solid #888; border-radius: 0; background: #fff; padding: 5px 8px; color: #343434; line-height: 1.5; }

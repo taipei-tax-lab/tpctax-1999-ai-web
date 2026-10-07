@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**HIGH-FIDELITY OFFICIAL-SITE VISUAL REPRODUCTION VERIFIED OFFLINE — AWAITING WEB CHATGPT REVIEW — NO LIVE DEPLOYMENT**
+**RESTRAINED OFFICIAL RED ACCENTS VERIFIED OFFLINE — AWAITING WEB CHATGPT REVIEW — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -23,6 +23,7 @@ Dialogflow CX backend source of truth:
 - Static search-style page.
 - Current official TRS header wordmark stored unchanged as `assets/trs-header.png` in both headers; local official city background in `assets/official-page-bg.png`.
 - Earlier `assets/trs-logo.gif` retained unchanged as the original standalone-mark source.
+- Shared CSS adds a slim official-red H1 marker and a smaller query-label marker; both text colors remain `#343434`.
 - No custom backend.
 - Dialogflow Messenger is the intended browser transport.
 - `liveEnabled=false`.
@@ -411,6 +412,58 @@ Approved accents:
 Do not expand red into the global header, logo, submit button, every border, or large backgrounds. The official yellow submit action remains unchanged.
 
 This is a small visual refinement only. No functional code, result/session behavior, or deployment settings may change.
+
+## Restrained official red accents completed — 2026-10-07
+
+Synced latest `main` at `98528415e4670f7ea8441988f3b50f704377f090` and read
+all seven requested documents in order. The initial sandbox could not reach the
+proxy; exact GitHub objects were synchronized through the connector and verified
+by Git object hashes. A subsequent network-enabled `git fetch origin main`
+confirmed the same upstream baseline.
+
+- Application change is confined to five added lines in `assets/styles.css`,
+  shared by `index.html` and `demo.html`; HTML and JavaScript are unchanged.
+- H1: empty decorative `::before`, `#d4222d`, 3px wide × .9em high
+  (20.16px at the existing 22.4px heading size), with 13px left padding.
+- Query label: empty decorative `::before`, `#de313c`, 2px wide × .75em high
+  (12px at the existing 16px label size), with 8px left padding. Its red area
+  is less than half that of the H1 marker. Neither marker adds accessible text.
+- Gray title/label text, official header/logo/background, font stack/sizes,
+  content width, result red bar, red hover/footer separator and yellow
+  `#ffc800` / `#cca000` query button are preserved.
+- `npm test`: 10 passed, 0 failed, 0 skipped.
+- Existing offline Chromium suite on local port 8771: PASS, nine checks,
+  zero external requests, page errors and Production requests.
+- Focused baseline comparison: both pages at 1280px/390px/320px passed.
+  Sampled element geometry and existing text/background/font/border styles
+  match the baseline exactly; only the intended markers and left text padding
+  are added. Normal/hover query and link colors are preserved.
+- Keyboard skip link and focus indicators, accessible H1/query/agency names,
+  live region, result focus, 44px actions, resizable textarea and no horizontal
+  overflow passed. Both pages also passed 320px at 200% text size. These are
+  focused accessibility checks, not a full accessibility audit.
+- Desktop, 390px and 320px result screenshots were visually inspected: accents
+  remain slim and subordinate to the accepted result heading. Corresponding
+  disabled-hosting screenshots and 200% text-size captures are included.
+- Frozen transport/session/model/renderer/config files, demo logic, tests and
+  original official image bytes are unchanged. `config.liveEnabled === false`.
+
+Current review evidence is outside Git at
+`/workspace/visual-review/red-accents-2026-10-07/`:
+
+- `desktop-review.png`, `mobile-390-review.png`, `mobile-320-review.png`:
+  offline synthetic multi-source results.
+- `desktop-idle.png`, `mobile-390-idle.png`, `mobile-320-idle.png`:
+  actual disabled hosting configuration.
+- `mobile-320-idle-text-200.png`, `mobile-320-review-text-200.png`:
+  enlarged-text reflow evidence.
+- `node-tests.txt`, `browser/browser_validation.json`, `visual_validation.json`.
+
+The designated projectless `/codex/.../output` directory could not be created
+in this attached environment (filesystem permission denied), so evidence uses
+the existing `/workspace/visual-review/` convention. No evidence was uploaded.
+No Production questions, deployment or CX/GCP/Messenger/Production Environment
+changes occurred. STOP after commit/push and wait for Web ChatGPT review.
 
 ## Backend contract
 

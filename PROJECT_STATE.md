@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**MIGRATED FROM CX QA REPO — FRONTEND SOURCE OF TRUTH ESTABLISHED — NO LIVE DEPLOYMENT**
+**STANDALONE MIGRATION VERIFIED OFFLINE — AWAITING WEB CHATGPT REVIEW — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -31,6 +31,38 @@ Dialogflow CX backend source of truth:
 - Official-site same-tab/new-tab/window behavior remains deliberately unspecified.
 - No official-site deployment has occurred.
 - No Production Messenger runtime validation has occurred from this repo.
+
+## Standalone migration verification — 2026-10-07
+
+Verified after fetching and synchronizing `origin/main` at
+`2a59c55341c26dacb41f46968f245af7d7cd77eb`. Read the repository agent instructions,
+README, state, next task, product plan and result contract before verification.
+
+- `npm test`: 10 passed, 0 failed, 0 skipped.
+- `python3 tests/phase7e3a_browser.py --output-dir /workspace/migration-verification/2026-10-07/browser --base-url http://127.0.0.1:8765/`:
+  PASS, 9 checks, no page errors, no external requests, 0 Production requests.
+  Used a local Python static server, Playwright 1.62.0 and `/usr/bin/chromium`;
+  the SDK bootstrap check used an intercepted local synthetic SDK.
+- Browser checks covered answer-only rendering, optional FAQ enhancement,
+  generic multi-source answers, same-session followups, one-shot
+  `currentPlaybook`, reset/expiry, unsafe response handling, empty/error states,
+  390px/320px layouts, IME Enter handling and the canonical return link.
+- `python3 tools/package_static.py --output-dir /workspace/migration-verification/2026-10-07/packages`:
+  hosting/demo ZIP integrity and manifest hashes passed. A second build into
+  `packages-repeat` produced byte-identical ZIPs.
+- Hosting ZIP SHA-256: `f89fa8834ae4858f84bdff3acd255e97a40e8d76a5384837b18cde2c9188c928`.
+- Demo ZIP SHA-256: `324c1423c159a51a9d22183cbc8720caa3a21b5850e52325a6b1f0e5c4914c5f`.
+- Search of executable `tests/`, `tools/` and `package.json` found no
+  `web/1999-ai/` references. Tests and packaging run directly from this checkout.
+- Imported `assets/config.js` in Node and confirmed `config.liveEnabled === false`.
+- Runtime: Node 24.19.0 and Python 3.12.14. No application or test code changed.
+
+Generated packages, screenshots, browser report and Node test output remain
+outside the checkout under `/workspace/migration-verification/2026-10-07/`;
+they have not been uploaded to Drive. These offline fixtures do not establish
+live SDK behavior, tax-answer quality, Production routing or deployment readiness.
+No Production questions were sent and no CX/GCP/Messenger/official-site settings
+were modified. Stop for Web ChatGPT review; see `NEXT_TASK.md`.
 
 ## Backend contract
 

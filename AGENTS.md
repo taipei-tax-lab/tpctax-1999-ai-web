@@ -152,6 +152,28 @@ Red identity may be slightly stronger than the previous restrained pass, but mus
 
 Do not recolor the official yellow primary query button.
 
+## Final example-placement rule
+
+The final example-question placement is fixed as follows:
+
+1. query label `您想了解什麼？`;
+2. textarea;
+3. clickable `您可詢問 ...` example sentence;
+4. yellow `查詢解答` submit button.
+
+The example sentence is input assistance and must sit between the textarea and the primary submit action.
+
+Do not move it back above the form or below the submit button.
+
+Keep:
+- the two approved example questions and their click-to-fill behavior;
+- official-red emphasis on `您可詢問`;
+- the official yellow submit button styling;
+- current status/session behavior;
+- current responsive/accessibility behavior.
+
+This is a placement-only refinement. No copy rewrite or functional redesign is authorized.
+
 ## Workflow
 
 - Project state lives in Git, not in the current session.

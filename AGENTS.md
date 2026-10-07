@@ -174,6 +174,58 @@ Keep:
 
 This is a placement-only refinement. No copy rewrite or functional redesign is authorized.
 
+## Deployment-gate workflow
+
+The UI is frozen unless a deployment test reveals a concrete display defect.
+
+Deployment work must proceed gate-by-gate. Do not combine later gates into an earlier task.
+
+Gate order:
+
+1. **Hosting / URL discovery**
+   - determine the intended hosting mechanism, final/public hostname or path, and whether the agency/CMS or another static host serves the files;
+   - audit current placeholders and packaging assumptions;
+   - identify the exact human inputs still required;
+   - do not deploy.
+
+2. **Messenger allowed-domain preparation**
+   - only after the actual host/origin is known;
+   - verify which exact origin(s) must be allowed;
+   - do not guess or broaden domains unnecessarily.
+
+3. **CSP / resource-policy preparation**
+   - derive required script/style/connect/frame/resource origins from the actual frontend and Messenger SDK;
+   - prepare the smallest compatible policy/change request for the actual host;
+   - do not weaken CSP broadly.
+
+4. **Production binding verification**
+   - read back the Messenger integration binding and confirm the expected Production Environment;
+   - backend source of truth remains `dialogflow-cx-qa-framework`;
+   - do not mutate backend settings without separate authorization.
+
+5. **Live frontend enablement**
+   - only after Gates 1-4 pass;
+   - set the real hosting URL and enable live mode in a controlled deployment candidate;
+   - no public deployment unless explicitly authorized.
+
+6. **Authorized live runtime validation**
+   - execute a small defined test set;
+   - verify SDK load, first-turn 1999 Playbook routing, follow-up behavior, reset/re-arm, generic answer rendering and errors;
+   - record evidence and stop if Production routing differs from expectation.
+
+7. **Official-page entry integration**
+   - only after the standalone AI page is proven live;
+   - define the final link/button change on the existing 1999 FAQ page and its target behavior.
+
+At each gate, record:
+- verified facts;
+- unknowns;
+- required human input;
+- exact changes proposed;
+- pass/fail decision.
+
+Never guess a production hostname, CSP policy, allowed domain, integration binding, or CMS capability.
+
 ## Workflow
 
 - Project state lives in Git, not in the current session.

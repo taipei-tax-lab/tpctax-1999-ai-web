@@ -2,75 +2,57 @@
 
 ## Active task
 
-**Final placement-only UI refinement**
+**STOP — Web ChatGPT review of the final placement-only refinement**
 
-Do not deploy live. Do not redesign the page.
+The accepted UI now has the required query-area order:
 
-## Human decision
-
-The current UI-freeze candidate is accepted except for one layout detail.
-
-Inside the query area, the exact visual order must be:
-
-1. label: `您想了解什麼？`
+1. `您想了解什麼？`
 2. textarea
-3. clickable example sentence:
-   `您可詢問 「房屋稅自住住家用稅率怎麼申請？」 「地價稅自用住宅用地優惠稅率怎麼申請？」`
-4. yellow `查詢解答` button
+3. `您可詢問 「房屋稅自住住家用稅率怎麼申請？」 「地價稅自用住宅用地優惠稅率怎麼申請？」`
+4. yellow `查詢解答`
 
-The example sentence is input assistance and must appear between the textarea and the primary submit button.
+Only the existing example paragraph was moved in both HTML pages. No copy,
+application CSS or JavaScript changed. Wait for human review before further work.
 
-## Preserve exactly
+## Review artifacts
 
-Keep the existing:
+Evidence root outside Git:
+`/workspace/visual-review/placement-2026-10-07/`.
 
-- example copy;
-- click-to-fill/focus behavior;
-- official-red emphasis on `您可詢問`;
-- official yellow submit button colors/styles;
-- H1 red accent;
-- result red heading;
-- official TRS logo/background/font/content width;
-- placeholder text;
-- `清除前次問答，重新提問` behavior and gating;
-- ready-state idle-panel hiding;
-- unavailable/loading/empty/error/session handling.
+- `desktop-ready.png`, `mobile-390-ready.png`, `mobile-320-ready.png`:
+  clearly labeled offline demo, ready state.
+- `desktop-review.png`, `mobile-390-review.png`, `mobile-320-review.png`:
+  synthetic result with existing reset action.
+- `desktop-unavailable.png`, `mobile-390-unavailable.png`,
+  `mobile-320-unavailable.png`: actual disabled hosting configuration.
+- `mobile-320-text-200-demo.png`, `mobile-320-text-200-index.png`:
+  200% text-size captures.
+- `node-tests.txt`, `browser/browser_validation.json`, `visual_validation.json`.
 
-Do not change any wording unless required by markup movement.
+Artifacts use the existing workspace evidence convention; nothing was uploaded.
 
-## Implementation scope
+## Completed verification
 
-This should be the smallest possible HTML/CSS adjustment.
-
-If the current markup structure makes placement awkward, reorganize only the query-form markup needed to achieve the required order.
-
-Do not alter Messenger/session/result semantics.
-
-## Verification
-
-1. Run existing Node tests.
-2. Run existing offline Chromium suite.
-3. Confirm at desktop, 390px and 320px:
-   - textarea appears above examples;
-   - examples appear above submit button;
-   - example buttons still populate/focus textarea;
-   - yellow submit remains the primary action;
-   - no overflow/accessibility regression.
-4. Regenerate review screenshots.
-5. Update `PROJECT_STATE.md` and `NEXT_TASK.md`.
-6. Commit/push and STOP for Web ChatGPT review.
+- Node: 10 passed, zero failures/skips.
+- Offline Chromium: 12 grouped checks passed, zero external requests,
+  page errors and Production requests. Updated the superseded above-form
+  assertion to check visual/DOM textarea → examples → submit placement.
+- Both pages at 1280px/390px/320px: required placement, both examples' fill/focus
+  without submission, yellow submit styling, no overflow and focused keyboard/
+  accessibility checks passed. Both pages at 320px with 200% text size passed.
+- Original wording, placeholder/reset action, all application JS/CSS, official
+  images and `liveEnabled=false` remain unchanged.
 
 ## Functional freeze
 
-Do not change:
+Do not change without a new explicit human instruction:
 
-- Dialogflow Messenger transport;
-- one-shot `currentPlaybook`;
+- Messenger transport or one-shot `currentPlaybook`;
 - session/reset/expiry/timeout semantics;
-- normalized result model;
-- answer/source/FAQ extraction/rendering;
-- CX/GCP/Messenger integration;
-- Production Environment;
+- normalized model or answer/source/FAQ renderer;
+- ready/unavailable/loading/empty/error/session behavior;
+- CX/GCP/Messenger integration or Production Environment;
 - `assets/config.js` `liveEnabled=false`.
 
-No Production query or deployment is authorized.
+No Production query or deployment is authorized. Offline fixtures and the
+intercepted SDK stub do not establish Production behavior or tax-answer quality.

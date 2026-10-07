@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**FINAL UI-FREEZE CANDIDATE VERIFIED OFFLINE — AWAITING WEB CHATGPT REVIEW — NO LIVE DEPLOYMENT**
+**FINAL PLACEMENT-ONLY REFINEMENT VERIFIED OFFLINE — AWAITING WEB CHATGPT REVIEW — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -24,7 +24,7 @@ Dialogflow CX backend source of truth:
 - Current official TRS header wordmark stored unchanged as `assets/trs-header.png` in both headers; local official city background in `assets/official-page-bg.png`.
 - Earlier `assets/trs-logo.gif` retained unchanged as the original standalone-mark source.
 - Shared CSS adds a slim official-red H1 marker and a smaller query-label marker; both text colors remain `#343434`.
-- Intro removed; common-tax examples are plain clickable quoted text above the form, with red `您可詢問` and a restrained red query top rule.
+- Intro removed; common-tax examples are plain clickable quoted text between textarea and submit, with red `您可詢問` and a restrained red query top rule.
 - Ready state hides the idle panel. Reset appears only after a successful answer, labeled `清除前次問答，重新提問`; it uses the existing real session reset, clears/focuses input and hides again until another successful answer.
 - No custom backend.
 - Dialogflow Messenger is the intended browser transport.
@@ -578,6 +578,49 @@ No other UI, copy, red-accent, status, reset/session, CX, Messenger, or deployme
 The current unavailable message:
 `服務準備中 / 查詢服務尚未開放。您可以先查看本府1999常見問答。`
 is expected only while `liveEnabled=false` or live Messenger initialization is unavailable. When the live CX/Messenger path initializes successfully, normal ready state hides the status panel.
+
+## Final placement-only refinement completed — 2026-10-07
+
+Pulled latest `main` at `5fc84bdc24c41a6ddfedb0840e621ee4b6a99fce` and read
+all seven requested documents in order. The accepted UI is unchanged except
+for the required example placement.
+
+- Moved the existing example paragraph in both `index.html` and `demo.html`
+  into the input wrapper, immediately after textarea and before submit.
+  Visual and DOM order is label → textarea → examples → yellow submit.
+- All visible wording, example values, placeholder and reset copy are
+  unchanged. Example buttons remain `type=button`, using the unchanged
+  click-to-fill/focus handler without submitting.
+- No application CSS or JavaScript changes. Red accents, official images,
+  font/content width, yellow action, renderer and every status/session behavior
+  remain unchanged; `config.liveEnabled === false`.
+- `npm test`: 10 passed, zero failures/skips.
+- Offline Chromium: 12 grouped checks passed, zero external requests,
+  page errors and Production requests. Replaced the superseded above-form
+  assertion with visual/DOM placement assertions at desktop/390px/320px.
+- Both pages at 1280px/390px/320px passed exact placement, both examples'
+  fill/focus without submission, 44px targets, keyboard navigation/focus,
+  accessible labels, textarea resizing and no horizontal overflow.
+  320px at 200% text size also passed. Yellow normal/hover colors and sampled
+  official styles are unchanged; focused contrast remains passing.
+- Three ready screenshots were visually inspected: examples sit between
+  textarea and submit at every width; yellow submit remains the primary action.
+
+Review evidence outside Git:
+`/workspace/visual-review/placement-2026-10-07/`.
+
+- `desktop-ready.png`, `mobile-390-ready.png`, `mobile-320-ready.png`:
+  clearly labeled offline demo, ready state.
+- `desktop-review.png`, `mobile-390-review.png`, `mobile-320-review.png`:
+  synthetic answer and existing reset action.
+- `desktop-unavailable.png`, `mobile-390-unavailable.png`,
+  `mobile-320-unavailable.png`: actual disabled hosting configuration.
+- `mobile-320-text-200-demo.png`, `mobile-320-text-200-index.png`:
+  enlarged-text reflow.
+- `node-tests.txt`, `browser/browser_validation.json`, `visual_validation.json`.
+
+No Production query, deployment, evidence upload or CX/GCP/Messenger/Production
+Environment change occurred. STOP after commit/push for Web ChatGPT review.
 
 ## Backend contract
 

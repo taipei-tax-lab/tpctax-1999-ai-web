@@ -40,7 +40,13 @@ with sync_playwright() as p:
     assert page.locator('.session-bar p').count() == 0
     assert page.locator('#query').get_attribute('placeholder') == '例如：房屋稅自住住家用稅率如何申請？'
     assert page.locator('.suggestions > span').inner_text() == '您可詢問'
-    assert page.evaluate("!!(document.querySelector('.suggestions').compareDocumentPosition(document.querySelector('#search-form')) & Node.DOCUMENT_POSITION_FOLLOWING)")
+    def assert_example_order():
+        label, textarea, examples, submit = [page.locator(s).bounding_box() for s in ['label[for="query"]', '#query', '.suggestions', '#submit']]
+        assert label['y'] + label['height'] <= textarea['y']
+        assert textarea['y'] + textarea['height'] <= examples['y']
+        assert examples['y'] + examples['height'] <= submit['y']
+        assert page.evaluate("['#query','.suggestions','#submit'].every((s,i,a) => i===0 || !!(document.querySelector(a[i-1]).compareDocumentPosition(document.querySelector(s)) & Node.DOCUMENT_POSITION_FOLLOWING))")
+    assert_example_order()
     for question in ['房屋稅自住住家用稅率怎麼申請？', '地價稅自用住宅用地優惠稅率怎麼申請？']:
         example = page.get_by_role('button', name=f'「{question}」', exact=True)
         example.hover()
@@ -50,7 +56,7 @@ with sync_playwright() as p:
         assert page.locator('#query').evaluate('(e) => e === document.activeElement')
         assert page.locator('#counter').inner_text() == f'{len(question)} / 1000'
     assert page.evaluate('demoHarness.requests.length') == 0
-    checks.append('ready has no idle/reset panel; quoted examples above form fill and focus input without submitting')
+    checks.append('ready has no idle/reset panel; quoted examples between textarea and submit fill and focus input without submitting')
     def query(fixture, text):
         page.locator('#fixture').select_option(fixture)
         page.locator('#query').fill(text)
@@ -118,6 +124,7 @@ with sync_playwright() as p:
     assert page.locator('#submit').is_enabled()
     checks.append('empty and service-error states; manual resubmission available')
     page.set_viewport_size({'width': 390, 'height': 844})
+    assert_example_order()
     query('generic', '手機查詢')
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
     assert page.locator('[data-answer]').is_visible()
@@ -125,6 +132,7 @@ with sync_playwright() as p:
     page.screenshot(path=str(OUT/'mobile-generic.png'), full_page=True)
     checks.append('390px mobile no horizontal overflow; canonical return link')
     page.set_viewport_size({'width': 320, 'height': 700})
+    assert_example_order()
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
     before = page.evaluate('demoHarness.requests.length')
     page.locator('#query').dispatch_event('compositionstart')

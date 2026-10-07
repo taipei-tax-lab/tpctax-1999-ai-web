@@ -465,6 +465,36 @@ the existing `/workspace/visual-review/` convention. No evidence was uploaded.
 No Production questions, deployment or CX/GCP/Messenger/Production Environment
 changes occurred. STOP after commit/push and wait for Web ChatGPT review.
 
+## Final UI refinement decision
+
+The high-fidelity official-site reproduction remains the accepted visual foundation.
+
+Human review requests a final citizen-facing simplification and slightly stronger official-red emphasis.
+
+Approved changes:
+
+1. remove the title intro sentence `用自己的話描述問題，從官方資訊中尋找解答。`;
+2. replace the current example-question block with a single line above the query form:
+   `您可詢問` + two clickable quoted common-tax questions;
+3. replace the textarea placeholder with a more common local-tax question;
+4. remove the always-visible normal/idle status panel;
+5. keep status UI only for loading, unavailable, empty/error, or reset/session feedback where needed;
+6. hide the reset/session control before any successful answer;
+7. after a successful answer, show the exact citizen-facing action:
+   `清除前次問答，重新提問`;
+8. this action must preserve the existing real session reset/re-arm behavior;
+9. remove the sentence `可接著詢問；開始新查詢會重設查詢脈絡。`;
+10. allow slightly stronger official-red identity in the H1 accent, `您可詢問` emphasis and query-section accent, while preserving the official yellow primary submit button.
+
+Recommended common examples:
+- `房屋稅自住住家用稅率怎麼申請？`
+- `地價稅自用住宅用地優惠稅率怎麼申請？`
+
+Recommended placeholder:
+`例如：房屋稅自住住家用稅率如何申請？`
+
+This is the final UI-freeze candidate. Functional architecture remains frozen.
+
 ## Backend contract
 
 - project: `serviceagent-1150909`

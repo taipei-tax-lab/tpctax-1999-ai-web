@@ -658,6 +658,19 @@ The current repository still contains:
 
 Gate 1 must first determine the actual host/path and hosting mechanism. Do not guess those values.
 
+## Confirmed production hosting facts
+
+Human-confirmed deployment facts:
+
+- production hostname/origin will be `https://services.arpa.tpctax.dof.gov.taipei`;
+- this is the same host family used by the existing Rental service;
+- the Revenue Service IT team can add a button/link to the existing official 1999 page and point it to the standalone AI page;
+- the frontend will be handed to IT as a static package and hosted on the Revenue Service's own server;
+- no iframe or server-side application is required by the current frontend architecture;
+- the final URL path is not yet known.
+
+Therefore the remaining Gate 1 unknown is the exact public path under the confirmed host, for example a path analogous to `/1999-ai/` if IT chooses that convention. Do not assume the path until IT confirms it.
+
 ## Backend contract
 
 - project: `serviceagent-1150909`

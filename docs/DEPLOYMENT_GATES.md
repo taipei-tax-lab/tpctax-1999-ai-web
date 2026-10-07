@@ -529,3 +529,26 @@ window. Then capture real SDK/subresources/connect destinations/CSP violations/
 CORS preflight from the actual page and request only evidenced IT adjustments.
 Rollback is entry removal/disable or restoration of the previous static package,
 with cache refresh. **Commit/push and STOP; do not mount or issue live queries.**
+
+
+## Deployment-path update — GitHub Pages live candidate first
+
+Human decision supersedes the previous first-mount recommendation A.
+
+Next validation path:
+- enable Messenger in the production candidate;
+- deploy exactly the production package contents to GitHub Pages;
+- run real browser E2E against the verified Production binding;
+- if successful, deliver the same package to Revenue Service IT.
+
+Known allowed hosts already cover both validation and final hosting:
+- `taipei-tax-lab.github.io`
+- `services.arpa.tpctax.dof.gov.taipei`
+
+GitHub Pages must not publish demo/test/tool/source-only files. The deployment
+artifact should be derived from the same production packager/allowlist used for
+`packages/hosting.zip`.
+
+Gate 3 closes for the GitHub Pages host only after real browser network/CSP/CORS
+capture. Agency-host security headers still require a later lightweight
+confirmation after IT mounts the same package.

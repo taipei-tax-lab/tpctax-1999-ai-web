@@ -2,91 +2,68 @@
 
 ## Active task
 
-**Deployment Gate 1 — Hosting / URL discovery and deployment-readiness audit**
+**Deployment Gate 2A — Production Messenger binding + allowed-domain readiness audit**
 
-Do not deploy. Do not enable live mode. Do not change CX/GCP/Messenger settings.
+Do not deploy. Do not enable live mode. Do not modify Playbooks/Tools/Data Stores.
+
+## Confirmed facts
+
+- Frontend source of truth: `taipei-tax-lab/tpctax-1999-ai-web`
+- CX backend is externally confirmed `CX BACKEND LAUNCH READY`
+- Production origin: `https://services.arpa.tpctax.dof.gov.taipei`
+- Static package will be hosted by Revenue Service IT on that server
+- Existing official 1999 page can add a normal hyperlink/button to the final AI page
+- Final public path/full URL is not yet confirmed
+- `liveEnabled=false` must remain unchanged in this task
 
 ## Goal
 
-Determine exactly where/how this frozen static frontend is intended to be hosted and identify the minimum human inputs required before any production-domain or Messenger configuration work.
+Verify the current Dialogflow Messenger integration is bound to the expected Production Environment and determine the exact allowed-domain configuration needed for the confirmed production origin.
 
-This is an audit/planning gate, not an implementation/deployment gate.
+This is a read/plan gate first. Do not mutate integration settings unless the task can prove the exact current state and the change is explicitly safe and limited.
 
 ## Required work
 
-1. Sync latest `main`.
-2. Read:
-   - `AGENTS.md`
-   - `README.md`
-   - `PROJECT_STATE.md`
-   - `NEXT_TASK.md`
-   - `docs/PRODUCT_PLAN.md`
-   - `docs/RESULT_CONTRACT.md`
-   - `docs/VISUAL_REFERENCE.md`
-3. Inspect all frontend/config/package/deployment-related files.
-4. Confirm every current placeholder or environment-specific value, especially:
-   - `assets/config.js hostingUrl`;
-   - `liveEnabled`;
-   - asset/path assumptions;
-   - relative URLs;
-   - Messenger SDK resource URL;
-   - official FAQ return URL;
-   - package contents and expected web-root layout.
-5. Determine which hosting shapes the current static package supports without code changes, for example:
-   - same existing agency web host under a subpath;
-   - separate static subdomain/host;
-   - CMS/static-file hosting.
-   Do not choose one without evidence.
-6. Search project history/docs for any already-recorded intended production URL, hostname, CMS path, server ownership or publishing mechanism.
-7. Produce a concise deployment Gate 1 report in a new file:
-   `docs/DEPLOYMENT_GATES.md`
-
-## docs/DEPLOYMENT_GATES.md requirements
-
-Create a gate table with:
-
-- Gate
-- Purpose
-- Verified facts
-- Unknowns
-- Human input required
-- Proposed next action
-- Status
-
-Populate all seven gates, but only Gate 1 may be actively analyzed now. Later gates must remain pending.
-
-For Gate 1, explicitly answer:
-
-1. Is a final/public hosting hostname already known anywhere in the repo/history?
-2. Is a final path such as `/1999-ai/` confirmed or only a placeholder?
-3. Does the package assume it is served from a subdirectory, and are all asset/module paths compatible?
-4. Is HTTPS required/assumed?
-5. Does the current frontend require any server-side feature? (Expected: static only; verify.)
-6. What exact information must the user/agency provide before Gate 1 can pass?
-7. Can a non-production temporary host be used safely for integration testing, and if so what constraints would apply? Do not create one.
+1. Sync latest `main` and read the standard project documents plus `docs/DEPLOYMENT_GATES.md`.
+2. Using the existing GCP/CX credentials available in the environment, read back the Messenger integration configuration for:
+   - project `serviceagent-1150909`
+   - agent `799426c1-ba69-49dc-85e4-5065985706e2`
+3. Confirm which Environment the Messenger integration is actually bound to.
+4. Compare it with expected Production Environment:
+   `a0c712e8-ab0c-4520-b100-d2abcfc85868`
+5. Read the current allowed-domain / domain allowlist configuration if the integration exposes it.
+6. Determine whether the production origin must be entered as:
+   - hostname only;
+   - origin including scheme;
+   - another format required by the API/UI.
+   Use actual API/UI evidence; do not guess.
+7. Determine whether `https://services.arpa.tpctax.dof.gov.taipei` is already allowed.
+8. Record findings in `docs/DEPLOYMENT_GATES.md`.
 
 ## Important
 
-Do not:
-- invent a production hostname;
-- modify `hostingUrl`;
-- change `liveEnabled=false`;
-- change allowed domains;
-- change CSP;
-- change Messenger integration;
-- change Production Environment;
-- deploy files;
-- send Production questions;
-- modify the frozen UI.
+- Do not change Playbook/Tool/Data Store/version configuration.
+- Do not change Production Environment contents.
+- Do not send Production queries.
+- Do not change `assets/config.js`.
+- Do not enable `liveEnabled`.
+- Do not deploy frontend files.
+- Do not guess the final path; allowed-domain work should be based on the confirmed origin/hostname if that is how Messenger enforces it.
 
-## Verification
+## Outcome
 
-Run the existing offline tests/package verification only if needed to confirm path/packaging assumptions.
+At the end, clearly report:
+
+1. Messenger bound Environment ID
+2. PASS/FAIL against expected Production Environment
+3. current allowed-domain entries
+4. whether `services.arpa.tpctax.dof.gov.taipei` is already allowed
+5. exact minimal change required, if any
+6. whether Gate 2 can pass without knowing the final page path
 
 Update:
 - `PROJECT_STATE.md`
+- `docs/DEPLOYMENT_GATES.md`
 - `NEXT_TASK.md`
 
 Commit/push and STOP.
-
-The final response must clearly list **only the human inputs that are actually needed next** to pass Gate 1.

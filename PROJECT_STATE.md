@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**UI FROZEN — GATE 2A PASS — GATE 3 CSP/RESOURCE AUDIT NEXT — NO LIVE DEPLOYMENT**
+**UI FROZEN — GATE 2A PASS — GATE 3 BLOCKED ON SDK/HEADER ACCESS — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -717,6 +717,39 @@ Web review accepts Gate 2A as PASS:
 
 Next work moves to CSP/resource-loading readiness. Do not reopen Messenger binding or allowed-domain work unless later live E2E disproves the current readback.
 
+## Deployment Gate 3 audit — 2026-10-07
+
+Synced `main` at `cbe29da4ea6e4eafbd44a042ba15e20040cafbcf` and read all
+seven requested project documents. **BLOCKED on SDK/header access**; the frozen
+local frontend CSP audit is complete.
+
+- All production page modules/CSS/images are same-origin. No inline executable
+  code/style, remote font, iframe, worker or custom browser API client in our code.
+- Confirmed official SDK entry:
+  `https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js`.
+  SDK transitive resource/style requirements and actual connect destinations
+  remain unverified; no wildcard/inline exception/API host was guessed.
+- Root HEAD and public SDK GET were blocked at 22:24:50 +08:00 by environment
+  proxy CONNECT HTTP 403 before reaching their origins. All agency security/CORS
+  headers are UNVERIFIED, not absent; root headers would not establish the
+  future AI path's policy even if available.
+- Focused local Chromium CSP enforcement passed for disabled `index.html`
+  and offline `demo.html`: zero CSP violations/errors/external requests;
+  same-origin resource inventory and synthetic answer/reset worked.
+- `docs/DEPLOYMENT_GATES.md` records exact local resources, a tested strict
+  disabled-page CSP, the proven SDK script-source addition, missing evidence
+  and IT actions. It does not claim a complete live CSP.
+- Required next input: allow the confirmed host and `www.gstatic.com` in the
+  environment network configuration (or supply current non-secret readback).
+  No GCP credential/final path is needed to resume these reads.
+- Final-path header compatibility and real API preflight/CORS/runtime behavior
+  still require later hosting/authorized E2E.
+
+Only three documentation files changed. Frozen frontend, `assets/config.js`,
+`liveEnabled=false`, transport/session/renderers, Messenger integration/binding/
+domain and all backend/Production contents remain unchanged. No Production
+query or deployment. Gate 2A stays PASS. Commit/push and STOP for review.
+
 ## Backend contract
 
 - project: `serviceagent-1150909`
@@ -730,7 +763,7 @@ Environment binding is integration-side and must not be guessed from HTML attrib
 ## Open deployment items
 
 - exact public path / full hosting URL (origin already confirmed);
-- hosting CSP / SDK resource / connect requirements (Messenger binding and
-  hostname allowlist readiness passed Gate 2A);
+- Gate 3 SDK dependency/connect inventory and root-header readback, currently
+  blocked on environment access; final-path policy validation remains pending;
 - final official 1999 link target and window behavior (normal link/button confirmed);
 - authorized live runtime validation after hosting.

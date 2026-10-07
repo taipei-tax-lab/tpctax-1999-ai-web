@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**UI FROZEN — GATE 2A PASS — GATE 3 CONDITIONAL PASS — PRE-DEPLOYMENT PACKAGE NEXT**
+**UI FROZEN — PRE-DEPLOYMENT PACKAGE VERIFIED (LIVE DISABLED) — AWAITING IT MOUNT — NO DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -29,7 +29,7 @@ Dialogflow CX backend source of truth:
 - No custom backend.
 - Dialogflow Messenger is the intended browser transport.
 - `liveEnabled=false`.
-- Hosting URL remains a placeholder.
+- hostingUrl remains placeholder metadata, unused at runtime; final IT path does not require rebuilding.
 - First-turn initial Playbook is the 1999 FAQ Playbook.
 - Generic answer rendering works without FAQ metadata.
 - FAQ source card is optional progressive enhancement only.
@@ -789,6 +789,66 @@ Remaining conditions to close Gate 3:
 3. capture real Messenger SDK/network/CSP behavior in browser;
 4. apply only the exact CSP/resource allowances demonstrated by that evidence.
 
+## Pre-deployment candidate package and IT handoff — 2026-10-07
+
+Synced latest main at `950859846d20f5e5943a5c6dcda4873e34027083` on a fresh
+working branch, preserving the previous session's unpushed local commit. Read
+all project/deployment documents. **Package preparation complete; STOP for
+review/IT readback. No deployment or Production query.**
+
+- Whole-repo hostingUrl/placeholder search found seven baseline references:
+  the sole config declaration and six document references. No runtime reader
+  in app/transport/model/demo or tests/tools. The property is unused metadata;
+  no asset/navigation/API/session/binding behavior depends on it. All locations
+  and the code/path analysis are recorded in docs/DEPLOYMENT_GATES.md.
+- IT may use any agreed HTTPS directory subpath on the confirmed origin without
+  modifying code or rebuilding. HTML/imports/CSS/logo/background/brand link are
+  relative; canonical return/source links and SDK URL are absolute. Preserve
+  folders, ending slash/directory redirect or explicit index.html, and no injected
+  base tag. The final public path is still not guessed.
+- Recommend A, liveEnabled=false, for the first mount: establish static/MIME/
+  actual-path header readiness with no SDK/API traffic; later authorize a
+  config-only live switch and E2E. B skips one config delivery but exposes
+  unverified live resource/header behavior at first mount. Both roll back by
+  restoring static files/entry; A keeps the simplest disabled baseline.
+- Final path alone requires no rebuild. A later live flag change needs updated
+  config hash/manifest and a versioned ZIP or verified one-file replacement,
+  with cache refresh, but no compilation or UI/backend change.
+- New concise docs/IT_HANDOFF.md contains mounting, MIME, directory handling,
+  URL/header/hash readback, normal-link entry, exact SDK entry and rollback.
+  No wildcard/inline exception or iframe is proposed. Disabled hosting does
+  not complete live CSP/CORS; later real browser evidence guides IT adjustments.
+- Production packager now includes the current IT document with index/assets/
+  manifest; older project/demo instructions are kept in the separate demo
+  package/source. No demo-only file is present in production; the frozen app's
+  inactive demo import is never selected by production index.html.
+- Formal deliverable: packages/hosting.zip, 210,849 bytes, SHA-256
+  `5ed9830e1129b9a9a73adbcae4fd9cdda6558249c2ae09520a43b455f920e278`;
+  companion packages/hosting.sha256. Exactly 11 files: index, eight original
+  assets (including all official images), IT handoff and manifest. No secret,
+  credential, token, .git, tests/tools or demo fixture file. Routing IDs in
+  config are non-secret identifiers; focused credential scans passed.
+- Node: 10 PASS. Existing offline Chromium against extracted demo on a nested
+  path: 12 grouped checks PASS, zero page errors/external/Production requests.
+- Extracted production: six directory/index entry cases under shallow,
+  multi-level and Chinese/space paths; 18 viewport checks at 1280/390/320px.
+  Correct local status/MIME/resources, links, logo, disabled state, no overflow
+  and strict disabled CSP passed, zero violations/errors/external requests.
+- SDK loader nested-path check used only an intercepted synthetic SDK;
+  original config.liveEnabled remained false. Unused hostingUrl sentinel did
+  not affect SDK loading. No real SDK/API/query request; no live proof claimed.
+- ZIP CRC, exact allowlist, manifest bytes/hashes, source equality and official
+  asset hashes passed. Two builds are byte-identical for hosting and demo.
+  Evidence outside Git: /workspace/work/predeployment/. Only production ZIP/
+  checksum are committed; no demo/browser evidence is uploaded.
+
+Frozen HTML/CSS/JS/config/assets/session/currentPlaybook/renderer are unchanged.
+CX BACKEND LAUNCH READY, Gate 2A PASS and Gate 3 CONDITIONAL PASS remain.
+IT must return the real URL, deployed ZIP hash and actual-path status/MIME/cache/
+security headers; then agree a separate live config switch/Production E2E window.
+No website, Messenger domain/binding, backend or live flag was changed. Commit/
+push and STOP; do not mount, enable or query automatically.
+
 ## Backend contract
 
 - project: `serviceagent-1150909`
@@ -802,7 +862,7 @@ Environment binding is integration-side and must not be guessed from HTML attrib
 ## Open deployment items
 
 - exact public path / full hosting URL (origin already confirmed);
-- Gate 3 SDK dependency/connect inventory and root-header readback, currently
-  blocked on environment access; final-path policy validation remains pending;
+- Gate 3 CONDITIONAL PASS; actual hosted live-page SDK/network/CSP/CORS
+  validation remains pending and does not block this package handoff;
 - final official 1999 link target and window behavior (normal link/button confirmed);
 - authorized live runtime validation after hosting.

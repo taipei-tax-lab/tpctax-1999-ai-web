@@ -15,7 +15,9 @@ Remaining unknown:
 - exact public path / final full URL beneath the confirmed origin
 
 **PARTIALLY PASSED** — origin and hosting model confirmed; exact path pending.
-Final `hostingUrl` must wait for IT's full URL. No candidate path is assumed.
+IT must report the final public URL. The pre-deployment audit below confirms
+`hostingUrl` is unused metadata; choosing the path does not require a runtime
+change or rebuild. No candidate path is assumed.
 
 ## Gate 2A — Production Messenger binding / allowed-domain audit
 
@@ -387,3 +389,143 @@ Close Gate 3 during live browser validation by capturing:
 
 Only then should IT add or adjust exact CSP sources. Do not pre-emptively add
 wildcards or `unsafe-inline`.
+
+## Pre-deployment candidate package and IT handoff — 2026-10-07
+
+Baseline synced/read: `950859846d20f5e5943a5c6dcda4873e34027083`.
+**PACKAGE READY FOR REVIEW — FIRST MOUNT RECOMMENDATION A (`liveEnabled=false`).**
+Gate 2A remains PASS; Gate 3 remains CONDITIONAL PASS under the accepted Web
+review decision. This task prepares the package; no mounting, official-site
+entry, live config switch or Production query occurred.
+
+### hostingUrl audit — every baseline reference
+
+Whole-repo search, including hidden files except `.git`, found these seven
+references to `hostingUrl` or its exact placeholder before this task's edits:
+
+| Baseline file:line | Usage |
+| --- | --- |
+| `assets/config.js:4` | Sole executable declaration; frozen config metadata |
+| `docs/DEPLOYMENT_GATES.md:18` | Deployment-note reference, now clarified above |
+| `docs/DEPLOYMENT_GATES.md:194` | Placeholder described as not a fetch destination |
+| `docs/OFFICIAL_SITE_HANDOFF.md:6` | Placeholder link destination in an older document |
+| `docs/HOSTING.md:16` | Placeholder in older packaging documentation |
+| `PROJECT_STATE.md:655` | Historical state/config description |
+| `NEXT_TASK.md:29` | Audit instruction |
+
+No `config.hostingUrl`, destructured/dynamic hostingUrl read or hostname/path
+derivation exists in app, transport, model, demo, tests or tools. The packaging
+tool copies config bytes without reading the property. This field is **metadata,
+not a functional dependency**: it does not drive asset loading, navigation,
+Messenger binding, allowed-domain checks or API destinations. New references in
+this audit/IT instructions are documentation only. The delivered ZIP includes the
+same original declaration; no credentials or live URL are substituted.
+
+The current IT instruction is `docs/IT_HANDOFF.md`. Historical `docs/HOSTING.md`
+and `docs/OFFICIAL_SITE_HANDOFF.md` retain earlier placeholder/readiness notes
+for provenance; they are excluded from the production ZIP to avoid misleading
+IT. Final URL is still necessary for entry-link configuration, response-header
+readback and later E2E, but **is not necessary to build or relocate this ZIP**.
+
+### Arbitrary directory subpath
+
+| Mechanism | Actual code / compatibility |
+| --- | --- |
+| HTML CSS/module/logo | `./assets/styles.css`, `./assets/app.js`, `./assets/trs-header.png` resolve beneath the mounted directory |
+| Brand home link | `./index.html` stays in that directory |
+| JS static imports | `./config.js`, `./result-model.js`, `./messenger-transport.js` resolve relative to `assets/app.js` |
+| CSS background | `./official-page-bg.png` resolves relative to `assets/styles.css` |
+| Demo import | `../demo/mock-messenger.js` only in `data-demo=true` branch; production HTML has no demo flag and makes no request to it |
+| Return link | Absolute canonical official FAQ URL; unchanged by mount path |
+| SDK loader | Absolute official HTTPS SDK URL from `messengerScript`; independent of `hostingUrl` and mount path |
+| Sources/FAQ URLs | Validated absolute HTTP(S) links; no path-relative API/resource derivation |
+
+There is no `<base>`, origin-root `/assets/` dependency or build-time public-path
+substitution. **IT can mount the same package under any agreed HTTPS directory
+path on the confirmed origin without changing code or rebuilding.** Preserve
+the structure and serve a URL ending `/` or explicit `index.html`; redirect a
+directory URL lacking its final slash. A server rewrite returning directory HTML
+at a slashless URL without redirect resolves relative URLs incorrectly. Do not
+inject a CMS base tag or flatten the package. Local test paths below are arbitrary
+test fixtures only, not proposed production paths.
+
+### First mounted version comparison
+
+| Dimension | A: liveEnabled=false | B: liveEnabled=true |
+| --- | --- | --- |
+| Rollback | Restore the same disabled package; queries remain unavailable | Restore disabled config/package; remove entry if already linked |
+| Safety at first mount | No Google SDK/API request; verifies static hosting/MIME/header issues before query availability | SDK starts on page load and users can query once ready while final-path policy is unverified |
+| Path-dependent rebuild | None | None |
+| Later package work | One config-only live switch; generate new ZIP/manifest for release traceability, no compilation or UI change | No later live switch, but failures may require a corrective config/package |
+| Step count | Mount → header/static readback → authorized config switch/E2E | Mount → authorized real E2E; one fewer config delivery |
+
+**Recommend A.** Binding/domain readiness does not establish the final path's
+headers, MIME or CSP/CORS behavior. A preserves the frozen config, isolates
+static hosting problems, and has a simple rollback. B is shorter in number of
+deliveries, but the small extra config delivery in A gives a clear tested static
+baseline. Gate 3 CONDITIONAL PASS still permits handing this candidate to IT;
+it does not become a package-preparation blocker.
+
+The later switch changes only `assets/config.js` `liveEnabled` after separate
+review/authorization; recording the actual hostingUrl is optional metadata.
+Recompute config hash/manifest and deliver a versioned ZIP (or a verified one-file
+replacement plus updated manifest), and invalidate/revalidate config/page caches.
+No path-specific build, backend change, Messenger-domain change or UI revision
+is needed. Live SDK/resource/CORS conditions can only close on the live-enabled
+hosted candidate during later explicitly authorized E2E, not on A's disabled page.
+Keep the official-page entry unchanged until the hosted live page is verified.
+
+### Formal package and verification
+
+Committed IT delivery: `packages/hosting.zip`, `packages/hosting.sha256`.
+ZIP: **210,849 bytes**, SHA-256
+`5ed9830e1129b9a9a73adbcae4fd9cdda6558249c2ae09520a43b455f920e278`.
+
+Packaging command: `python3 tools/package_static.py --output-dir <directory>`.
+It builds separate hosting/demo archives; **deliver only hosting.zip**. Production
+contains exactly `index.html`, eight `assets/` files, `docs/IT_HANDOFF.md` and
+`MANIFEST.json` (11 files). All three unchanged official images are included;
+the retained GIF is provenance, the two PNGs are active runtime images.
+No demo.html/demo module, test/tool, `.git`, debug fixture, environment file,
+secret, credential or token file is packaged. The inactive demo branch in frozen
+app.js remains unchanged and is never taken by production index.html.
+Project/agent/Environment/Playbook resource IDs in config are public routing
+identifiers, not credentials. Runtime answer/session/config/assets are byte-for-
+byte identical to the synchronized baseline.
+
+- Node: **10 PASS**, no failures/skips.
+- Existing offline Chromium suite against extracted demo ZIP under a nested
+  local path: **12 grouped checks PASS**, no page errors/external/Production
+  requests; SDK case uses intercepted local synthetic code.
+- Extracted production ZIP under shallow, multi-level and percent-encoded
+  Traditional Chinese/space directory paths; directory URL and explicit
+  index.html each tested: **6 cases / 18 viewport checks** at 1280/390/320px.
+  Correct 200/MIME responses for four modules/CSS/images, brand link/return URL,
+  original logo dimensions, disabled state and no horizontal overflow passed.
+  Strict disabled CSP: zero violations/errors/external requests; eight runtime
+  resource URLs per entry, no SDK/demo request.
+- Unchanged SDK loader at a nested path also passed with an exact locally
+  fulfilled synthetic SDK and an irrelevant in-memory hostingUrl sentinel.
+  No Google request or sendQuery was made; this is path/bootstrap evidence,
+  not real SDK/CORS/Production validation.
+- ZIP CRC/integrity, exact allowlist, complete manifest byte counts/SHA-256,
+  every packaged source byte and documented official image SHA-256 passed.
+  Text inspection plus focused private-key/service-account/API key/PAT/OAuth
+  token/secret-assignment/JWT scans found no credential material in either ZIP.
+- Two independent builds produced byte-identical hosting and demo ZIPs. Only
+  hosting ZIP/checksum is committed; demo/build/test evidence stays outside Git
+  under `/workspace/work/predeployment/`.
+
+### IT readback and STOP
+
+IT actions and concise response checklist are in `docs/IT_HANDOFF.md`: mount the
+preserved structure on the confirmed HTTPS host, correct MIME/directory redirect,
+return the actual full URL, deployed ZIP hash and page/asset status/security/cache
+headers. Do not use iframe or preemptive wildcard/inline CSP expansion.
+
+Before live browser E2E, we need that readback, reachability/access requirements,
+and a separately agreed live config switch plus Production test authorization/
+window. Then capture real SDK/subresources/connect destinations/CSP violations/
+CORS preflight from the actual page and request only evidenced IT adjustments.
+Rollback is entry removal/disable or restoration of the previous static package,
+with cache refresh. **Commit/push and STOP; do not mount or issue live queries.**

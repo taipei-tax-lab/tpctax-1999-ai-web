@@ -1,106 +1,80 @@
 # NEXT_TASK
 
-## Active task
+## Status
 
-**Pre-deployment candidate package and IT handoff preparation**
+**STOP — PRE-DEPLOYMENT PACKAGE VERIFIED; wait for review and IT mount readback.**
 
-Do not deploy from Codex. Do not modify CX backend resources.
+The authorized package/IT-handoff preparation is complete. No deployment,
+official-page link change, live enablement, Production query or backend mutation
+occurred. UI frozen; CX BACKEND LAUNCH READY; Gate 2A PASS; Gate 3 CONDITIONAL
+PASS. First mount recommendation: **A, `liveEnabled=false`**.
 
-## Prerequisites
+## Deliverables
 
-- UI frozen
-- CX backend: CX BACKEND LAUNCH READY
-- Production Messenger binding: PASS
-- Allowed domain: PASS for `services.arpa.tpctax.dof.gov.taipei`
-- Gate 3 CSP/resource audit: CONDITIONAL PASS
-- Production origin confirmed
-- Final public path still chosen by Revenue Service IT
+- `packages/hosting.zip` — production handoff, 210,849 bytes.
+- `packages/hosting.sha256` — ZIP SHA-256:
+  `5ed9830e1129b9a9a73adbcae4fd9cdda6558249c2ae09520a43b455f920e278`.
+- `docs/IT_HANDOFF.md` — concise mounting/MIME/header/readback/rollback instructions;
+  included in the ZIP alongside runtime files and `MANIFEST.json`.
+- `docs/DEPLOYMENT_GATES.md` — whole-repo hostingUrl reference audit, arbitrary
+  subpath evidence, A/B comparison and package verification.
 
-## Goal
+Baseline: `950859846d20f5e5943a5c6dcda4873e34027083`.
+All project/deployment documents read. `hostingUrl` is unused metadata; final
+path selection requires no code change or rebuild. Runtime URLs are relative
+except canonical official links and absolute SDK/resource identifiers.
+Use any agreed directory path on `https://services.arpa.tpctax.dof.gov.taipei`,
+with ending `/` (or explicit `index.html`) and preserved structure. Do not guess
+the path, flatten the ZIP, inject a base tag or embed it in an iframe.
 
-Prepare the smallest deployment-ready static handoff package and a concise IT
-checklist so Revenue Service IT can place the page under the confirmed production
-origin. The actual hosted page will then be used to close CSP/resource validation
-and run live browser E2E.
+The packager now puts only the current IT document in the production ZIP;
+older hosting/placeholder/project docs stay in the separate demo archive/source
+for provenance. **Do not give demo.zip or the whole development checkout to IT.**
+The production ZIP has 11 allowlisted files; no demo/test/tool/credential files.
+The inactive demo import remains in frozen app.js and is not executed by index.
+UI, config, transport, currentPlaybook/session and renderer bytes are unchanged.
 
-## Required work
+## Completed checks
 
-1. Sync latest `main` and read all deployment/project documents.
-2. Audit whether `config.hostingUrl` is used by runtime code or is metadata only.
-   Report every reference.
-3. Determine whether the static package can be hosted at an arbitrary subpath
-   beneath `https://services.arpa.tpctax.dof.gov.taipei` without rebuilding.
-4. Verify all production asset/module URLs are relative and subpath-safe.
-5. Do not guess a final path.
-6. Prepare a production handoff package that IT can place at the path they choose.
+- Node: 10 PASS, no failure/skip.
+- Offline Chromium on extracted demo at nested local path: 12 grouped checks
+  PASS, zero page errors/external/Production requests, local synthetic SDK only.
+- Extracted production: six directory/index entry cases across shallow,
+  multi-level and Chinese/space paths, 18 viewport checks at 1280/390/320px.
+  Local modules/CSS/images, MIME/status, return/brand URLs, disabled mode,
+  strict CSP and overflow checks passed; no SDK/demo/external request.
+- Nested-path SDK loader passed using a locally fulfilled stub, with original
+  config.liveEnabled=false and unused in-memory hostingUrl metadata changed.
+  No real Google/API/query traffic.
+- ZIP CRC, exact production-file allowlist, manifest counts/hashes, source
+  equality, all official image hashes and focused credential scan PASS.
+- Hosting/demo repeat builds are byte-identical. Production ZIP/checksum are
+  committed; demo/build/browser evidence: `/workspace/work/predeployment/`.
 
-## Live-mode decision
+## Required next input
 
-Do not blindly set `liveEnabled=true`.
+IT mounts the reviewed static package when separately agreed. After mounting,
+request only the checklist in `docs/IT_HANDOFF.md`:
 
-First determine whether the IT handoff should be:
+1. Complete final HTTPS URL, reachability/redirect/login requirements.
+2. Mounted ZIP SHA-256/version, completion time and intact directory structure.
+3. Actual page/config/CSS/image status, MIME, cache/security/CORS headers,
+   including CSP + Report-Only (and any platform-injected meta CSP), XFO,
+   Referrer/Permissions policy, COOP/COEP/CORP. Root headers are insufficient.
 
-A. a hosted connectivity candidate with `liveEnabled=false`, followed by a
-small config-only switch after header/path verification; or
+Then verify static hosting first. Live browser E2E needs a separately agreed
+config-only live switch and explicit Production test authorization/window.
+Changing path alone does not require a new ZIP; changing config.liveEnabled
+does require a new config hash/manifest/versioned package or verified file
+replacement, plus config/page cache invalidation. No frontend compilation.
 
-B. a live integration candidate with `liveEnabled=true` because binding/domain
-readiness is already proven and real browser E2E is the next required gate.
+Gate 3 closes on the actual live-enabled page: capture SDK/subresources,
+connect destinations, CSP violations and real API preflight/CORS, then make
+only evidence-backed IT adjustments. Do not add wildcard/unsafe-inline,
+worker/frame/WebSocket/SSE origins or guess a regional REST endpoint.
 
-Recommend one of A/B based on the current code and rollback simplicity.
-Do not deploy it yourself.
-
-If B is recommended, prepare but clearly mark the package as an authorized
-Production integration test candidate. Do not send queries from Codex.
-
-## IT handoff document
-
-Create/update a concise:
-`docs/IT_HANDOFF.md`
-
-It must tell IT only what they actually need to do:
-
-- host the supplied static package under any agreed HTTPS path beneath
-  `services.arpa.tpctax.dof.gov.taipei`;
-- preserve file/folder structure and MIME types;
-- provide the final full URL after publishing;
-- do not iframe it;
-- the official 1999 page will use a normal hyperlink/button;
-- allow the official Dialogflow Messenger SDK/resource traffic required by the
-  hosted browser candidate;
-- do not add permissive wildcard CSP pre-emptively;
-- if their platform sets CSP/security headers, provide the actual headers or
-  allow browser E2E to identify exact required exceptions.
-
-Include a one-line rollback instruction: remove/disable the entry link or restore
-the previous static package.
-
-## Package verification
-
-Run:
-- Node tests
-- offline Chromium tests
-- static package integrity/reproducibility checks
-
-Confirm:
-- no demo files are accidentally exposed in the production package unless
-  intentionally documented;
-- no secrets/tokens/credentials are present;
-- official images and required assets are included;
-- UI remains frozen.
-
-## Output
-
-Update:
-- `PROJECT_STATE.md`
-- `docs/DEPLOYMENT_GATES.md`
-- `docs/IT_HANDOFF.md`
-- `NEXT_TASK.md`
-
-Commit/push and STOP.
-
-Final response must answer:
-1. Can IT host the package at an arbitrary subpath?
-2. Does the package require rebuild after IT chooses the final path?
-3. Should the first hosted candidate use `liveEnabled=false` or `true`, and why?
-4. Exactly what does IT need to do?
-5. Exactly what do we need back from IT before live browser E2E?
+Preserve the accepted binding/allowed-domain settings. Do not change UI,
+integration/session/currentPlaybook/renderer/backend or liveEnabled without
+the corresponding later authorization. After the live page passes, a normal
+official 1999 hyperlink/button may be integrated; it is not installed now.
+Rollback: remove/disable entry or restore previous static package and caches.

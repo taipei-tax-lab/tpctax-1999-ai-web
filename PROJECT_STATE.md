@@ -312,6 +312,31 @@ No evidence upload, Production questions, deployment, CX/GCP/Messenger/
 Production Environment or official-site changes occurred. Stop after commit/push
 for final Web ChatGPT visual acceptance; no general redesign is pending.
 
+## Revised human visual direction — high fidelity
+
+The prior V1.2 styling is no longer treated as visually final.
+
+Human review now explicitly prefers the standalone AI page to look **as close as practical to the existing official Taipei City Revenue Service site**.
+
+This means the next revision should directly reproduce, where evidence is available:
+
+- the official TRS logo / agency identity at upper left;
+- the official header/background treatment;
+- page-title color and heading treatment;
+- official-site typography direction and sizing;
+- link colors;
+- form/search background and border treatment;
+- primary button colors;
+- separators and overall content density.
+
+The official 1999 FAQ page and agency logo page are the primary visual references.
+
+The AI page should still avoid copying unrelated global navigation/footer complexity, but any shared component should look native rather than merely "government-like".
+
+The previous V1.2 palette is therefore an implementation checkpoint, not a visual freeze. Evidence-backed changes needed to improve fidelity are authorized.
+
+Functional behavior remains frozen.
+
 ## Backend contract
 
 - project: `serviceagent-1150909`

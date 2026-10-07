@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**FINAL PLACEMENT-ONLY REFINEMENT VERIFIED OFFLINE — AWAITING WEB CHATGPT REVIEW — NO LIVE DEPLOYMENT**
+**UI FROZEN — DEPLOYMENT PREPARATION GATE 1 PENDING — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -621,6 +621,28 @@ Review evidence outside Git:
 
 No Production query, deployment, evidence upload or CX/GCP/Messenger/Production
 Environment change occurred. STOP after commit/push for Web ChatGPT review.
+
+## UI freeze and deployment transition
+
+Human review accepts the final UI. Treat the current visual/citizen interaction as frozen.
+
+Deployment preparation now proceeds sequentially:
+
+1. Hosting / URL discovery
+2. Messenger allowed-domain preparation
+3. CSP / resource-policy preparation
+4. Production Environment binding verification
+5. Controlled live frontend enablement
+6. Authorized live runtime validation
+7. Official 1999 FAQ entry integration
+
+The current repository still contains:
+- `liveEnabled=false`;
+- placeholder `hostingUrl=https://REVENUE_SERVICE_HOST_PLACEHOLDER/1999-ai/`;
+- no live deployment evidence;
+- no Production Messenger runtime validation.
+
+Gate 1 must first determine the actual host/path and hosting mechanism. Do not guess those values.
 
 ## Backend contract
 

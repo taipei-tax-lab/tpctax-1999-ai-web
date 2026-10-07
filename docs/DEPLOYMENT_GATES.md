@@ -147,8 +147,7 @@ Commit/push and STOP for review; do not advance later gates automatically.
 Audit date: 2026-10-07 (Asia/Taipei). Synced baseline:
 `cbe29da4ea6e4eafbd44a042ba15e20040cafbcf`.
 
-**BLOCKED — local frontend requirements verified; current SDK dependency /
-connection inventory and origin headers could not be read.** This is an
+**CONDITIONAL PASS — local frontend requirements are verified; live SDK dependency / connection inventory and actual hosted-page headers remain deployment-time verification conditions.** This is an
 environment access blocker, not evidence that the agency server rejects Messenger.
 
 ### Evidence and scope
@@ -368,3 +367,23 @@ Final AI-path response-header validation and authorized live CORS/routing/E2E
 remain later conditions even after this access blocker is resolved. Preserve
 Gate 2A PASS; do not reopen binding/domain settings. Update the three requested
 documents, commit/push and STOP for review; do not deploy or advance live gates.
+
+
+### Web review decision
+
+Gate 3 is not treated as a pre-deployment blocker.
+
+The Codex environment's CONNECT 403 is an execution-environment limitation, not
+evidence that the agency host blocks Messenger. The next efficient verification
+point is the actual hosted candidate page under
+`https://services.arpa.tpctax.dof.gov.taipei`.
+
+Close Gate 3 during live browser validation by capturing:
+- actual page/asset response headers;
+- SDK script/subresource requests;
+- exact Messenger connect destinations;
+- any CSP violations;
+- any CORS/preflight failures.
+
+Only then should IT add or adjust exact CSP sources. Do not pre-emptively add
+wildcards or `unsafe-inline`.

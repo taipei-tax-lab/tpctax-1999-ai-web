@@ -1,99 +1,154 @@
-# V1.2 official-site visual references
+# Official-site visual reproduction references
 
-Inspected on 2026-10-07, after syncing `main` at `abd800d`.
+Current revision: **high-fidelity official 1999 page language**, inspected on
+2026-10-07 after syncing `main` at `8cdf9332845ecaf42eb1af238da2e980be1e2935`.
+This supersedes the earlier V1.2 interpreted visual baseline.
 
-## Agency sources
+## Authoritative sources and inspection
 
 - Official 1999 FAQ:
   https://tpctax.gov.taipei/News.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16
-- Official logo-download page:
+- Official logo publication page:
   https://tpctax.gov.taipei/cp.aspx?n=97DA1F76BC737417
-- Official stylesheet:
+- Official shared CSS:
   https://tpctax.gov.taipei/css/global.css
-- Current header-image override:
+- Official page CSS:
+  https://tpctax.gov.taipei/css/page.css
+- Current agency image overrides:
   https://tpctax.gov.taipei/css/sys_detail.css
 
-Both HTML pages and the stylesheets were fetched successfully over verified
-HTTPS. Their HTML/CSS were also rendered locally with scripts removed and all
-network requests blocked to inspect content-page styles. This is a static
-reference capture, not a claim to reproduce the official site's full scripted
-layout. No official scripts, Google API or Production Messenger were executed.
+Fetched the HTML, CSS and agency images over verified HTTPS (HTTP 200).
+Unlike the earlier script-free reference approximation, this inspection ran
+normal official layout scripts with only cached/allowlisted static GET assets
+from `tpctax.gov.taipei` and `www-ws.gov.taipei`. Third-party scripts and all
+POST/API requests were blocked. No form was submitted, no Production question
+was sent, and no official-site state or integration setting was modified.
+Replayed the 70 cached static resources offline to measure rendered styles,
+hover states and geometry at 1280px, 390px and 320px.
 
-## Style decisions
+CSS SHA-256 at inspection:
 
-| Official evidence | V1.2 treatment |
+| File | SHA-256 |
 | --- | --- |
-| `.sys-root`: Arial / 微軟正黑體, 16px, `#343434` | Arial / Microsoft JhengHei / 微軟正黑體, with PingFang TC fallback; 16px body and controls |
-| `.simple-text.heading .ct h2`: 1.4em (22.4px at default size) | A single plain 26px desktop / 24px mobile unit heading; modest increase for standalone-page hierarchy |
-| `.area-form.page-search .ct`: `#fafafa`, square form controls | Light gray form block, bordered textarea, 2px maximum panel/control corners |
-| Page-search submit: `#ffc800` with `#1a1a1a`; hover `#cca000` | Small query button only; no gold page backgrounds or decorative bands |
-| Content-link rule: `#067db8`; hover `#045b87` | Use the darker official `#045b87` throughout for readable underlined links and focus outlines |
-| Neutral text, content separators and conventional lists/tables | White answer area, simple separators, neutral reference block; no shadows |
+| `global.css` | `12114d3a65b6220877c814124681c41429fa1afb3ed9adeaf9005a8f249771a6` |
+| `page.css` | `13f322f99ba4936deca24bbffb09dbf1048be25ff922fa6a88e008a4d095c783` |
+| `sys_detail.css` | `da09f3c1505dd41eccff45409b57463de9461256c431cfc0e434478a74bb1af3` |
 
-The V1.1 `#40596c` and its blue header band are removed. Example-question and
-reset buttons are secondary underlined controls with 44px minimum heights.
-The header/footer remain minimal; official navigation and footer content are
-not copied. The demo fixture controls use neutral styling and retain their
-explicit non-production label.
+## Directly reproduced values
 
-## Official TRS logo integration — 2026-10-07
-
-Retrieved the official candidate files successfully after syncing `main` at
-`1605f05`. The selected standalone TRS mark is now local in both headers.
-
-| Field | Selected asset |
+| Actual official selector / evidence | Standalone application |
 | --- | --- |
-| Agency source page | `https://tpctax.gov.taipei/cp.aspx?n=97DA1F76BC737417` |
-| Exact source URL | `https://www-ws.gov.taipei/001/Upload/public/Attachment/53171512338.gif` |
-| Local filename | `assets/trs-logo.gif` |
-| Dimensions | 1200 × 1200 pixels |
-| Format / size | GIF89a, single frame, transparent background, 12,260 bytes |
-| SHA-256 | `2ad2f6a09be0bc255a313fe14fd54586f4aa28394cc65cd736290dc420cffff5` |
+| `.sys-root`: `Arial,"微軟正黑體修正","微軟正黑體","Helvetica Neue",Helvetica,sans-serif,"新細明體"`; 16px; `#343434` | Same font stack, size and primary text color. Copied local-only glyph correction for U+7DB0/U+78A7/U+7B75; no remote font. |
+| `.base-header .info`: white; inner width 1000px; measured default desktop height 107.469px | White identity row, same inner width and measured desktop height; no utility search or global menu. |
+| `.simple-text.major-logo .ct a`: width 350px, approximately 80px container, `background-size:contain` | Original official header PNG rendered proportionally at 350×74.667px, centered vertically in an 80px brand link. Upper-left at x=140 on a 1280px viewport, matching the reference. |
+| `.sys-root>.in`, with `sys_detail.css` override: `#fff3f4`; official city image; `no-repeat center top`, size `auto` | Same color, unchanged local city artwork and background positioning. |
+| `.simple-text.heading .ct h2`: 1.4em = 22.4px, weight 400, `#343434`, padding 3px, margin 0 | Same values for the single `1999 AI 智慧問答` H1 on desktop and mobile. The measured official title is gray, not red. |
+| `.base-content>.in`: 1000px; native primary FAQ white column 748px outer / 728px inner; content padding 10px, top gap 15px, bottom gap 30px | Header/footer retain the 1000px shell. The native primary content width, padding and gaps are copied; centered because the unrelated 216px sidebar is omitted. |
+| `.base-content .info`: `1px solid #e4e4e4`, bottom margin 8px | Same separators and compact spacing above the form and around reference content. |
+| `.area-form.page-search .ct`: `#fafafa`, padding 5px, top margin 5px; fieldsets margin 5px | Same surface/padding/margins; normal-weight 16px labels. Textarea replaces the official short keyword inputs for natural-language questions. |
+| `.sys-root` text controls: white, square, padding `5px 8px`, border `1px solid #e4e4e4` | White/square/padding reproduced; textarea edge deliberately darker for accessibility, as recorded below. |
+| Page-search submit: `#ffc800`, `#1a1a1a`, 16px regular, padding 8px; hover `#cca000` | Same normal colors/type/padding and hover background. Left-aligned below the textarea; no arrow decoration. |
+| Page-search reset: `#646464` with white text | Same secondary treatment for the existing reset action; behavior unchanged. |
+| FAQ table content links: inherited `#343434`, underline; hover `#de313c`, no underline, 150ms transition | Same content-link and source-link treatment, replacing the previous blue interpretation. |
+| FAQ table header: `#d4222d`, white bold text, padding 8px; cells `1px solid #e4e4e4`; alternating surface `#f5f5f5` | Existing result heading and answer/query/reference containers use these native colors, borders and padding through CSS only. No renderer changes. |
+| Official footer separator: red `#de313c` | Red separator plus simple agency identification only; no full footer modules. |
+| Official small-screen shell breakpoint: 768px; identity row 48px; logo image fitted proportionally | Same breakpoint/height and 225×48px image. Centered across the header because the unrelated 48px menu control is omitted. |
+| Mobile content: 8px outer margins, 10px white content padding | Same 354px inner width at 390px / 284px at 320px. Title remains 22.4px. |
 
-The agency download page links the GIF over HTTP; it was retrieved from the
-same exact host/path over verified HTTPS. The saved file is byte-for-byte
-identical to the downloaded original. No conversion, cropping, recoloring,
-redrawing or other image modification was performed.
+No general-purpose official CSS/JS is shipped. Only the relevant shared visual
+rules and the two original images are used. Full navigation, sidebar, site
+search, sharing toolbar, satisfaction survey and large footer are omitted.
+The canonical `返回本府1999常見問答` anchor is retained in the content-navigation
+row. The demo-only fixture controls remain explicitly labeled non-production.
 
-Selection rationale: the standalone mark works next to the existing visible
-`臺北市稅捐稽徵處` text in a compact white header. It avoids duplicating the text
-of the wide wordmark and does not require changing the accepted V1.2 styling.
-The candidate logo-with-text PNG and current header background were also
-downloaded and visually inspected, but only the selected GIF is retained in Git.
+## Unchanged local official assets
 
-Both HTML pages use `./assets/trs-logo.gif` with `alt="TRS"`, followed by the
-visible agency name. CSS alone displays the full square image at 56px desktop /
-44px mobile, with proportional automatic height and a 10px text gap. No remote
-runtime image is loaded. Both static packages include the original GIF and its
-manifest SHA-256. Palette, typography, form/result styling and functional code
-remain on the accepted V1.2 baseline.
+### Selected current header identity
 
-Local-only browser checks passed for both pages at 1280px, 390px and 320px:
-image HTTP 200, natural 1200×1200 dimensions, correct rendered aspect/size,
-adjacent agency identification, vertical alignment and no horizontal overflow.
+| Field | Value |
+| --- | --- |
+| Evidence | Current official FAQ header and `sys_detail.css` major/minor-logo override |
+| Source URL | `https://www-ws.gov.taipei/001/Upload/336/sites/pagebackimage/3e3dd9d8-60ab-484b-805f-4281fd31cb27.png` |
+| Local filename | `assets/trs-header.png` |
+| Dimensions / format / bytes | 1200 × 256 pixels / PNG RGBA / 28,256 bytes |
+| SHA-256 | `c89e58ab3e545c5ae1bc3b5ed5b8ef903821fb52b6b433397be7bc5f1e3d79f5` |
 
-### Official candidate sources
+Selected because it is the identity actually displayed by the current agency
+website: formal TRS mark, Chinese agency name and English agency name together
+on the original cyan tile. It reproduces the official composition more faithfully
+than placing the standalone mark next to newly typeset text. Both HTML pages use
+this local image. The full Chinese agency name is clearly visible inside the
+original image, and adjacent agency-name text remains available in the brand
+link's accessible name without visually duplicating the official wordmark.
 
-The logo page publishes these agency assets:
+### Current official page background
 
-- Color GIF preview:
-  https://www-ws.gov.taipei/001/Upload/public/Attachment/531715114910.gif
-- Color GIF download (page uses HTTP; use verified HTTPS):
-  https://www-ws.gov.taipei/001/Upload/public/Attachment/53171512338.gif
-- Logo with agency text:
-  https://www-ws.gov.taipei/001/Upload/336/relpic/16016/4092/dbd1f0c1-640c-45bc-bcfa-b72e3a350869.png
-- Current official header background, from `sys_detail.css`:
-  https://www-ws.gov.taipei/001/Upload/336/sites/pagebackimage/3e3dd9d8-60ab-484b-805f-4281fd31cb27.png
+| Field | Value |
+| --- | --- |
+| Evidence | `sys_detail.css` `.sys-root>.in` background override |
+| Source URL | `https://www-ws.gov.taipei/001/Upload/336/sites/pagebackimage/d11eeeb6-8065-453a-9dca-adee781252b2.png` |
+| Local filename | `assets/official-page-bg.png` |
+| Dimensions / format / bytes | 1919 × 581 pixels / PNG RGBA / 159,311 bytes |
+| SHA-256 | `129823f9e980a0e44b945d86fe2a3053fb88e35f908cdda25bdddc2410dd4b1a` |
 
-Earlier attempts returned proxy `CONNECT 403`. This blocker is resolved:
-the color GIF download, logo-with-text PNG and current header background all
-downloaded successfully on 2026-10-07. The temporary plain-text-only placeholder
-has been replaced by the selected official TRS mark plus the existing name.
+Both assets are byte-for-byte copies of the official downloads: no conversion,
+cropping, redrawing, recoloring or distortion. All runtime image URLs are local.
+The hosting and demo packages include both images and per-file manifest hashes.
 
-The generic `/Images/major_logo.png` fallback was also inspected. It contains
-Taipei City Government identity, not the required TRS mark, and was therefore
-not added to this repository or used in the page.
+### Retained prior official standalone mark
 
-The official TRS integration is complete and awaits final Web ChatGPT screenshot
-acceptance. This does not authorize deployment or establish live SDK/Production
-behavior.
+`assets/trs-logo.gif` remains unchanged for provenance, but is no longer the
+rendered header identity. Published on the official logo page; retrieved from
+`https://www-ws.gov.taipei/001/Upload/public/Attachment/53171512338.gif`
+(the publication uses HTTP; download uses verified HTTPS).
+1200×1200, transparent single-frame GIF89a, 12,260 bytes;
+SHA-256 `2ad2f6a09be0bc255a313fe14fd54586f4aa28394cc65cd736290dc420cffff5`.
+The original agency asset remains in both packages. The generic municipal
+`/Images/major_logo.png` is not the TRS identity and is not used.
+
+## Documented accessibility / functional differences
+
+Per `AGENTS.md`, retain accessibility where exact source styling would regress it:
+
+- Keep visible buttons and the return link at least 44px high rather than the
+  official default 32px query/reset controls.
+- Keep the textarea edge `#888` rather than `#e4e4e4` (3.40:1 against `#fafafa`).
+- Keep dark `#1a1a1a` query text on the official `#cca000` hover background
+  (7.12:1); the source switches to low-contrast white text.
+- Retain the source's dashed focus shape but use `#045b87` instead of cyan
+  `#21cec3` for a clearly visible focus indicator.
+- Keep the natural-language textarea resizable and answer paragraphs at 1.7
+  line height, with safe wrapping of questions/source URLs. Skip link, visible
+  form labels, live regions, result focus target and reduced-motion handling
+  remain intact. No external fonts are introduced.
+
+Normal/hover text colors passed focused contrast checks (at least 4.5:1),
+including gray links, red hover links (4.55:1), white result headings (5.16:1)
+and gray reset buttons (5.92:1). This is not a full accessibility audit.
+
+## Offline review evidence
+
+Evidence root outside Git:
+`/workspace/visual-review/fidelity-2026-10-07/`.
+
+- Start with `desktop-idle.png` for the hosting appearance, then
+  `desktop-review.png`, `mobile-390-review.png`, `mobile-320-review.png` for
+  generic multi-source results; `desktop-faq-review.png` shows FAQ enhancement.
+- Corresponding mobile idle captures: `mobile-390-idle.png`, `mobile-320-idle.png`.
+- `reference/official-1280.png`, `official-390.png`, `official-320.png` are the
+  controlled official reference captures.
+- `reference/detailed-styles.json`, `computed-styles.json`,
+  `resource-manifest.json` and `reference-network.json` record source evidence.
+- `node-tests.txt`: 10 passed. `browser/browser_validation.json`: existing nine
+  Chromium checks passed, zero external requests/page errors/Production requests.
+- `visual_validation.json`: both pages at all three widths, local logo/aspect,
+  CSS values and hover, 44px controls, keyboard skip link, return link and no
+  horizontal overflow; 320px at 200% text size also passed.
+- `contrast_validation.json`: focused text/control/focus contrast results.
+- `packages/hosting.zip`, `packages/demo.zip`, `packages/package_summary.json`:
+  deterministic packages with the local images; repeat builds match exactly.
+
+Messenger transport, one-shot Playbook/session/reset/expiry/timeout logic,
+normalized results, answer/source/FAQ renderer, demo logic and existing tests
+remain unchanged. `liveEnabled=false`. Stop for Web ChatGPT visual review;
+no live runtime verification or Production deployment is implied.

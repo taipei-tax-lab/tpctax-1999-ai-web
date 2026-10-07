@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**V1.2 OFFICIAL TRS LOGO INTEGRATED AND VERIFIED OFFLINE — AWAITING FINAL VISUAL ACCEPTANCE — NO LIVE DEPLOYMENT**
+**HIGH-FIDELITY OFFICIAL-SITE VISUAL REPRODUCTION VERIFIED OFFLINE — AWAITING WEB CHATGPT REVIEW — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -21,7 +21,8 @@ Dialogflow CX backend source of truth:
 ## Current implementation
 
 - Static search-style page.
-- Original official TRS logo stored locally as `assets/trs-logo.gif` in both headers.
+- Current official TRS header wordmark stored unchanged as `assets/trs-header.png` in both headers; local official city background in `assets/official-page-bg.png`.
+- Earlier `assets/trs-logo.gif` retained unchanged as the original standalone-mark source.
 - No custom backend.
 - Dialogflow Messenger is the intended browser transport.
 - `liveEnabled=false`.
@@ -336,6 +337,62 @@ The AI page should still avoid copying unrelated global navigation/footer comple
 The previous V1.2 palette is therefore an implementation checkpoint, not a visual freeze. Evidence-backed changes needed to improve fidelity are authorized.
 
 Functional behavior remains frozen.
+
+## High-fidelity official-site reproduction — 2026-10-07
+
+Synced latest `origin/main` at `8cdf9332845ecaf42eb1af238da2e980be1e2935`
+and read all seven requested documents in order. The human high-fidelity
+instruction supersedes the previous accepted V1.2 visual treatment.
+
+- Re-fetched actual official HTML/CSS and measured normal scripted layout at
+  1280px, 390px and 320px. Only official static GET resources were allowed;
+  third-party scripts and all POST/API requests were blocked. No official form
+  submission or Production question occurred.
+- Replaced the separately typeset brand with the unchanged current official
+  header image: `assets/trs-header.png`, 1200×256, 28,256 bytes. Its original
+  composition includes the TRS mark and both agency names. Local original city
+  background: `assets/official-page-bg.png`, 1919×581, 159,311 bytes.
+  Exact source URLs, hashes and selection rationale are in
+  `docs/VISUAL_REFERENCE.md`; neither image was edited or hotlinked.
+- Directly copied the white header, native logo size/placement, pale pink page
+  background, official system font stack, 22.4px regular gray unit heading,
+  #fafafa search surface, #e4e4e4 separators, gray underlined/red-hover links,
+  gold query button, gray reset button and red FAQ-table result treatment.
+- Matched the native primary content width/density and mobile 8px margins/48px
+  header. Centered the primary column because the unrelated sidebar/menu are
+  omitted. The return link remains a normal canonical anchor in the content row.
+- Retained 44px actions, higher-contrast textarea/focus edges and dark query
+  hover text as documented accessibility differences. Both pages passed keyboard
+  skip-link, proportional logo, no-overflow and 200% text-size inspection.
+- `npm test`: 10 passed, 0 failed, 0 skipped.
+- Existing offline Chromium suite on local port 8770: nine checks passed;
+  zero external requests, page errors and Production requests. SDK wiring was
+  checked only through the intercepted local synthetic SDK.
+- Additional visual validation: seven grouped checks passed for both pages at
+  1280/390/320px and 320px at 200% text size. Focused contrast checks passed.
+- Hosting/demo integrity, manifest hashes and deterministic repeat-build checks
+  passed. Both packages include byte-identical official header/background
+  assets and the retained standalone GIF.
+- Hosting ZIP SHA-256: `4c0ea28c2f781a9dcbe9da680413fc5ee57d04e53b192cc419e6899c7cfb1d56`.
+- Demo ZIP SHA-256: `c718510ed79f65d980e61427a66bd665811d9feef11a78403f2d71b072c5a19f`.
+- Frozen transport/model/config/renderer/demo/test files remain byte-identical
+  to the synchronized baseline. `config.liveEnabled === false`. No executable
+  tests/tools rely on `web/1999-ai/`.
+
+Current review artifacts, outside Git and not uploaded to Drive:
+`/workspace/visual-review/fidelity-2026-10-07/`.
+Review `desktop-idle.png` first, then `desktop-review.png`,
+`mobile-390-review.png`, `mobile-320-review.png` and `desktop-faq-review.png`.
+The demo ZIP can be extracted and served locally over HTTP to review
+`demo.html`; its questions/answers are offline fixtures. Source captures,
+computed styles, network audit and test reports are in the same evidence root.
+Packages: `packages/hosting.zip`, `packages/demo.zip` and
+`packages/package_summary.json`.
+
+No live deployment or CX/GCP/Messenger/Production/official-site changes occurred.
+Stop after commit/push for Web ChatGPT review. Offline passing results do not
+establish Production routing, live SDK behavior, tax-answer quality or hosting
+readiness.
 
 ## Backend contract
 

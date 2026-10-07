@@ -7,7 +7,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT
-ASSETS = ['config.js', 'styles.css', 'app.js', 'result-model.js', 'messenger-transport.js', 'trs-logo.gif']
+ASSETS = ['config.js', 'styles.css', 'app.js', 'result-model.js', 'messenger-transport.js', 'trs-logo.gif', 'trs-header.png', 'official-page-bg.png']
 DOCS = ['README.md', 'docs/HOSTING.md', 'docs/RESULT_CONTRACT.md', 'docs/OFFICIAL_SITE_HANDOFF.md', 'docs/VISUAL_REFERENCE.md']
 
 def digest(data):

@@ -50,6 +50,32 @@ Frontend visual work should therefore:
 
 When visual similarity conflicts with usability, accessibility or the existing result/session contract, preserve function and accessibility first and document the difference.
 
+## Official-site reference hierarchy
+
+For visual work, use this priority:
+
+1. official Taipei City Revenue Service logo/brand asset;
+2. the current official 1999 FAQ page's content-page visual language;
+3. accessibility/usability requirements;
+4. the existing standalone AI page styling.
+
+The official 1999 FAQ page is structurally a conventional government content page: agency identity, page/unit heading, restrained form controls, ordinary text links, content/list/table presentation and dense but readable spacing. The AI page should inherit that visual rhythm without cloning unrelated navigation.
+
+The official Revenue Service logo is the TRS blue/gold mark published on the agency's own logo-download page. Blue/gold may inform small brand accents, but do not turn the AI page into a blue/gold promotional theme. Use a mostly white/neutral content surface.
+
+Design direction for the next visual revision:
+
+- remove the provisional unsupported blue-gray brand color as a defining visual identity;
+- derive primary action/link treatment from the official site's actual identity/reference when available;
+- make the official TRS logo + agency name the main upper-left identity;
+- keep the page title similar in scale and weight to a normal official-site unit/content heading, not a marketing hero;
+- use square or only lightly rounded controls and panels;
+- use borders/separators more than shadows;
+- keep body copy around ordinary government-site reading size, with answer text allowed slightly more breathing room;
+- keep one obvious primary action for query submission; examples/reset/return links should be visually secondary;
+- avoid decorative AI iconography, gradients, floating cards and oversized empty space;
+- the page may be cleaner than the legacy official page, but should not look like a separate branded product.
+
 ## Workflow
 
 - Project state lives in Git, not in the current session.

@@ -394,6 +394,24 @@ Stop after commit/push for Web ChatGPT review. Offline passing results do not
 establish Production routing, live SDK behavior, tax-answer quality or hosting
 readiness.
 
+## Human refinement — official red accents
+
+The high-fidelity visual reproduction is accepted overall.
+
+Human review requests one restrained refinement: restore more of the official site's red identity without changing the page's overall palette or structure.
+
+Approved accents:
+
+1. main `1999 AI 智慧問答` heading: keep the text `#343434`, add a slim left-side accent using official red `#de313c` or `#d4222d`;
+2. query label `您想了解什麼？`: keep normal text color, add a small red marker/left border;
+3. keep the current result heading red block `#d4222d`;
+4. keep official link hover red `#de313c`;
+5. keep footer red separator `#de313c`.
+
+Do not expand red into the global header, logo, submit button, every border, or large backgrounds. The official yellow submit action remains unchanged.
+
+This is a small visual refinement only. No functional code, result/session behavior, or deployment settings may change.
+
 ## Backend contract
 
 - project: `serviceagent-1150909`

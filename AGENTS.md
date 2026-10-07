@@ -99,6 +99,31 @@ The remaining branding/layout task includes official TRS identity completion and
 - verify desktop, 390px and 320px layout after insertion;
 - if the official asset cannot be retrieved in the execution environment, STOP and report the exact blocker instead of inventing a replacement.
 
+## Official red accent rule
+
+Use the official Revenue Service reds as restrained identity accents, not as a new dominant palette.
+
+Reference reds:
+- `#d4222d`: use for stronger section/header emphasis where the official site already uses red blocks.
+- `#de313c`: use for lighter emphasis, hover states, short separators and small accent marks.
+
+Approved placements:
+- a slim red accent beside the main page heading;
+- a small red accent beside the query label;
+- the existing red result heading bar;
+- link hover states;
+- the existing red footer separator.
+
+Do not:
+- turn the global header red;
+- recolor the official logo;
+- replace the official yellow submit button with red;
+- add red borders to every panel;
+- make all headings red;
+- add decorative gradients or large red background areas.
+
+The intent is to restore official-site identity through small, evidence-based red accents while preserving the current high-fidelity structure.
+
 ## Workflow
 
 - Project state lives in Git, not in the current session.

@@ -2,7 +2,7 @@
 
 ## Active task
 
-**Enable Production Messenger + deploy exact production artifact to GitHub Pages + run real browser E2E**
+**Enable Production Messenger + GitHub Pages live E2E**
 
 This task is explicitly authorized by the human owner.
 
@@ -11,153 +11,155 @@ Environment contents, Messenger binding, or allowed domains.
 
 ## Confirmed prerequisites
 
-- frontend source of truth: `taipei-tax-lab/tpctax-1999-ai-web`
-- UI frozen
-- CX backend: `CX BACKEND LAUNCH READY`
-- Production Messenger binding: PASS
-- Production Environment ID:
+- [x] Frontend source of truth: `taipei-tax-lab/tpctax-1999-ai-web`
+- [x] UI frozen
+- [x] CX backend: `CX BACKEND LAUNCH READY`
+- [x] Production Messenger binding verified
+- [x] Production Environment ID:
   `a0c712e8-ab0c-4520-b100-d2abcfc85868`
-- Messenger allowed domains already include:
+- [x] Allowed domains include:
   - `taipei-tax-lab.github.io`
   - `services.arpa.tpctax.dof.gov.taipei`
-- production package is arbitrary-subpath safe
-- `hostingUrl` is unused runtime metadata
-- Gate 3 local audit: CONDITIONAL PASS
+- [x] Production package is arbitrary-subpath safe
+- [x] `hostingUrl` is unused runtime metadata
+- [x] Gate 3 local audit: CONDITIONAL PASS
 
 ## Goal
 
-Create one live production candidate with Dialogflow Messenger enabled, deploy
-**exactly the production package contents** to GitHub Pages, and perform a small
-real-browser Production Messenger E2E. If it passes, regenerate/commit the same
-production ZIP for Revenue Service IT.
+Enable the frozen production frontend for live Messenger, deploy the exact
+production artifact contents to GitHub Pages, run a minimal real-browser
+Production Messenger E2E, and if successful regenerate the exact live package
+for Revenue Service IT.
 
-## 1. Inspect GitHub Pages state first
+## Checklist
 
-Determine, from repository/GitHub configuration:
+### A. Sync and inspect Pages state
 
-- whether GitHub Pages is already enabled for this repo;
-- current source/deployment method;
-- actual expected public Pages URL;
-- whether an existing workflow/branch would be overwritten.
+- [ ] Pull/sync latest `main`.
+- [ ] Read:
+  - `AGENTS.md`
+  - `README.md`
+  - `PROJECT_STATE.md`
+  - `NEXT_TASK.md`
+  - `docs/DEPLOYMENT_GATES.md`
+  - `docs/IT_HANDOFF.md`
+  - `docs/PRODUCT_PLAN.md`
+  - `docs/RESULT_CONTRACT.md`
+- [ ] Determine whether GitHub Pages is already enabled for this repo.
+- [ ] Record current Pages source/deployment method.
+- [ ] Record actual expected public Pages URL.
+- [ ] Confirm whether an existing workflow/branch would be overwritten.
 
-Do not guess the Pages path.
+### B. Enable live Messenger candidate
 
-If Pages is not configured, implement the smallest standard GitHub Actions Pages
-deployment needed for this repo. Prefer official GitHub Pages actions.
+- [ ] Change only `assets/config.js`:
+  `liveEnabled: false` → `liveEnabled: true`.
+- [ ] Confirm project/agent/location/initialPlaybook/session/reset/timeout/model/
+      renderer/UI/Messenger SDK URL remain unchanged.
+- [ ] Do not make runtime depend on `hostingUrl`.
 
-The deployment must publish only the **production artifact contents**, not the
-whole repository.
+### C. Production artifact parity
 
-## 2. Enable Messenger in the production candidate
+- [ ] Ensure Pages deploys only production artifact contents.
+- [ ] Do not publish:
+  - `demo.html`
+  - `demo/`
+  - tests
+  - tools
+  - fixtures
+  - repository internals
+- [ ] Prefer building the existing production package and deploying its extracted
+      contents.
+- [ ] Confirm Pages runtime files and `hosting.zip` runtime files are byte-equivalent.
 
-Make the smallest config change necessary:
+### D. Pre-deployment verification
 
-- set `config.liveEnabled = true`.
+- [ ] Node tests PASS.
+- [ ] Offline Chromium tests PASS.
+- [ ] Package integrity PASS.
+- [ ] Manifest verification PASS.
+- [ ] Deterministic repeat build PASS.
+- [ ] Secret/credential/token scan PASS.
+- [ ] Confirm only intended functional change is live enablement plus Pages
+      deployment infrastructure/docs.
 
-Do not alter:
-- project/agent/location IDs;
-- initial 1999 Playbook;
-- session/reset/timeout behavior;
-- renderer/model;
-- UI;
-- Messenger SDK URL;
-- expected Production Environment;
-- allowed-domain settings.
+### E. GitHub Pages deployment
 
-`hostingUrl` is unused metadata. Do not make runtime depend on it.
+- [ ] If Pages is not configured, add the smallest standard official GitHub Pages
+      Actions deployment.
+- [ ] Deploy the production artifact.
+- [ ] Record actual GitHub Pages URL.
+- [ ] Record deployed commit SHA.
+- [ ] Record GitHub Actions workflow/run evidence.
+- [ ] Record live production ZIP SHA-256.
+- [ ] Do not add the official 1999-site entry link yet.
 
-## 3. Artifact parity rule
+### F. Real browser Production E2E
 
-GitHub Pages must serve the same production files that will be delivered to IT.
+- [ ] Live page does not show `服務準備中` in normal ready state.
+- [ ] Official Dialogflow Messenger SDK loads successfully.
+- [ ] Query button becomes usable.
+- [ ] First query:
+      `房屋稅自住住家用稅率怎麼申請？`
+      returns a non-empty answer.
+- [ ] Same-session follow-up returns a non-empty answer.
+- [ ] `清除前次問答，重新提問` performs a real session reset.
+- [ ] After reset, one new query returns a non-empty answer.
+- [ ] No blocking CSP error.
+- [ ] No blocking CORS error.
+- [ ] No blocking JavaScript error.
+- [ ] Capture observed SDK/subresource hosts.
+- [ ] Capture observed Messenger connect destinations.
+- [ ] Capture relevant response/security headers.
+- [ ] 390px mobile live page works without layout regression.
 
-Use the existing production packager/allowlist as the artifact source of truth.
-Do not expose:
-- `demo.html`
-- `demo/`
-- tests
-- tools
-- source-only deployment documents other than the intentional IT handoff file
-- repository internals
+Keep query count minimal. Do not perform bulk tax-answer quality testing.
 
-If practical, have the Pages workflow build the production package and deploy
-its extracted contents so Pages and `hosting.zip` are byte-equivalent for
-runtime files.
+### G. Gate decision
 
-## 4. Pre-live verification
+If E2E PASS:
 
-Before deployment:
+- [ ] Mark GitHub Pages live validation PASS.
+- [ ] Close Gate 3 for the GitHub Pages environment based on observed evidence.
+- [ ] Regenerate live `packages/hosting.zip`.
+- [ ] Regenerate `packages/hosting.sha256`.
+- [ ] Confirm this exact live package is ready for Revenue Service IT.
 
-- run Node tests;
-- run offline Chromium suite;
-- verify production ZIP integrity/manifest/reproducibility;
-- confirm no secrets/credentials/tokens;
-- confirm only intended functional change is live enablement plus Pages deployment
-  infrastructure/docs.
+If E2E FAIL:
 
-## 5. Deploy to GitHub Pages
+- [ ] Record whether failure is Pages / CSP-CORS / SDK / binding-domain / frontend.
+- [ ] STOP without modifying Playbooks/Tools or broadly weakening security policy.
 
-Deploy the live candidate.
+### H. Documentation and handoff
 
-Record:
-- actual Pages URL;
-- workflow/run evidence;
-- deployed commit SHA;
-- production ZIP SHA-256.
+- [ ] Update `PROJECT_STATE.md`.
+- [ ] Update `docs/DEPLOYMENT_GATES.md`.
+- [ ] Update `docs/IT_HANDOFF.md`.
+- [ ] Update this `NEXT_TASK.md` checklist with completed items and evidence.
+- [ ] Commit/push all changes.
+- [ ] STOP for Web ChatGPT review.
 
-Do not add the official 1999-site entry link yet.
+## Completion report
 
-## 6. Real browser Production E2E
+At the bottom of this file, add a short completion summary with:
 
-Using the actual GitHub Pages URL, run a deliberately small Production test set.
-
-Minimum required checks:
-
-1. Page loads with no `服務準備中` idle panel.
-2. Official Messenger SDK loads successfully.
-3. Query button becomes usable.
-4. First query:
-   `房屋稅自住住家用稅率怎麼申請？`
-   returns a non-empty answer.
-5. Same-session follow-up returns a non-empty answer and does not require a reset.
-6. `清除前次問答，重新提問` performs the real session reset.
-7. After reset, one new query returns a non-empty answer.
-8. No blocking CSP/CORS/JS errors.
-9. Capture actual SDK/subresource/connect destinations and relevant response
-   headers/console errors.
-10. Verify 390px mobile layout still works on the live page.
-
-Keep query count minimal. Do not run bulk tax-answer quality testing; backend
-smoke is already complete.
-
-## 7. Gate decisions
-
-If E2E passes:
-- mark GitHub Pages live validation PASS;
-- close Gate 3 for the GitHub Pages environment based on observed evidence;
-- regenerate/commit the live `packages/hosting.zip` + checksum;
-- state that this exact live package is the IT handoff candidate.
-
-If E2E fails:
-- stop;
-- diagnose whether failure is Pages, CSP/CORS/resource loading, Messenger SDK,
-  binding/domain, or frontend;
-- do not modify CX Playbooks/Tools or broaden security policy without evidence.
-
-## 8. Documentation
-
-Update:
-- `PROJECT_STATE.md`
-- `docs/DEPLOYMENT_GATES.md`
-- `docs/IT_HANDOFF.md`
-- `NEXT_TASK.md`
-
-Commit/push and STOP.
-
-Final report must clearly provide:
 1. actual GitHub Pages test URL;
-2. whether live Messenger initialized;
-3. E2E PASS/FAIL with each minimal check;
+2. Messenger initialized: PASS/FAIL;
+3. E2E checklist result;
 4. observed external resource/connect hosts;
-5. any CSP/CORS/browser-console issue;
-6. final live production ZIP SHA-256;
-7. whether the same ZIP is ready to hand to Revenue Service IT.
+5. CSP/CORS/browser-console issues;
+6. live production ZIP SHA-256;
+7. ready to hand to Revenue Service IT: YES/NO.
+
+## Functional freeze
+
+Do not change without new explicit human instruction:
+
+- CX Playbooks/Tools/Data Stores/Router/Production versions;
+- Production Environment contents;
+- Messenger binding or allowed domains;
+- one-shot `currentPlaybook`;
+- session/reset/expiry/timeout semantics;
+- normalized result model;
+- answer/source/FAQ renderer;
+- frozen UI.

@@ -29,6 +29,27 @@ At the start of every task, read:
 - Do not modify live Messenger settings, CX resources, GCP IAM, Production Environment, or the official Taipei City website from this repo unless separately authorized.
 - `assets/config.js` must remain `liveEnabled: false` until explicit deployment authorization.
 
+## UI continuity with official site
+
+The 1999 AI page should feel like an extension of the existing Taipei City Revenue Service website, not a separate product microsite.
+
+Reference page:
+`https://tpctax.gov.taipei/News.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16`
+
+Frontend visual work should therefore:
+
+- keep the interface simple, functional and government-site-like;
+- align the page background, text colors, link colors, border treatment and spacing with the official site rather than introducing a distinct product palette;
+- use the official Revenue Service logo/brand treatment at the upper left when an approved/local asset is available; do not invent a replacement logo;
+- prefer the same or a close system Traditional Chinese font stack and restrained typography scale used by the official site;
+- avoid oversized marketing-style hero typography, heavy shadows, pill-heavy controls, decorative gradients, glass effects or startup/SaaS visual language;
+- preserve clear hierarchy and accessibility while keeping body text, headings, controls and link sizes close to the official-site proportions;
+- keep the AI-specific page lightweight: official-style header/branding, page title/description, natural-language query area, result area, source area and return link are sufficient;
+- do not copy unrelated official-site navigation or footer elements merely for visual imitation;
+- do not change Messenger/session/result-contract behavior during a visual-only revision unless separately authorized.
+
+When visual similarity conflicts with usability, accessibility or the existing result/session contract, preserve function and accessibility first and document the difference.
+
 ## Workflow
 
 - Project state lives in Git, not in the current session.

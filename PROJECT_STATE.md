@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**STANDALONE MIGRATION VERIFIED OFFLINE — AWAITING WEB CHATGPT REVIEW — NO LIVE DEPLOYMENT**
+**STANDALONE MIGRATION VERIFIED OFFLINE — OFFICIAL-SITE VISUAL ALIGNMENT REVISION PLANNED — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -63,6 +63,26 @@ they have not been uploaded to Drive. These offline fixtures do not establish
 live SDK behavior, tax-answer quality, Production routing or deployment readiness.
 No Production questions were sent and no CX/GCP/Messenger/official-site settings
 were modified. Stop for Web ChatGPT review; see `NEXT_TASK.md`.
+
+## Human UI review decision — 2026-10-07
+
+The functional V1 architecture is accepted. The next revision is visual only.
+
+Human direction:
+
+- keep the page simple;
+- make it feel like a natural extension of the existing Taipei City Revenue Service website;
+- align the palette, upper-left branding/logo treatment, Traditional Chinese font stack, font sizing, border treatment and general density with the official 1999 FAQ page;
+- remove or reduce visual language that feels like a separate modern product/microsite;
+- retain the custom natural-language search/result interaction and all current answer/session behavior;
+- do not recreate the entire municipal website shell; only enough shared visual language is needed to establish continuity.
+
+Official visual reference:
+`https://tpctax.gov.taipei/News.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16`
+
+The official Revenue Service logo is published on the agency site. The implementation should prefer a local approved asset rather than an invented `1999` mark or an unnecessary runtime hotlink.
+
+This revision must not change CX backend resources, Messenger integration settings, Production binding, hosting, or `liveEnabled=false`.
 
 ## Backend contract
 

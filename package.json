@@ -1,0 +1,8 @@
+{
+  "name": "tpctax-1999-ai-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/phase7e3a.test.mjs"
+  }
+}

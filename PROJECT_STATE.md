@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**V1.2 VISUAL BASELINE ACCEPTED — OFFICIAL TRS LOGO COMPLETION PENDING — NO LIVE DEPLOYMENT**
+**V1.2 OFFICIAL TRS LOGO INTEGRATED AND VERIFIED OFFLINE — AWAITING FINAL VISUAL ACCEPTANCE — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -21,6 +21,7 @@ Dialogflow CX backend source of truth:
 ## Current implementation
 
 - Static search-style page.
+- Original official TRS logo stored locally as `assets/trs-logo.gif` in both headers.
 - No custom backend.
 - Dialogflow Messenger is the intended browser transport.
 - `liveEnabled=false`.
@@ -269,6 +270,47 @@ No further abstract palette/typography redesign is requested at this point. The 
 The official logo source candidates and current access limitation are documented in `docs/VISUAL_REFERENCE.md`.
 
 After the logo is integrated and the screenshots are reviewed, the frontend should move to deployment preparation rather than another open-ended visual-design cycle.
+
+## Official TRS logo completion — 2026-10-07
+
+Synced `origin/main` at `1605f05` and read all seven requested documents in order.
+The previously blocked official assets were successfully retrieved this time.
+Selected the standalone agency-published TRS color GIF at
+`https://www-ws.gov.taipei/001/Upload/public/Attachment/53171512338.gif`.
+
+- Stored original bytes unchanged as `assets/trs-logo.gif`: 1200×1200,
+  single-frame transparent GIF, 12,260 bytes. Exact SHA-256 and selection
+  rationale are recorded in `docs/VISUAL_REFERENCE.md`.
+- Added the local image to `index.html` and `demo.html`, retaining visible
+  `臺北市稅捐稽徵處` text and the normal canonical return link.
+- Only three CSS rules were added for logo flex alignment/gap and
+  proportional 56px desktop / 44px mobile sizing. The rest of the accepted
+  V1.2 stylesheet is byte-for-byte unchanged.
+- Added the selected asset to the existing static package asset list.
+  No remote image dependency or substitute logo was introduced.
+- `npm test`: 10 passed, 0 failed, 0 skipped.
+- Existing offline Chromium suite on local port 8768: 9 checks passed,
+  no page errors/external requests, 0 Production requests.
+- Focused logo checks: 6 passed (both HTML pages at 1280px, 390px and 320px).
+  Verified local image HTTP 200/natural dimensions, original aspect ratio,
+  rendered size, accessible brand-link name, adjacent visible agency name,
+  vertical alignment and no horizontal overflow.
+- Hosting/demo ZIP integrity, manifest hashes and repeat-build reproducibility
+  passed. Both packages contain logo bytes identical to the official download.
+- Messenger transport, one-shot Playbook/session/reset/expiry/timeout logic,
+  normalized result model, answer/source/FAQ renderer, demo fixtures and existing
+  tests remain unchanged. `config.liveEnabled === false`.
+
+Review evidence is outside Git under
+`/workspace/visual-review/trs-logo-2026-10-07/`:
+`desktop-review.png`, `mobile-390-review.png`, `mobile-320-review.png`,
+the corresponding `*-disabled.png` views, `browser/browser_validation.json`,
+`logo_checks.json`, `node-tests.txt`, `packages/hosting.zip`,
+`packages/demo.zip` and `packages/package_summary.json`.
+
+No evidence upload, Production questions, deployment, CX/GCP/Messenger/
+Production Environment or official-site changes occurred. Stop after commit/push
+for final Web ChatGPT visual acceptance; no general redesign is pending.
 
 ## Backend contract
 

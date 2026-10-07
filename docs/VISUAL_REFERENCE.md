@@ -36,7 +36,43 @@ The header/footer remain minimal; official navigation and footer content are
 not copied. The demo fixture controls use neutral styling and retain their
 explicit non-production label.
 
-## Official TRS asset placeholder
+## Official TRS logo integration — 2026-10-07
+
+Retrieved the official candidate files successfully after syncing `main` at
+`1605f05`. The selected standalone TRS mark is now local in both headers.
+
+| Field | Selected asset |
+| --- | --- |
+| Agency source page | `https://tpctax.gov.taipei/cp.aspx?n=97DA1F76BC737417` |
+| Exact source URL | `https://www-ws.gov.taipei/001/Upload/public/Attachment/53171512338.gif` |
+| Local filename | `assets/trs-logo.gif` |
+| Dimensions | 1200 × 1200 pixels |
+| Format / size | GIF89a, single frame, transparent background, 12,260 bytes |
+| SHA-256 | `2ad2f6a09be0bc255a313fe14fd54586f4aa28394cc65cd736290dc420cffff5` |
+
+The agency download page links the GIF over HTTP; it was retrieved from the
+same exact host/path over verified HTTPS. The saved file is byte-for-byte
+identical to the downloaded original. No conversion, cropping, recoloring,
+redrawing or other image modification was performed.
+
+Selection rationale: the standalone mark works next to the existing visible
+`臺北市稅捐稽徵處` text in a compact white header. It avoids duplicating the text
+of the wide wordmark and does not require changing the accepted V1.2 styling.
+The candidate logo-with-text PNG and current header background were also
+downloaded and visually inspected, but only the selected GIF is retained in Git.
+
+Both HTML pages use `./assets/trs-logo.gif` with `alt="TRS"`, followed by the
+visible agency name. CSS alone displays the full square image at 56px desktop /
+44px mobile, with proportional automatic height and a 10px text gap. No remote
+runtime image is loaded. Both static packages include the original GIF and its
+manifest SHA-256. Palette, typography, form/result styling and functional code
+remain on the accepted V1.2 baseline.
+
+Local-only browser checks passed for both pages at 1280px, 390px and 320px:
+image HTTP 200, natural 1200×1200 dimensions, correct rendered aspect/size,
+adjacent agency identification, vertical alignment and no horizontal overflow.
+
+### Official candidate sources
 
 The logo page publishes these agency assets:
 
@@ -49,17 +85,15 @@ The logo page publishes these agency assets:
 - Current official header background, from `sys_detail.css`:
   https://www-ws.gov.taipei/001/Upload/336/sites/pagebackimage/3e3dd9d8-60ab-484b-805f-4281fd31cb27.png
 
-The cloud proxy returned 403 for the GIF preview and text-logo PNG. A network
-draft adding `www-ws.gov.taipei` while preserving `tpctax.gov.taipei` was saved;
-it requires the user to save the change in environment settings before retry.
-No TRS logo bytes are currently in the repository. The header's plain agency
-name is the documented temporary asset placeholder; it is not a replacement
-logo or a claim that official branding is complete.
+Earlier attempts returned proxy `CONNECT 403`. This blocker is resolved:
+the color GIF download, logo-with-text PNG and current header background all
+downloaded successfully on 2026-10-07. The temporary plain-text-only placeholder
+has been replaced by the selected official TRS mark plus the existing name.
 
 The generic `/Images/major_logo.png` fallback was also inspected. It contains
 Taipei City Government identity, not the required TRS mark, and was therefore
 not added to this repository or used in the page.
 
-Once accessible, download a suitable official TRS asset unchanged to a local
-`assets/` path, record its exact source/dimensions/SHA-256 here, add the image
-to both static packages, and recheck the header at desktop/390px/320px.
+The official TRS integration is complete and awaits final Web ChatGPT screenshot
+acceptance. This does not authorize deployment or establish live SDK/Production
+behavior.

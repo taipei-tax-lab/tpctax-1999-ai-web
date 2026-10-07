@@ -2,78 +2,44 @@
 
 ## Active task
 
-**Complete official TRS logo integration on the accepted V1.2 visual baseline**
+**Final Web ChatGPT visual acceptance of V1.2 with the official TRS logo**
 
-Do not deploy live. Do not redesign the page.
+Do not deploy live. Do not redesign the accepted V1.2 baseline.
 
-## Human decision
+## Completed work
 
-Web review accepts the current V1.2 reference-driven palette, typography, form styling, spacing direction and result presentation.
+The unchanged official TRS standalone color GIF is stored locally as
+`assets/trs-logo.gif` and used in both `index.html` and `demo.html`, next to
+visible `臺北市稅捐稽徵處` text. Original source, dimensions, SHA-256 and
+selection rationale are recorded in `docs/VISUAL_REFERENCE.md`.
 
-This task is intentionally narrow:
+Only logo sizing/alignment/responsive CSS was added. Accepted palette,
+typography, form treatment, density and answer/source/FAQ presentation remain
+unchanged. Both deterministic static packages include the original logo bytes.
 
-> add the correct official TRS logo/agency identity, verify layout, then return for final visual review.
+10 Node tests, 9 existing offline Chromium checks and 6 focused logo checks
+passed. Desktop, 390px and 320px screenshots are recorded in `PROJECT_STATE.md`.
 
-Do not perform another general styling pass.
+## Required next decision
 
-## Required work
+1. Web ChatGPT should inspect the desktop, 390px and 320px logo-complete
+   screenshots and provide final visual acceptance or identify a concrete
+   logo-size/alignment issue.
+2. Apply only separately requested focused corrections; do not start another
+   general palette, typography or layout revision.
+3. After visual acceptance, prepare a separate deployment-readiness task:
+   actual hosting URL/owner, HTTPS/MIME/cache requirements, official CMS link
+   handoff, and separately authorized Messenger/domain/Production-binding/CSP
+   checks. No live action is authorized by this document.
 
-1. Sync latest `main`.
-2. Read:
-   - `AGENTS.md`
-   - `README.md`
-   - `PROJECT_STATE.md`
-   - `NEXT_TASK.md`
-   - `docs/PRODUCT_PLAN.md`
-   - `docs/RESULT_CONTRACT.md`
-   - `docs/VISUAL_REFERENCE.md`
-3. Retrieve the official Taipei City Revenue Service / TRS logo from the agency-controlled source already documented in `docs/VISUAL_REFERENCE.md`.
-4. Select the most suitable official asset for a compact web header.
-5. Save the original asset bytes unchanged under `assets/`.
-6. Record in `docs/VISUAL_REFERENCE.md`:
-   - exact source URL;
-   - local filename;
-   - image dimensions;
-   - SHA-256;
-   - short rationale for the chosen asset.
-7. Update `index.html` and `demo.html` so the header uses:
-   - official TRS logo;
-   - visible `臺北市稅捐稽徵處` text or equivalent meaningful accessible identification;
-   - existing return link to `本府1999常見問答`.
-8. Make only the minimum CSS adjustments needed for logo sizing/alignment/responsive behavior.
-9. Do not redraw, recolor, distort, stylize, trace or replace the logo with another Taipei City Government identity.
-10. Do not add remote runtime dependencies for the logo.
-11. Keep the accepted V1.2 styling baseline unchanged unless a concrete logo-layout issue requires a local adjustment.
-12. Run:
-   - existing Node tests;
-   - existing offline Chromium suite;
-   - focused responsive checks at desktop, 390px and 320px.
-13. Regenerate:
-   - desktop screenshot;
-   - 390px screenshot;
-   - 320px screenshot;
-   - deterministic hosting/demo packages.
-14. Confirm the local logo asset is included in both packages.
-15. Update `PROJECT_STATE.md` and `NEXT_TASK.md`.
-16. Commit/push and STOP for Web ChatGPT review.
-
-## If the asset is still inaccessible
-
-Do not invent or substitute a logo.
-
-Report the exact blocked URL / error and STOP. The user can then provide the official asset manually.
+Current implementation work is complete: commit/push and STOP for review.
 
 ## Functional freeze
 
-Do not change:
+Preserve Messenger transport, one-shot `currentPlaybook`, session/reset/expiry/
+timeout, request locking, normalized result model and answer/source/FAQ logic.
+Keep `assets/config.js` with `liveEnabled=false`.
 
-- Dialogflow Messenger transport;
-- one-shot `currentPlaybook`;
-- session/reset/expiry/timeout behavior;
-- normalized result model;
-- answer/source/FAQ extraction/rendering;
-- CX/GCP/Messenger integration settings;
-- Production Environment;
-- `assets/config.js` `liveEnabled=false`.
-
-No Production questions, deployment, official-site modification or backend work are authorized.
+No Production questions, deployment, CX/GCP/Messenger integration,
+Production Environment or official-site changes are authorized. Offline
+fixtures do not establish live SDK/Production behavior.

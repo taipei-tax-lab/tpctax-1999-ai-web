@@ -2,62 +2,69 @@
 
 ## Active task
 
-**STOP — Web ChatGPT review of high-fidelity official-site visual reproduction**
+**Add restrained official red accents to the accepted high-fidelity visual reproduction**
 
-The requested implementation and offline verification are complete. Do not start
-another visual revision or deploy live without a new human instruction.
+Do not deploy live. Do not redesign the page.
 
-## Review target
+## Human decision
 
-Judge whether the AI page appears to be a service page within the current
-Taipei City Revenue Service website when entered from the official 1999 FAQ.
-The previous V1.2 interpreted styling is superseded by the current measured
-HTML/CSS reference treatment.
+The current high-fidelity reproduction is accepted overall.
 
-Official references:
+One small visual refinement is requested:
 
-- `https://tpctax.gov.taipei/News.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16`
-- `https://tpctax.gov.taipei/cp.aspx?n=97DA1F76BC737417`
+> introduce a few more official red accents so the page carries more of the existing Revenue Service identity, without making red the dominant color.
 
-Exact CSS alignment, image URLs/dimensions/SHA-256, accessibility exceptions and
-reference-inspection method are in `docs/VISUAL_REFERENCE.md`.
+## Official red values
 
-## Review artifacts
+Use the already verified official values:
 
-Local evidence root:
-`/workspace/visual-review/fidelity-2026-10-07/`.
+- `#d4222d`
+- `#de313c`
 
-1. `desktop-idle.png`: hosting page, actual disabled configuration.
-2. `desktop-review.png`: desktop generic answer and sources in the offline demo.
-3. `mobile-390-review.png`: 390px result layout.
-4. `mobile-320-review.png`: 320px result layout.
-5. `desktop-faq-review.png`: optional official FAQ enhancement.
-6. `reference/official-1280.png`, `official-390.png`, `official-320.png`: source
-   comparison captures with third-party/API requests blocked.
-7. `packages/demo.zip`: extract and serve via a local HTTP server, then open
-   `demo.html` for offline interactive review.
-8. `packages/hosting.zip`: deterministic static hosting artifact for review,
-   not authorization to upload/deploy it.
+## Required changes
 
-Both packages include the original `assets/trs-header.png` and
-`assets/official-page-bg.png`, plus the retained `assets/trs-logo.gif`.
-The demo controls and synthetic answers are labeled non-production.
+1. Keep the main `1999 AI 智慧問答` heading text in the existing official dark gray.
+2. Add a slim red accent to the main heading, preferably a left border/marker rather than recoloring the full heading.
+3. Add a small red accent to the query label `您想了解什麼？`, again using a minimal marker/left border.
+4. Keep the existing red result heading block `#d4222d`.
+5. Keep link hover red `#de313c`.
+6. Keep the footer red separator `#de313c`.
+7. Keep the official yellow submit button exactly as the current evidence-based implementation unless a layout-only adjustment is required.
+8. Keep the official TRS logo and official background unchanged.
 
-## Completed checks
+## Do not
 
-- Node: 10 passed.
-- Existing offline Chromium: nine checks passed, zero external requests,
-  page errors and Production requests.
-- Both HTML pages at 1280px/390px/320px: proportional local official logo,
-  native visual values/hover, keyboard skip link, 44px actions, canonical return
-  link and no horizontal overflow. 320px at 200% text size passed.
-- Focused contrast checks passed; deterministic repeated ZIP builds, integrity,
-  manifest checks and official image inclusion passed.
-- Frozen functional files unchanged; `liveEnabled=false`.
+- do not make the global header red;
+- do not recolor or redraw the logo;
+- do not change the yellow submit button to red;
+- do not make all headings red;
+- do not add red borders to every section;
+- do not introduce large red surfaces, gradients or decorative banners;
+- do not change any Messenger/session/result logic.
+
+## Scope
+
+This is a CSS/markup micro-adjustment only.
+
+Use the smallest implementation needed to achieve:
+
+- H1 red accent;
+- query-label red accent;
+- preserve existing official red result/hover/footer treatment.
+
+## Verification
+
+1. Run existing Node tests.
+2. Run existing offline Chromium suite.
+3. Regenerate desktop, 390px and 320px screenshots.
+4. Confirm the red accents remain visually restrained at all three widths.
+5. Confirm no horizontal overflow or accessibility regression.
+6. Update `PROJECT_STATE.md` and `NEXT_TASK.md`.
+7. Commit/push and STOP for Web ChatGPT review.
 
 ## Functional freeze
 
-Do not change without separate authorization:
+Do not change:
 
 - Dialogflow Messenger transport;
 - one-shot `currentPlaybook`;
@@ -68,5 +75,4 @@ Do not change without separate authorization:
 - Production Environment;
 - `assets/config.js` `liveEnabled=false`.
 
-No Production questions or deployment are authorized. Wait for Web ChatGPT
-visual review and the next explicit human instruction.
+No Production questions or deployment are authorized.

@@ -1,53 +1,95 @@
 # NEXT_TASK
 
-## Status
+## Active task
 
-**STOP — Deployment Gate 2A PASS; wait for review / next-gate instruction.**
+**Deployment Gate 3 — CSP / SDK / resource-loading readiness audit**
 
-Frozen UI and `liveEnabled=false` remain unchanged. No deployment, Production
-query, integration mutation or CX resource change occurred in this audit.
-See `docs/DEPLOYMENT_GATES.md` for the current UI evidence and limits.
+Do not deploy. Do not enable live mode. Do not change CX Playbooks/Tools/Data Stores or Production Environment.
 
-## Completed Gate 2A
+## Confirmed prerequisites
 
-- Current user-provided Messenger Console shows **Production** for project
-  `serviceagent-1150909`, location `asia-northeast1`, agent
-  `799426c1-ba69-49dc-85e4-5065985706e2`.
-- Same agent's current Production resource readback resolves to
-  `a0c712e8-ab0c-4520-b100-d2abcfc85868`, matching the expected Environment ID.
-- Current domain entries:
-  - `taipei-tax-lab.github.io`
-  - `services.arpa.tpctax.dof.gov.taipei`
-- Saved format is hostname, without scheme or page path.
-- Target production host is already allowed: **domain PASS**.
-- Minimal binding/domain change: **none**.
-- Final page path is not needed for this completed readiness audit.
-- No authenticated API read succeeded in the agent environment; results are
-  grounded in current user-provided Console screenshot/resource readback.
+- CX backend: `CX BACKEND LAUNCH READY`
+- Messenger binding: expected Production Environment confirmed
+- Allowed domain already includes:
+  `services.arpa.tpctax.dof.gov.taipei`
+- Production origin:
+  `https://services.arpa.tpctax.dof.gov.taipei`
+- Final page path is still unknown, but is not required for this policy-readiness audit
+- Frontend remains static and `liveEnabled=false`
 
-## Remaining deployment facts / human inputs
+## Goal
 
-- Frontend source: `taipei-tax-lab/tpctax-1999-ai-web`.
-- CX backend is externally confirmed `CX BACKEND LAUNCH READY`.
-- Production origin: `https://services.arpa.tpctax.dof.gov.taipei`.
-- Revenue Service IT hosts a static package; official 1999 uses a normal link/button.
-- Gate 1 remains partially passed: IT must supply the final public path/full URL.
-  Do not guess a path or replace the `hostingUrl` placeholder yet.
-- No further credential or domain input is needed for this completed UI audit.
-- Gate 3 would need the actual hosting CSP/resource-policy constraints or
-  response-header evidence from IT. Do not start it without a new instruction.
+Determine the exact browser resource/security-policy requirements for the frozen frontend + Dialogflow Messenger and identify what the Revenue Service IT team must allow on the production server.
 
-## Next authorized task
+This is primarily an audit/planning gate. Do not weaken security policy broadly and do not invent origins.
 
-Wait for review / an explicit next-gate instruction. Sync main and read the
-project documents at the start of that task. Do not automatically enable live
-mode or treat this configuration audit as runtime routing evidence.
+## Required work
 
-The direct agent API route remains unavailable: no connected GCP identity or
-identified credential selector and proxy CONNECT HTTP 403 for the regional API.
-If later direct reads are needed, reconnect an existing identity and allow the
-required API/refresh hosts through environment configuration. Never share
-credential contents in chat; the proxy failure is not a GCP IAM denial.
+1. Sync latest `main`.
+2. Read the standard project documents plus `docs/DEPLOYMENT_GATES.md`.
+3. Inspect:
+   - `index.html`
+   - `assets/app.js`
+   - `assets/messenger-transport.js`
+   - `assets/config.js`
+   - all locally referenced assets/modules
+4. Derive all runtime resource classes required by the frontend:
+   - same-origin HTML/CSS/JS/images;
+   - Dialogflow Messenger SDK script;
+   - any SDK-loaded scripts/styles/fonts/images;
+   - network/API connections used by Messenger;
+   - any worker/frame/websocket/event-stream requirements if actually observed/documented.
+5. Use authoritative Google/Dialogflow Messenger documentation or actual browser/network evidence where available.
+6. Do not guess wildcard domains. Prefer exact hosts/origins.
+7. Check whether the confirmed production host currently returns security headers that may matter:
+   - Content-Security-Policy
+   - Content-Security-Policy-Report-Only
+   - X-Frame-Options
+   - Referrer-Policy
+   - Permissions-Policy
+   - Cross-Origin-Opener-Policy
+   - Cross-Origin-Embedder-Policy
+   - Cross-Origin-Resource-Policy
+   - any relevant CORS headers
+   If the root host is reachable, inspect it only with safe GET/HEAD requests. Do not submit forms or queries.
+8. If current production-host headers cannot establish the policy that will apply to the future AI path, say so explicitly.
+9. Produce a minimal recommended CSP/resource allowlist for IT, separated into:
+   - definitely required;
+   - conditionally required / verify during live E2E;
+   - not required by the current frontend.
+10. Record whether inline scripts/styles are required. Prefer preserving the current external-module architecture rather than adding unsafe-inline.
+11. Record whether the page needs iframe permission. Expected: no iframe; verify.
+12. Record whether the final page path is needed to complete this gate.
 
-Keep frontend config, one-shot Playbook/session semantics, renderers and backend
-resources unchanged. No deployment or Production query until explicitly authorized.
+## Output
+
+Update `docs/DEPLOYMENT_GATES.md` with:
+
+- verified runtime resource dependencies;
+- observed production-host response headers;
+- minimal recommended CSP directives;
+- unresolved items to verify only after deployment;
+- exact IT action, if any;
+- Gate 3 PASS / CONDITIONAL PASS / BLOCKED.
+
+Update `PROJECT_STATE.md` and `NEXT_TASK.md`.
+
+## Important prohibitions
+
+Do not:
+- deploy;
+- change `liveEnabled=false`;
+- change frontend UI;
+- mutate Messenger integration;
+- change Production binding/domain settings;
+- modify backend resources;
+- send Production queries;
+- add permissive wildcard CSP merely for convenience.
+
+Commit/push and STOP.
+
+Final response must clearly state:
+1. what IT needs to allow;
+2. what is already safe/local;
+3. what cannot be known until the actual page is hosted;
+4. whether any human input is needed before the next gate.

@@ -76,17 +76,24 @@ Design direction for the next visual revision:
 - avoid decorative AI iconography, gradients, floating cards and oversized empty space;
 - the page may be cleaner than the legacy official page, but should not look like a separate branded product.
 
-## Branding asset completion rule
+## Official-site fidelity rule
 
-The V1.2 palette/layout is now the accepted visual baseline. Do not keep retuning colors, spacing or typography unless a concrete screenshot review identifies a problem.
+The visual target is now **high fidelity to the current official Taipei City Revenue Service website**, not merely visual continuity.
 
-The remaining branding task is limited to official TRS identity completion:
+Where the official site provides clear evidence, prefer direct reproduction of its visual language over reinterpretation. This includes header background treatment, agency identity placement, page-title color, typography scale, link color, border/separator treatment, search/form surfaces and primary-button styling.
+
+Do not invent an alternate brand system when the official site already defines one.
+
+The remaining branding/layout task includes official TRS identity completion and evidence-based fidelity work:
 
 - use an unchanged official Taipei City Revenue Service / TRS logo asset;
 - store the selected logo locally under `assets/`;
 - record exact source URL, dimensions and SHA-256 in `docs/VISUAL_REFERENCE.md`;
 - use the asset in both `index.html` and `demo.html`;
 - preserve meaningful adjacent agency-name text for accessibility and recognition;
+- match official header/background/title colors and spacing as closely as practical from retrieved official CSS/reference evidence;
+- reproduce the official page-title visual treatment rather than keeping a custom AI-page title color;
+- keep the page simpler than the full government shell, but make shared elements look intentionally native to the source website;
 - do not redraw, recolor, crop aggressively, stylize or substitute another Taipei City Government mark;
 - do not add remote image/font runtime dependencies;
 - verify desktop, 390px and 320px layout after insertion;

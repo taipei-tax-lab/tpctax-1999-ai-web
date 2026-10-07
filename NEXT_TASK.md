@@ -1,85 +1,106 @@
 # NEXT_TASK
 
-## Status
+## Active task
 
-**STOP — fresh-session handoff requested; Gate 3 still BLOCKED on SDK/header access.**
+**Pre-deployment candidate package and IT handoff preparation**
 
-Stop this session; continue only Gate 3 in the new session requested below.
-No UI/config/backend/Messenger setting change, live enablement, Production
-query or deployment is authorized. Gate 2A remains PASS.
+Do not deploy from Codex. Do not modify CX backend resources.
 
-## Human direction — continue in a new session
+## Prerequisites
 
-The user reports applying/publishing environment network settings and requests
-a fresh-session continuation prompt plus GitHub handoff. Start the new session
-from latest main; do not assume the published settings have established access.
+- UI frozen
+- CX backend: CX BACKEND LAUNCH READY
+- Production Messenger binding: PASS
+- Allowed domain: PASS for `services.arpa.tpctax.dof.gov.taipei`
+- Gate 3 CSP/resource audit: CONDITIONAL PASS
+- Production origin confirmed
+- Final public path still chosen by Revenue Service IT
 
-In this session, runtime desired/observed revision `8` was current/enforced but
-custom allowed hosts remained empty, and both public probes still received
-proxy CONNECT HTTP 403. A new session may use refreshed environment setup;
-verify its actual policy/readiness and real GET/HEAD result before deciding.
+## Goal
 
-Resume only **Deployment Gate 3 — CSP / SDK / resource-loading readiness audit**.
-Read in order: `AGENTS.md`, `README.md`, `PROJECT_STATE.md`, `NEXT_TASK.md`,
-`docs/DEPLOYMENT_GATES.md`, `docs/PRODUCT_PLAN.md`, `docs/RESULT_CONTRACT.md`.
-Finish the missing SDK/header readback and minimum IT CSP proposal if access
-works; otherwise record the exact new evidence without guessing or bypassing.
+Prepare the smallest deployment-ready static handoff package and a concise IT
+checklist so Revenue Service IT can place the page under the confirmed production
+origin. The actual hosted page will then be used to close CSP/resource validation
+and run live browser E2E.
 
-## Completed evidence
+## Required work
 
-- Baseline synced: `cbe29da4ea6e4eafbd44a042ba15e20040cafbcf`.
-- Frozen production document, four JS modules, CSS and two active images are
-  same-origin; no inline script/style or remote font required by our code.
-- Exact official SDK entry identified in config and Google documentation.
-- Strict CSP enforcing no inline/eval/frame/worker/API/remote-font permissions
-  passed local Chromium on disabled index and offline demo, including mock
-  answer/reset. No external requests or CSP violations.
-- Exact live API host(s), SDK extra resources/styles and origin response
-  headers are not verified. Do not guess a regional REST endpoint or wildcard.
-- `docs/DEPLOYMENT_GATES.md` contains the resource matrix, tested disabled-page
-  CSP, safe read failure evidence and scope limits. The disabled policy is not
-  a live Messenger deployment policy.
+1. Sync latest `main` and read all deployment/project documents.
+2. Audit whether `config.hostingUrl` is used by runtime code or is metadata only.
+   Report every reference.
+3. Determine whether the static package can be hosted at an arbitrary subpath
+   beneath `https://services.arpa.tpctax.dof.gov.taipei` without rebuilding.
+4. Verify all production asset/module URLs are relative and subpath-safe.
+5. Do not guess a final path.
+6. Prepare a production handoff package that IT can place at the path they choose.
 
-## Input needed to resume only Gate 3
+## Live-mode decision
 
-Apply managed-environment network access for:
+Do not blindly set `liveEnabled=true`.
 
-- `services.arpa.tpctax.dof.gov.taipei`
-- `www.gstatic.com`
+First determine whether the IT handoff should be:
 
-Current proxy denies both with CONNECT HTTP 403; this is not an agency CSP or
-GCP IAM failure. No GCP credential is needed for public GET/HEAD.
+A. a hosted connectivity candidate with `liveEnabled=false`, followed by a
+small config-only switch after header/path verification; or
 
-Published-setting retry at 2026-10-07 22:46:16 +08:00 also failed. The user
-confirmed the intended environment/settings, but current observed revision `8`
-still has no custom allowed hosts and excludes both requested destinations.
-Next input must be the actual environment name and allowed-domain list (or
-non-secret header/SDK readback), so this configuration/readiness discrepancy can
-be diagnosed. A publish confirmation alone does not establish network access.
+B. a live integration candidate with `liveEnabled=true` because binding/domain
+readiness is already proven and real browser E2E is the next required gate.
 
-The user chose a new-session handoff rather than supplying the list in this
-session. Recheck the newly attached environment first; request configuration
-readback only if access remains blocked. Do not ask for credential contents.
+Recommend one of A/B based on the current code and rollback simplicity.
+Do not deploy it yourself.
 
-Alternatively provide current non-secret origin headers and SDK dependency/
-network evidence. Do not include Cookie/token/query payloads.
+If B is recommended, prepare but clearly mark the package as an authorized
+Production integration test candidate. Do not send queries from Codex.
 
-## Resume procedure
+## IT handoff document
 
-1. Sync main/read project instructions and recheck observed network readiness.
-2. Read root HEAD/GET safely without forms/queries; record security/CORS headers,
-   status/redirects and timestamp. Do not infer final AI-path headers from root.
-3. GET the exact public SDK, record retrieval/hash and inspect actual loaders,
-   styles, fonts/images and request URL construction.
-4. If a local SDK probe is needed, intercept and block all backend/query/event
-   requests. Do not enable the frontend or send a Production query.
-5. Add only evidenced exact script/style/connect/font/etc. sources; no wildcard,
-   broad inline/eval exception, frame/worker allowance or invented endpoint.
-6. Separate a complete live CSP candidate from the verified disabled-page policy.
-   Record any remaining live-E2E conditions and PASS/CONDITIONAL PASS/BLOCKED.
-7. Update the three documents, commit/push and STOP for review.
+Create/update a concise:
+`docs/IT_HANDOFF.md`
 
-Production origin and static IT hosting/normal 1999 link are confirmed. Final
-public path/full URL remains pending with IT; `hostingUrl` stays a placeholder.
-Final-path headers and actual API CORS/routing validation require later
-authorized hosting/E2E. Do not advance those gates automatically.
+It must tell IT only what they actually need to do:
+
+- host the supplied static package under any agreed HTTPS path beneath
+  `services.arpa.tpctax.dof.gov.taipei`;
+- preserve file/folder structure and MIME types;
+- provide the final full URL after publishing;
+- do not iframe it;
+- the official 1999 page will use a normal hyperlink/button;
+- allow the official Dialogflow Messenger SDK/resource traffic required by the
+  hosted browser candidate;
+- do not add permissive wildcard CSP pre-emptively;
+- if their platform sets CSP/security headers, provide the actual headers or
+  allow browser E2E to identify exact required exceptions.
+
+Include a one-line rollback instruction: remove/disable the entry link or restore
+the previous static package.
+
+## Package verification
+
+Run:
+- Node tests
+- offline Chromium tests
+- static package integrity/reproducibility checks
+
+Confirm:
+- no demo files are accidentally exposed in the production package unless
+  intentionally documented;
+- no secrets/tokens/credentials are present;
+- official images and required assets are included;
+- UI remains frozen.
+
+## Output
+
+Update:
+- `PROJECT_STATE.md`
+- `docs/DEPLOYMENT_GATES.md`
+- `docs/IT_HANDOFF.md`
+- `NEXT_TASK.md`
+
+Commit/push and STOP.
+
+Final response must answer:
+1. Can IT host the package at an arbitrary subpath?
+2. Does the package require rebuild after IT chooses the final path?
+3. Should the first hosted candidate use `liveEnabled=false` or `true`, and why?
+4. Exactly what does IT need to do?
+5. Exactly what do we need back from IT before live browser E2E?

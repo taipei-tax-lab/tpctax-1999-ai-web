@@ -560,6 +560,25 @@ upload or live deployment occurred; no CX/GCP/Messenger/Production Environment
 settings changed and no Production query was sent. STOP after commit/push and
 wait for Web ChatGPT review before calling the UI frozen.
 
+## Final placement refinement
+
+Human review accepts the current UI-freeze candidate except for one layout detail.
+
+Required final ordering inside the query area:
+
+1. `您想了解什麼？`
+2. textarea
+3. `您可詢問 「房屋稅自住住家用稅率怎麼申請？」 「地價稅自用住宅用地優惠稅率怎麼申請？」`
+4. yellow `查詢解答` button
+
+The example sentence remains clickable and must continue filling/focusing the textarea.
+
+No other UI, copy, red-accent, status, reset/session, CX, Messenger, or deployment behavior should change.
+
+The current unavailable message:
+`服務準備中 / 查詢服務尚未開放。您可以先查看本府1999常見問答。`
+is expected only while `liveEnabled=false` or live Messenger initialization is unavailable. When the live CX/Messenger path initializes successfully, normal ready state hides the status panel.
+
 ## Backend contract
 
 - project: `serviceagent-1150909`

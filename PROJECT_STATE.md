@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**V1.2 REFERENCE-DRIVEN STYLES VERIFIED OFFLINE — OFFICIAL TRS ASSET ACCESS PENDING — NO LIVE DEPLOYMENT**
+**V1.2 VISUAL BASELINE ACCEPTED — OFFICIAL TRS LOGO COMPLETION PENDING — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -253,6 +253,22 @@ No evidence was uploaded to Drive. No Production questions, live deployment,
 CX/GCP/Messenger integration, Production Environment or official-site changes
 occurred. Commit/push and STOP for Web ChatGPT review; the next work is official
 TRS asset completion once the access prerequisite is supplied.
+
+## Web review decision — final visual baseline
+
+The V1.2 reference-driven styling is accepted as the visual baseline.
+
+No further abstract palette/typography redesign is requested at this point. The remaining visual task is narrowly scoped to:
+
+1. obtain the unchanged official TRS logo asset from an agency-controlled source;
+2. store it locally under `assets/`;
+3. integrate it into the header of both `index.html` and `demo.html`;
+4. preserve the current V1.2 layout, colors, typography, form treatment and result presentation unless the logo causes a concrete responsive/layout issue;
+5. rerun the existing offline verification and regenerate desktop/390px/320px screenshots.
+
+The official logo source candidates and current access limitation are documented in `docs/VISUAL_REFERENCE.md`.
+
+After the logo is integrated and the screenshots are reviewed, the frontend should move to deployment preparation rather than another open-ended visual-design cycle.
 
 ## Backend contract
 

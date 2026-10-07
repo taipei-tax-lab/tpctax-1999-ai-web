@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**UI FROZEN — DEPLOYMENT PREPARATION GATE 1 PENDING — NO LIVE DEPLOYMENT**
+**UI FROZEN — GATE 1 PARTIALLY PASSED — GATE 2A PASS — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -656,7 +656,8 @@ The current repository still contains:
 - no live deployment evidence;
 - no Production Messenger runtime validation.
 
-Gate 1 must first determine the actual host/path and hosting mechanism. Do not guess those values.
+Gate 1 has confirmed the origin and hosting mechanism. The exact public path
+remains pending; do not guess it or replace the hosting URL placeholder.
 
 ## Confirmed production hosting facts
 
@@ -669,7 +670,39 @@ Human-confirmed deployment facts:
 - no iframe or server-side application is required by the current frontend architecture;
 - the final URL path is not yet known.
 
-Therefore the remaining Gate 1 unknown is the exact public path under the confirmed host, for example a path analogous to `/1999-ai/` if IT chooses that convention. Do not assume the path until IT confirms it.
+The remaining Gate 1 unknown is the exact public path under the confirmed host.
+No candidate path is assumed; IT must confirm the final URL.
+
+## Deployment Gate 2A audit — 2026-10-07
+
+Synced `main` at `1847571b9c421d021de90e1ae87bff2a7107201c` and read the
+seven requested documents. **Gate 2A PASS — no setting changes required.**
+
+- Following login guidance, the user supplied current Console UI evidence for
+  the correct project/location/agent. Messenger visibly selects **Production**.
+- The user read the same agent's Production Environment resource:
+  `projects/serviceagent-1150909/locations/asia-northeast1/agents/799426c1-ba69-49dc-85e4-5065985706e2/environments/a0c712e8-ab0c-4520-b100-d2abcfc85868`.
+  The selected name and current name-to-ID readback establish that the bound
+  Environment ID is `a0c712e8-ab0c-4520-b100-d2abcfc85868`, matching expectation.
+- Current allowed-domain entries: `taipei-tax-lab.github.io` and
+  `services.arpa.tpctax.dof.gov.taipei`. The target host is already present.
+- Saved format is **hostname**, without scheme or path. No domain change
+  and no final page path are needed for this readiness audit.
+- Evidence is current user-provided Console screenshot/resource readback,
+  not a successful authenticated API read in this agent environment.
+  The embed snippet contains no Environment ID and is not binding proof.
+- Direct API access was unavailable: no connected GCP identity/identified
+  credential selector, and the regional API readiness probe hit proxy
+  `CONNECT` HTTP 403 at 14:07:58 UTC. This was not a GCP IAM denial or query.
+- Historical backend Console records dated 2026-10-01 show the same domain
+  entries and Production display name; they are cross-checks, not current proof.
+- Gate 1's final URL remains pending. Gate 2A PASS does not establish runtime
+  routing/SDK/CSP readiness or authorize live enablement/deployment.
+
+See `docs/DEPLOYMENT_GATES.md` for the UI transcription and evidence limits.
+Only the three project documents changed. Frozen UI, frontend configuration
+and CX/Production settings remain unchanged; `liveEnabled=false`.
+No Production query or deployment occurred. Commit/push and STOP for review.
 
 ## Backend contract
 
@@ -683,9 +716,8 @@ Environment binding is integration-side and must not be guessed from HTML attrib
 
 ## Open deployment items
 
-- actual Revenue Service hosting URL / hostname;
-- Messenger allowed-domain status;
-- current Messenger Production binding readback;
-- CSP / SDK resource / connect requirements on the actual host;
-- official municipal CMS link insertion capability and target behavior;
+- exact public path / full hosting URL (origin already confirmed);
+- hosting CSP / SDK resource / connect requirements (Messenger binding and
+  hostname allowlist readiness passed Gate 2A);
+- final official 1999 link target and window behavior (normal link/button confirmed);
 - authorized live runtime validation after hosting.

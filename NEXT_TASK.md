@@ -1,69 +1,53 @@
 # NEXT_TASK
 
-## Active task
+## Status
 
-**Deployment Gate 2A — Production Messenger binding + allowed-domain readiness audit**
+**STOP — Deployment Gate 2A PASS; wait for review / next-gate instruction.**
 
-Do not deploy. Do not enable live mode. Do not modify Playbooks/Tools/Data Stores.
+Frozen UI and `liveEnabled=false` remain unchanged. No deployment, Production
+query, integration mutation or CX resource change occurred in this audit.
+See `docs/DEPLOYMENT_GATES.md` for the current UI evidence and limits.
 
-## Confirmed facts
+## Completed Gate 2A
 
-- Frontend source of truth: `taipei-tax-lab/tpctax-1999-ai-web`
-- CX backend is externally confirmed `CX BACKEND LAUNCH READY`
-- Production origin: `https://services.arpa.tpctax.dof.gov.taipei`
-- Static package will be hosted by Revenue Service IT on that server
-- Existing official 1999 page can add a normal hyperlink/button to the final AI page
-- Final public path/full URL is not yet confirmed
-- `liveEnabled=false` must remain unchanged in this task
+- Current user-provided Messenger Console shows **Production** for project
+  `serviceagent-1150909`, location `asia-northeast1`, agent
+  `799426c1-ba69-49dc-85e4-5065985706e2`.
+- Same agent's current Production resource readback resolves to
+  `a0c712e8-ab0c-4520-b100-d2abcfc85868`, matching the expected Environment ID.
+- Current domain entries:
+  - `taipei-tax-lab.github.io`
+  - `services.arpa.tpctax.dof.gov.taipei`
+- Saved format is hostname, without scheme or page path.
+- Target production host is already allowed: **domain PASS**.
+- Minimal binding/domain change: **none**.
+- Final page path is not needed for this completed readiness audit.
+- No authenticated API read succeeded in the agent environment; results are
+  grounded in current user-provided Console screenshot/resource readback.
 
-## Goal
+## Remaining deployment facts / human inputs
 
-Verify the current Dialogflow Messenger integration is bound to the expected Production Environment and determine the exact allowed-domain configuration needed for the confirmed production origin.
+- Frontend source: `taipei-tax-lab/tpctax-1999-ai-web`.
+- CX backend is externally confirmed `CX BACKEND LAUNCH READY`.
+- Production origin: `https://services.arpa.tpctax.dof.gov.taipei`.
+- Revenue Service IT hosts a static package; official 1999 uses a normal link/button.
+- Gate 1 remains partially passed: IT must supply the final public path/full URL.
+  Do not guess a path or replace the `hostingUrl` placeholder yet.
+- No further credential or domain input is needed for this completed UI audit.
+- Gate 3 would need the actual hosting CSP/resource-policy constraints or
+  response-header evidence from IT. Do not start it without a new instruction.
 
-This is a read/plan gate first. Do not mutate integration settings unless the task can prove the exact current state and the change is explicitly safe and limited.
+## Next authorized task
 
-## Required work
+Wait for review / an explicit next-gate instruction. Sync main and read the
+project documents at the start of that task. Do not automatically enable live
+mode or treat this configuration audit as runtime routing evidence.
 
-1. Sync latest `main` and read the standard project documents plus `docs/DEPLOYMENT_GATES.md`.
-2. Using the existing GCP/CX credentials available in the environment, read back the Messenger integration configuration for:
-   - project `serviceagent-1150909`
-   - agent `799426c1-ba69-49dc-85e4-5065985706e2`
-3. Confirm which Environment the Messenger integration is actually bound to.
-4. Compare it with expected Production Environment:
-   `a0c712e8-ab0c-4520-b100-d2abcfc85868`
-5. Read the current allowed-domain / domain allowlist configuration if the integration exposes it.
-6. Determine whether the production origin must be entered as:
-   - hostname only;
-   - origin including scheme;
-   - another format required by the API/UI.
-   Use actual API/UI evidence; do not guess.
-7. Determine whether `https://services.arpa.tpctax.dof.gov.taipei` is already allowed.
-8. Record findings in `docs/DEPLOYMENT_GATES.md`.
+The direct agent API route remains unavailable: no connected GCP identity or
+identified credential selector and proxy CONNECT HTTP 403 for the regional API.
+If later direct reads are needed, reconnect an existing identity and allow the
+required API/refresh hosts through environment configuration. Never share
+credential contents in chat; the proxy failure is not a GCP IAM denial.
 
-## Important
-
-- Do not change Playbook/Tool/Data Store/version configuration.
-- Do not change Production Environment contents.
-- Do not send Production queries.
-- Do not change `assets/config.js`.
-- Do not enable `liveEnabled`.
-- Do not deploy frontend files.
-- Do not guess the final path; allowed-domain work should be based on the confirmed origin/hostname if that is how Messenger enforces it.
-
-## Outcome
-
-At the end, clearly report:
-
-1. Messenger bound Environment ID
-2. PASS/FAIL against expected Production Environment
-3. current allowed-domain entries
-4. whether `services.arpa.tpctax.dof.gov.taipei` is already allowed
-5. exact minimal change required, if any
-6. whether Gate 2 can pass without knowing the final page path
-
-Update:
-- `PROJECT_STATE.md`
-- `docs/DEPLOYMENT_GATES.md`
-- `NEXT_TASK.md`
-
-Commit/push and STOP.
+Keep frontend config, one-shot Playbook/session semantics, renderers and backend
+resources unchanged. No deployment or Production query until explicitly authorized.

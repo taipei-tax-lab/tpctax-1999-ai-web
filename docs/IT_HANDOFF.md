@@ -1,8 +1,7 @@
 # 資訊室靜態網頁交付
 
 交付檔：`hosting.zip`；另附 `hosting.sha256` 與 ZIP 內逐檔 `MANIFEST.json`。
-此版為首次掛載檢查版，`liveEnabled=false`；畫面顯示「服務準備中」、
-查詢按鈕停用是預期行為。先確認靜態頁面，再由專案方交付 live 設定版。
+目前交付策略已改為：先由專案方在 GitHub Pages 以相同 production package 完成 Messenger 真實問答 E2E；通過後，再提供資訊室該已驗證 live package。資訊室不需要先掛 disabled 版。
 
 ## 掛載
 
@@ -50,3 +49,14 @@ SDK/resource/API 若被擋，由後續 browser E2E 依實際 request/CSP/CORS �
 重新驗證該檔及頁面的快取，避免瀏覽器繼續使用 disabled 版。
 
 Rollback：移除／停用入口連結，或換回前一版 static package（含快取更新）。
+
+
+## 交付策略更新
+
+正式交資訊室前，專案方會先在 `taipei-tax-lab.github.io` 部署與資訊室
+最終收到的相同 production package，完成 Dialogflow Messenger Production
+browser E2E。
+
+因此資訊室收到的應是已完成 live 驗證的 package，而不是 disabled 預覽版。
+掛載後仍需回覆最終 HTTPS URL，以便做 agency-host 的簡短 headers/resource
+確認；不需要再次修改 Playbook、Messenger binding 或 allowed domain。

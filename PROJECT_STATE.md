@@ -622,6 +622,20 @@ Review evidence outside Git:
 No Production query, deployment, evidence upload or CX/GCP/Messenger/Production
 Environment change occurred. STOP after commit/push for Web ChatGPT review.
 
+## Backend launch-ready external prerequisite
+
+As of 2026-10-07, the CX backend is externally confirmed **CX BACKEND LAUNCH READY**.
+
+Production backend composition:
+- Router v1
+- Rental Playbook v2
+- 1999 FAQ Playbook v2
+- Rental Tool v1
+- FAQ Tool v1
+- Production smoke: 6/6 PASS
+
+This frontend repository remains the sole frontend source of truth. Do not reopen Playbook/Tool configuration work here. Remaining work is limited to Messenger Production binding verification, hosting/origin, allowed domain, CSP/resource loading, browser E2E, live enablement, and official 1999-page entry integration.
+
 ## UI freeze and deployment transition
 
 Human review accepts the final UI. Treat the current visual/citizen interaction as frozen.

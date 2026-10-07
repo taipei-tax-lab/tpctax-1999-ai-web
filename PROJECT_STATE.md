@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**CONSERVATIVE VISUAL DRAFT VERIFIED OFFLINE — OFFICIAL REFERENCE/LOGO ACCESS PENDING — NO LIVE DEPLOYMENT**
+**V1.1 CONSERVATIVE VISUAL DRAFT VERIFIED — V1.2 REFERENCE-DRIVEN OFFICIAL-SITE ALIGNMENT PLANNED — NO LIVE DEPLOYMENT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -145,6 +145,33 @@ demo ZIP and serve it over HTTP to inspect `demo.html`. The yellow demo panel
 and all answers are offline fixtures. No live deployment or CX/GCP/Messenger/
 Production/official-site modification occurred. Stop for Web ChatGPT review;
 resume official reference work only when access or supplied assets are available.
+
+## V1.2 visual planning decision — 2026-10-07
+
+Web review accepts the V1.1 simplification but does not accept its provisional palette as final.
+
+Verified public references available to Web ChatGPT:
+
+- Official 1999 FAQ page:
+  `https://tpctax.gov.taipei/News.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16`
+- Official Revenue Service logo-download page:
+  `https://tpctax.gov.taipei/cp.aspx?n=97DA1F76BC737417`
+- The official logo is the TRS blue/gold mark published by the agency.
+
+The target for V1.2 is not a visual clone of the entire government website. It is a lightweight AI query page that inherits the official content-page identity:
+
+- official TRS logo plus agency name in the header;
+- white/neutral surfaces;
+- official-site-like typography scale and density;
+- restrained link/primary-action color derived from the official identity/reference rather than the provisional `#40596c`;
+- standard borders/separators, minimal corner radius and no decorative shadows;
+- a normal unit/page heading rather than a product hero;
+- query form and result content treated like official-site content blocks;
+- no full navigation/menu duplication.
+
+The current V1.1 blue-gray color is explicitly provisional and may be replaced.
+
+Functional architecture remains frozen. This next iteration is visual-only and must preserve all verified Messenger/session/result-contract behavior and `liveEnabled=false`.
 
 ## Backend contract
 

@@ -140,3 +140,18 @@ Documentation diff/whitespace, unchanged executable files and the config
 invariant are checked before commit. Node/Chromium suites need no rerun for
 docs-only work.
 Commit/push and STOP for review; do not advance later gates automatically.
+
+
+## Gate 3 — CSP / resource-loading audit
+
+Status: **NEXT**
+
+Goal:
+- derive the exact external resource/connect requirements of the frozen frontend and Dialogflow Messenger runtime;
+- determine whether the confirmed production host can permit them without broad CSP weakening;
+- identify only the IT/server changes actually needed.
+
+Known production origin:
+`https://services.arpa.tpctax.dof.gov.taipei`
+
+This gate does not require the final page path for policy analysis, but actual response-header validation on the final deployed page will remain pending until hosting exists.

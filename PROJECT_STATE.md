@@ -4,7 +4,7 @@ Last updated: 2026-10-07
 
 ## Status
 
-**UI FROZEN — PRE-DEPLOYMENT PACKAGE VERIFIED (LIVE DISABLED) — AWAITING IT MOUNT — NO DEPLOYMENT**
+**UI FROZEN — LIVE MESSENGER CANDIDATE AUTHORIZED — GITHUB PAGES E2E NEXT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -848,6 +848,28 @@ IT must return the real URL, deployed ZIP hash and actual-path status/MIME/cache
 security headers; then agree a separate live config switch/Production E2E window.
 No website, Messenger domain/binding, backend or live flag was changed. Commit/
 push and STOP; do not mount, enable or query automatically.
+
+## Human deployment-path decision — GitHub Pages first
+
+The human owner supersedes the previous disabled-first mount recommendation.
+
+New shortest-path decision:
+
+1. integrate/enable Dialogflow Messenger in the frozen production frontend;
+2. deploy the exact production handoff contents to GitHub Pages for real browser / Production Messenger E2E;
+3. use the already-allowed host `taipei-tax-lab.github.io`;
+4. after E2E passes, hand the same production package to Revenue Service IT for
+   hosting under `services.arpa.tpctax.dof.gov.taipei`;
+5. then validate the agency-hosted URL and add the normal official 1999 entry link.
+
+Important:
+- GitHub Pages must deploy only the production package contents, not the full repo/demo/tests.
+- The production frontend is path-independent and can run under a GitHub Pages project subpath or an arbitrary agency-server subpath.
+- `hostingUrl` is unused metadata and must not be used to derive runtime URLs.
+- Allowed domains already include both `taipei-tax-lab.github.io` and
+  `services.arpa.tpctax.dof.gov.taipei`.
+- Messenger remains bound to the verified Production Environment.
+- This decision authorizes a controlled Production Messenger browser test from GitHub Pages; it does not reopen CX Playbook/Tool configuration.
 
 ## Backend contract
 

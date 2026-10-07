@@ -762,6 +762,13 @@ BLOCKED. The discrepancy between the user-reported configuration and observed
 access requires the actual environment name/domain-list readback or current
 non-secret SDK/header evidence. No Production query or configuration change.
 
+The user subsequently requested a fresh session to continue Gate 3 and asked
+for the GitHub handoff to be updated. `NEXT_TASK.md` now directs that session to
+sync/read the project documents, verify actual refreshed network readiness,
+resume only the SDK/root-header audit, and retain all frozen configuration and
+no-query/no-deployment restrictions. New-session creation is not proof that
+network access is fixed; Gate 3 stays BLOCKED until readback succeeds.
+
 ## Backend contract
 
 - project: `serviceagent-1150909`

@@ -2,11 +2,28 @@
 
 ## Status
 
-**STOP — Gate 3 BLOCKED on public SDK / root-header access; local audit complete.**
+**STOP — fresh-session handoff requested; Gate 3 still BLOCKED on SDK/header access.**
 
-Wait for review or the pending network/readback input. No UI/config/backend/
-Messenger setting change, live enablement, Production query or deployment
-is authorized. Gate 2A remains PASS.
+Stop this session; continue only Gate 3 in the new session requested below.
+No UI/config/backend/Messenger setting change, live enablement, Production
+query or deployment is authorized. Gate 2A remains PASS.
+
+## Human direction — continue in a new session
+
+The user reports applying/publishing environment network settings and requests
+a fresh-session continuation prompt plus GitHub handoff. Start the new session
+from latest main; do not assume the published settings have established access.
+
+In this session, runtime desired/observed revision `8` was current/enforced but
+custom allowed hosts remained empty, and both public probes still received
+proxy CONNECT HTTP 403. A new session may use refreshed environment setup;
+verify its actual policy/readiness and real GET/HEAD result before deciding.
+
+Resume only **Deployment Gate 3 — CSP / SDK / resource-loading readiness audit**.
+Read in order: `AGENTS.md`, `README.md`, `PROJECT_STATE.md`, `NEXT_TASK.md`,
+`docs/DEPLOYMENT_GATES.md`, `docs/PRODUCT_PLAN.md`, `docs/RESULT_CONTRACT.md`.
+Finish the missing SDK/header readback and minimum IT CSP proposal if access
+works; otherwise record the exact new evidence without guessing or bypassing.
 
 ## Completed evidence
 
@@ -39,6 +56,10 @@ still has no custom allowed hosts and excludes both requested destinations.
 Next input must be the actual environment name and allowed-domain list (or
 non-secret header/SDK readback), so this configuration/readiness discrepancy can
 be diagnosed. A publish confirmation alone does not establish network access.
+
+The user chose a new-session handoff rather than supplying the list in this
+session. Recheck the newly attached environment first; request configuration
+readback only if access remains blocked. Do not ask for credential contents.
 
 Alternatively provide current non-secret origin headers and SDK dependency/
 network evidence. Do not include Cookie/token/query payloads.

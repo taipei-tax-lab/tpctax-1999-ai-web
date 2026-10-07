@@ -349,6 +349,11 @@ what setting was changed or mark this as an origin CSP/IAM rejection. Gate 3
 remains BLOCKED. No frontend/config/backend/integration change or Production
 query occurred; no broadening or bypass of the proxy was attempted.
 
+The user requested fresh-session continuation and a GitHub handoff update.
+See `NEXT_TASK.md`. The new session must verify its current effective policy
+and actual public GET/HEAD access; do not assume session restart resolves the
+blocker. This session stops without further probing or live-gate advancement.
+
 **Gate 3 BLOCKED**, because a minimum live allowlist cannot yet be substantiated.
 Local frontend audit is complete. Root response headers and current SDK
 dependency/connection inventory are missing; the failure is environmental.

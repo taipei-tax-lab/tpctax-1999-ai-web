@@ -124,6 +124,34 @@ Do not:
 
 The intent is to restore official-site identity through small, evidence-based red accents while preserving the current high-fidelity structure.
 
+## Final interaction simplification rule
+
+The next UI refinement should simplify the citizen-facing interaction while preserving all session behavior.
+
+Citizen-facing copy and behavior:
+
+- remove the intro sentence under the page title;
+- move example questions above the query form;
+- present them as a simple sentence beginning with `您可詢問`, followed by two clickable quoted example questions;
+- use more common local-tax examples rather than niche wording;
+- use a common local-tax question as the textarea placeholder;
+- do not show an idle/status panel during normal ready state;
+- show status UI only for loading, unavailable, empty/error, or session-reset feedback as needed;
+- do not show the reset/session control before the first successful answer;
+- after a successful answer, show a secondary control labeled exactly:
+  `清除前次問答，重新提問`
+- that control must perform the existing real session reset/re-arm behavior; do not fake reset by only clearing visible text;
+- remove the explanatory sentence `可接著詢問；開始新查詢會重設查詢脈絡。`.
+
+Red identity may be slightly stronger than the previous restrained pass, but must remain tied to official values and function:
+- H1 red accent;
+- `您可詢問` emphasis;
+- query section top/accent treatment;
+- existing red result heading;
+- red hover/footer separator.
+
+Do not recolor the official yellow primary query button.
+
 ## Workflow
 
 - Project state lives in Git, not in the current session.

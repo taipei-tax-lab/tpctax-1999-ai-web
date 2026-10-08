@@ -1,5 +1,30 @@
 # NEXT_TASK
 
+## Human action required before resume
+
+Before Codex resumes deployment, the repository owner must change:
+
+**GitHub repo → Settings → Pages → Build and deployment → Source → GitHub Actions**
+
+Current Pages is still branch/Jekyll publication of the repository root. The
+prepared workflow intentionally refuses to deploy until Pages `build_type=workflow`
+so the live candidate cannot accidentally republish the full repository.
+
+After the human changes Source to GitHub Actions, resume this same branch
+`live-pages-candidate`. Do not restart the task from scratch.
+
+Expected next actions after the setting change:
+
+- verify Pages now reports Actions/workflow source;
+- merge or fast-forward the reviewed candidate to `main` as appropriate;
+- let `.github/workflows/pages.yml` deploy the exact production artifact;
+- record the new Actions run and actual hosted candidate;
+- continue only the still-unchecked deployment/E2E checklist items.
+
+Codex Cloud network may still be unable to browse `taipei-tax-lab.github.io`.
+If so, do not label the deployed page failed. Record the limitation and leave
+real-browser E2E for human/Web ChatGPT browser validation.
+
 ## Active task
 
 **Enable Production Messenger + GitHub Pages live E2E**

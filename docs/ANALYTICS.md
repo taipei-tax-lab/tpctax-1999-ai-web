@@ -90,3 +90,22 @@ trusted browser can observe the official loader and `page_view`, then one
 `ai_question_start` with no question/answer/source payload. Follow-up and
 reset/post-reset should add no second custom event. Loading the page alone
 must not add it. A queued call or offline fixture is not evidence of GA receipt.
+
+
+## Revision — per-query counting
+
+Human decision on 2026-10-08 supersedes the earlier once-per-tab interpretation.
+
+The next implementation must count **every accepted Messenger query** once.
+Follow-ups and post-reset questions therefore each increment the GA4 custom
+event count. Reset, example clicks and invalid submissions do not.
+
+Preferred event name: `ai_query_submit`.
+
+The raw custom-event count must be reported as **查詢次數**, not unique users or
+「發問人次」. Unique users/sessions, if needed later, should come from GA4's own
+user/session dimensions filtered by the query event.
+
+The privacy/data-minimization rule remains unchanged: no question, answer,
+source, inferred tax category or user-entered identifier is sent as a custom
+event parameter.

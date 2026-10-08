@@ -139,6 +139,20 @@ images/app/transport/model/demo bytes and other config fields remain unchanged.
 - [x] Record live production ZIP SHA-256.
 - [x] Do not add the official 1999-site entry link yet.
 
+- [x] Prepared official Actions workflow with a fail-closed Pages source guard.
+- [x] Generated candidate live ZIP/checksum (not an E2E-approved IT release).
+
+Evidence: Pages is already enabled; the conditional new-site setup above does
+not apply. Migration from root Jekyll to Actions Source remains blocked because
+the available API/connector cannot administer Pages. Prepared workflow has not
+run or deployed. All changes are pushed only to `live-pages-candidate`: pushing
+live config to `main` now would republish the full repository through Jekyll.
+No live-candidate deployment SHA/run exists. URL is established by the prior
+deploy logs in A; that baseline is not candidate E2E evidence. Candidate ZIP:
+211,148 bytes, SHA-256
+`c19ad3e5ebfc5d3a97c45aaf1cdd3f36dec33cf2b854b59d5be35335c57a4ebd`.
+No official-site entry is added. Actual deployment/parity remains unchecked.
+
 ### F. Real browser Production E2E
 
 - [ ] Live page does not show `服務準備中` in normal ready state.

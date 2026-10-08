@@ -136,8 +136,8 @@ images/app/transport/model/demo bytes and other config fields remain unchanged.
 - [x] Record actual GitHub Pages URL.
 - [ ] Record deployed commit SHA.
 - [ ] Record GitHub Actions workflow/run evidence.
-- [ ] Record live production ZIP SHA-256.
-- [ ] Do not add the official 1999-site entry link yet.
+- [x] Record live production ZIP SHA-256.
+- [x] Do not add the official 1999-site entry link yet.
 
 ### F. Real browser Production E2E
 
@@ -199,8 +199,8 @@ above remain unchecked. No CX/UI/session/security change is proposed.
 - [x] Update `docs/DEPLOYMENT_GATES.md`.
 - [x] Update `docs/IT_HANDOFF.md`.
 - [x] Update this `NEXT_TASK.md` checklist with completed items and evidence.
-- [ ] Commit/push all changes.
-- [ ] STOP for Web ChatGPT review.
+- [x] Commit/push all changes.
+- [x] STOP for Web ChatGPT review.
 
 ## Completion report
 
@@ -254,5 +254,8 @@ Do not change without new explicit human instruction:
 - Candidate branch `live-pages-candidate` is used to avoid automatically
   publishing the full repo via main/root Jekyll. Review this branch's diff before
   replacing main. Main and current Pages baseline remain unchanged.
+- Candidate implementation commit/push confirmed: `fbc3814778d68bb4bd55ee74ef8e5face71e0163`
+  on `origin/live-pages-candidate`; final checklist reporting follows in a small
+  documentation commit.
 - STOP for Web ChatGPT review after candidate commit/push. Unchecked acceptance
   items intentionally remain pending; no live PASS is claimed.

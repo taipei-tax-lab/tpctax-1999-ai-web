@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 ## Status
 
-**UI FROZEN — RENDERER/RENTAL/SESSION PASS — BRAND LINK + MINIMAL GA4 IMPLEMENTED; LIVE GA4 PENDING**
+**UI FROZEN — CORE LIVE PASS — PER-QUERY GA4 + LOW-RISK PERFORMANCE OPTIMIZATION NEXT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -959,6 +959,31 @@ treated as current blockers.
 The human owner has supplied the approved GA4 Web Data Stream Measurement ID:
 `G-S891SFSMBH`. This ID is non-secret and may be used in the frontend analytics
 configuration. GA4 live activation is therefore authorized for the current task.
+
+## Analytics semantics revision + performance direction — 2026-10-08
+
+Human decision supersedes the previous once-per-tab analytics contract.
+
+New GA4 meaning:
+- count every valid query that is actually accepted/sent to Messenger;
+- follow-up queries count separately;
+- post-reset queries count separately;
+- reset/example clicks/invalid submissions do not count;
+- do not send user-entered question/answer/source content.
+
+Preferred custom event name is `ai_query_submit` because the metric now means
+**total query submissions**, not unique people or one question-start visit.
+
+Reporting terminology:
+- `page_view` = page views;
+- custom query event count = 查詢次數;
+- do not label raw custom-event count as unique people/發問人次.
+
+The same task also authorizes a narrow startup-performance review and small
+evidence-backed optimizations only. No framework/bundler/service-worker/CDN
+migration or major UI/architecture rewrite is authorized. Priority is to avoid
+non-critical GA4 work competing with core page/Messenger startup while preserving
+current UX and frozen visuals.
 
 ## Backend contract
 

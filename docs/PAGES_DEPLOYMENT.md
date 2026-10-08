@@ -50,8 +50,8 @@ and eight assets) remain byte-identical to the first deployed candidate.
 - Updated candidate ZIP: 211,729 bytes.
 - SHA-256: `bc5faed14477cf3eafc390a2889c0ee559c37cdecf0a24ba951d70d73fb9fe65`.
 - Exact 11-file allowlist, CRC/manifest/source-byte/credential checks: PASS.
-- Final documentation artifact deployment evidence is recorded below after
-  Actions completes; this file is not part of the production ZIP.
+- Final documentation artifact deployment: PASS (see below). This report is
+  not a production ZIP payload.
 
 ## Available HTTPS evidence
 
@@ -101,6 +101,31 @@ actual SDK/connect/CSP/CORS/session evidence. Do not weaken production policy,
 change CX/Messenger binding/allowed domains, or add the official entry link.
 Agency final path/security headers still require their own validation.
 
-Small scratch reports/headers/screenshots remain outside tracked source under
-work/resume; durable results are recorded here and in NEXT_TASK.md. No Drive
+Small scratch reports/headers remain outside tracked source under
+/workspace/work/tpctax-pages-resume; durable results are recorded here and in NEXT_TASK.md. No Drive
 upload or message to others was performed. Commit/push then STOP for review.
+
+
+## Final deployed artifact
+
+| Evidence | Value |
+| --- | --- |
+| Actions run | [37715179426](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37715179426) |
+| Deployed SHA | `0247ad4b14f2069707ae969832db6960c2db01f9` |
+| Source/build/deploy | PASS / PASS / PASS |
+| Deployment success | 2026-10-08 09:54:08 Asia/Taipei (01:54:08 UTC) |
+| Pages URL | <https://taipei-tax-lab.github.io/tpctax-1999-ai-web/> |
+| github-pages artifact | `11523566263` |
+| ZIP size | 211,729 bytes |
+| ZIP SHA-256 | `bc5faed14477cf3eafc390a2889c0ee559c37cdecf0a24ba951d70d73fb9fe65` |
+
+Final hosted GET verification: all 11 files HTTP 200 and byte-identical to the
+updated archive, including new IT_HANDOFF.md and MANIFEST.json; all six exclusion
+probes still 404. The runtime is unchanged from the first deployed candidate.
+Final run rechecks Node tests, deterministic build/committed archive/checksum,
+manifest/source/credential validation and production-only upload. Both jobs PASS.
+
+Subsequent reporting-only commit updates NEXT_TASK, PROJECT_STATE and this file;
+it is not a new artifact deployment and does not change any ZIP payload or hash.
+Both main and live-pages-candidate receive the reporting commit. Preserve the
+deployed SHA above when distinguishing branch HEAD from deployed artifact.

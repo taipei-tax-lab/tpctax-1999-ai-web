@@ -329,7 +329,13 @@ Do not change without new explicit human instruction:
 ## Completion summary — resumed deployment, 2026-10-08 (Asia/Taipei)
 
 - Pages Source migration verified; production-only deployment and hosted-byte
-  parity PASS. Exact run / SHA / final ZIP are in `docs/PAGES_DEPLOYMENT.md`.
+  parity PASS. Final run: [37715179426](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37715179426);
+  deployed SHA: `0247ad4b14f2069707ae969832db6960c2db01f9`.
+- Final candidate production ZIP SHA-256:
+  `bc5faed14477cf3eafc390a2889c0ee559c37cdecf0a24ba951d70d73fb9fe65`
+  (211,729 bytes; 11 hosted files byte-equivalent; exclusion probes 404).
+  Artifact `11523566263`; deployment success 09:54:08 Asia/Taipei.
+  Reporting-only commit after deployment does not change this artifact SHA/hash.
 - Actual URL: `https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`.
 - Messenger initialized: UNVERIFIED / BLOCKED, not a demonstrated failure.
 - F: headers captured; all remaining acceptance checks pending. Browser document

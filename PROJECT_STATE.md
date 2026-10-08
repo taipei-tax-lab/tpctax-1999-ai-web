@@ -957,3 +957,13 @@ PASS or a demonstrated frontend failure. Gate 3 CONDITIONAL PASS; IT-ready NO.
 Unchecked F/G remain for trusted-browser validation. Handoff document refresh
 produces an updated candidate archive with identical runtime bytes. No official
 entry link or backend mutation. Commit/push and STOP per `NEXT_TASK.md`.
+
+
+Final documentation artifact deployment confirmed: Actions run
+[37715179426](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37715179426),
+deployed SHA `0247ad4b14f2069707ae969832db6960c2db01f9`, success at
+2026-10-08 09:54:08 Asia/Taipei. Current candidate ZIP SHA-256
+`bc5faed14477cf3eafc390a2889c0ee559c37cdecf0a24ba951d70d73fb9fe65`
+(211,729 bytes). Final hosted 11-file byte parity and exclusion probes PASS.
+Subsequent reporting-only commit is branch HEAD, not a new deployed artifact;
+runtime/ZIP unchanged. Gate 3 / E2E / IT-ready decisions above remain unchanged.

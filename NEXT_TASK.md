@@ -38,11 +38,17 @@ Still not human-verified:
 
 ## A. Preserve backend and routing
 
-- [ ] Do not modify Router, Rental Playbook, 1999 FAQ Playbook, Tools, Data
+- [x] Do not modify Router, Rental Playbook, 1999 FAQ Playbook, Tools, Data
       Stores, Production versions, Environment mappings, Messenger binding, or
       allowed domains.
-- [ ] Confirm the fix is frontend-renderer-only unless later Rental live evidence
+- [x] Confirm the fix is frontend-renderer-only unless later Rental live evidence
       proves a backend change is necessary.
+
+Evidence (execution start): synchronized `origin/main` at
+`88b14f6` (exact SHA recorded in completion).
+Read repository instructions and requested project/deployment documents.
+Only result normalization/rendering and focused tests/docs/packages are in scope;
+HTML/CSS, config, SDK/transport/session and all CX resources stay unchanged.
 
 ## B. Safe Markdown subset for the custom 1999 renderer
 
@@ -53,17 +59,17 @@ Markdown.
 Implement a minimal safe renderer for the two formats actually observed and
 required:
 
-- [ ] `**text**` → semantic `<strong>`.
-- [ ] `[label](https://...)` → semantic `<a>` whose visible text is `label`;
+- [x] `**text**` → semantic `<strong>`.
+- [x] `[label](https://...)` → semantic `<a>` whose visible text is `label`;
       do not display the destination URL beside it.
-- [ ] Preserve line breaks and all ordinary answer wording.
-- [ ] Preserve safe bare HTTP(S) URL auto-linking for non-Markdown URLs.
-- [ ] Reject unsafe/non-HTTP(S) Markdown destinations using the existing
+- [x] Preserve line breaks and all ordinary answer wording.
+- [x] Preserve safe bare HTTP(S) URL auto-linking for non-Markdown URLs.
+- [x] Reject unsafe/non-HTTP(S) Markdown destinations using the existing
       `safeUrl()` rules.
-- [ ] Do not use response `innerHTML`, raw HTML parsing, `eval`, or a broad
+- [x] Do not use response `innerHTML`, raw HTML parsing, `eval`, or a broad
       Markdown library that introduces unnecessary executable/HTML behavior.
-- [ ] Any response HTML such as `<script>` must remain inert visible text.
-- [ ] Keep current UI/frozen styling except minimal CSS if required for rendered
+- [x] Any response HTML such as `<script>` must remain inert visible text.
+- [x] Keep current UI/frozen styling except minimal CSS if required for rendered
       `strong` / inline link consistency.
 
 Do not implement images, tables, arbitrary HTML, or full Markdown unless a
@@ -77,44 +83,61 @@ Desired citizen-facing result:
 
 where the question/title itself is the clickable link and the raw URL is hidden.
 
-- [ ] Extract/recognize safe URLs already represented by Markdown links in the
+- [x] Extract/recognize safe URLs already represented by Markdown links in the
       answer.
-- [ ] Do not add those same URLs again as ordinary `sources[]` solely because
+- [x] Do not add those same URLs again as ordinary `sources[]` solely because
       they appear inside the answer text.
-- [ ] More generally, an HTTP(S) URL already rendered inline in the answer must
+- [x] More generally, an HTTP(S) URL already rendered inline in the answer must
       not be duplicated in the lower ordinary `參考資料` list.
-- [ ] Preserve explicit structured citations that are genuinely additional and
+- [x] Preserve explicit structured citations that are genuinely additional and
       are not already represented inline.
-- [ ] Preserve optional `faqMetadata` behavior unless a direct duplicate is
+- [x] Preserve optional `faqMetadata` behavior unless a direct duplicate is
       demonstrated.
-- [ ] Verify the screenshot scenario ends with the inline linked title and no
+- [x] Verify the screenshot scenario ends with the inline linked title and no
       duplicate lower `tpctax.gov.taipei` source item.
+
+Evidence: one shared minimal parser produces DOM text/strong/anchor nodes and
+canonical inline URL inventory. Unsafe/incomplete Markdown and unsupported
+images remain literal; no response HTML parsing/dependency/CSS change.
+Normalization and rendering both remove ordinary inline-source duplicates;
+additional structured citations and explicit FAQ metadata are preserved.
+Screenshot scenario reconstruction is synthetic and PASS at desktop/390/320px;
+this does not claim a new live response or tax-quality result.
 
 ## D. Tests
 
 Add/update focused tests for:
 
-- [ ] bold rendering;
-- [ ] Markdown link label rendering with hidden destination text;
-- [ ] line-break preservation;
-- [ ] safe bare URL linkification;
-- [ ] duplicate inline/source suppression;
-- [ ] additional structured source remains visible when not duplicated;
-- [ ] `javascript:`, `data:`, credential-bearing and malformed links rejected;
-- [ ] raw HTML/script remains inert text;
-- [ ] no regression in generic answer / FAQ metadata rendering;
-- [ ] reset/session/currentPlaybook behavior unchanged.
+- [x] bold rendering;
+- [x] Markdown link label rendering with hidden destination text;
+- [x] line-break preservation;
+- [x] safe bare URL linkification;
+- [x] duplicate inline/source suppression;
+- [x] additional structured source remains visible when not duplicated;
+- [x] `javascript:`, `data:`, credential-bearing and malformed links rejected;
+- [x] raw HTML/script remains inert text;
+- [x] no regression in generic answer / FAQ metadata rendering;
+- [x] reset/session/currentPlaybook behavior unchanged.
 
 Run:
 
-- [ ] Node tests PASS.
-- [ ] Offline Chromium PASS.
-- [ ] production package integrity/manifest/repeat-build PASS.
-- [ ] credential/secret scan PASS.
+- [x] Node tests PASS.
+- [x] Offline Chromium PASS.
+- [x] production package integrity/manifest/repeat-build PASS.
+- [x] credential/secret scan PASS.
+
+Evidence: Node **14 PASS**, offline Chromium **17 grouped PASS**; browser
+checks use real normalizer/renderer with labeled synthetic fixtures, zero
+external/Production requests or page errors. Existing generic/FAQ, reset,
+expiry, timeout and one-shot currentPlaybook tests PASS. Screenshots and report:
+`/workspace/work/renderer-parity/browser/`. Config/HTML/CSS/app/transport/demo
+bytes are unchanged. Production/demo double builds byte-identical; 11-file CRC/manifest/source
+parity/credential scan PASS. Candidate ZIP 212,951 bytes, SHA-256
+`4abde0ae04a749b1e8ca8a6a7136d7f3f1adb80d6ea6d8ece05be672ba018d2a`.
 
 ## E. GitHub Pages deployment
 
-- [ ] Regenerate live production `packages/hosting.zip` + checksum.
+- [x] Regenerate live production `packages/hosting.zip` + checksum.
 - [ ] Commit/push to `main`.
 - [ ] GitHub Actions production-only Pages deployment PASS.
 - [ ] Record deployed commit/run/ZIP SHA-256.
@@ -137,9 +160,9 @@ text responses support Markdown including `**Bold**` and
 
 Therefore:
 
-- [ ] Confirm by read-only project evidence that Rental still uses the official
+- [x] Confirm by read-only project evidence that Rental still uses the official
       Conversational Messenger / Production integration.
-- [ ] Do not change the shared 1999 FAQ Playbook merely to compensate for the
+- [x] Do not change the shared 1999 FAQ Playbook merely to compensate for the
       custom 1999 frontend.
 - [ ] After the 1999 frontend fix is deployed, run/obtain one Rental live
       verification where a question is answered through the 1999 FAQ Playbook.
@@ -152,6 +175,16 @@ Therefore:
 - [ ] If Rental does not render correctly, capture exact screenshot/network/
       response evidence and STOP for Web ChatGPT review before any backend
       mutation.
+
+Evidence (read-only): Rental main `e3d786a3f4eb32ba1165644ac2008888b314f936`
+`site/messenger.html` and `assets/js/messenger-ui.js` embed native official
+SDK/chat-bubble and one-shot Rental Playbook on the same Production agent.
+Actual released Rental Pages HTML GET 200 matches that integration. Backend
+main `2f8205c78d62c3e7196f2e818a0edce10dae820b` STATE/7F closeout record
+Conversational Messenger Production cutover, exact accepted v2 Playbooks,
+6/6 Production smoke and Rental→FAQ return. This is retained-integration
+evidence, not newly observed live rendering or a fresh Console readback.
+Sources and limitations: `docs/RENDERER_PARITY.md`. Live attempt follows deployment.
 
 ## G. Trusted-browser completion
 
@@ -173,12 +206,12 @@ perform them.
 
 ## H. Documentation / completion
 
-- [ ] Update `docs/RESULT_CONTRACT.md` to describe the safe Markdown subset and
+- [x] Update `docs/RESULT_CONTRACT.md` to describe the safe Markdown subset and
       inline-source de-duplication rule.
-- [ ] Update `PROJECT_STATE.md`.
+- [x] Update `PROJECT_STATE.md`.
 - [ ] Update `docs/DEPLOYMENT_GATES.md` only if deployment/live evidence changes
       a gate decision.
-- [ ] Update `docs/IT_HANDOFF.md` if the new live package hash changes.
+- [x] Update `docs/IT_HANDOFF.md` if the new live package hash changes.
 - [ ] Update this checklist with evidence and completion summary.
 - [ ] Commit/push and STOP for Web ChatGPT review.
 

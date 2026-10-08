@@ -124,6 +124,74 @@ with sync_playwright() as p:
     assert page.locator('[data-faq]').is_hidden()
     assert page.locator('a[href^="javascript:"]').count() == 0
     checks.append('unsafe response rendered as text; invalid source/FAQ URL rejected')
+    # Reconstruct the owner's presentation defect with explicitly synthetic text.
+    # Invoke the real normalizer/renderer; no SDK response or tax claim is fabricated.
+    url = 'https://tpctax.gov.taipei/News.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16'
+    label = '地價稅按自用住宅用地優惠稅率課稅有哪些條件？如何申請？'
+    text = f'**一、適用條件：**\n合成格式測試，非稅務回答。\n來源與詳細資訊請參考：[{label}]({url})'
+    def render_fixture(answer, citations=None, metadata=None, normalize=True):
+        return page.evaluate('''async ({answer,citations,metadata,normalize}) => {
+          const {normalizeResult,renderResult} = await import('./assets/result-model.js');
+          const detail={data:{messages:[{type:'text',text:answer},{citations}]}};
+          if(metadata) detail.raw={queryResult:{responseMessages:[{payload:{universalAnswer:{schemaVersion:1,faqMetadata:metadata}}}]}};
+          const model=normalize ? normalizeResult(detail,['https://tpctax.gov.taipei']) : {answer,sources:citations};
+          const root=document.querySelector('#result');renderResult(model,root);root.hidden=false;
+          return model;
+        }''', {'answer':answer,'citations':citations or [],'metadata':metadata,'normalize':normalize})
+    model = render_fixture(text,[{'url':url,'title':'duplicate'}])
+    assert 'sources' not in model
+    assert page.locator('[data-answer] strong').inner_text() == '一、適用條件：'
+    assert page.locator('[data-answer]').text_content() == f'一、適用條件：\n合成格式測試，非稅務回答。\n來源與詳細資訊請參考：{label}'
+    assert page.locator('[data-answer] a').inner_text() == label
+    assert page.locator('[data-answer] a').get_attribute('href') == url
+    assert url not in page.locator('[data-answer]').inner_text()
+    assert '**' not in page.locator('[data-answer]').inner_text()
+    assert page.locator('[data-source-section]').is_hidden()
+    page.screenshot(path=str(OUT/'renderer-parity-desktop.png'),full_page=True)
+    for width in [390,320]:
+        page.set_viewport_size({'width':width,'height':844})
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        assert page.locator('[data-answer] a').is_visible()
+        page.screenshot(path=str(OUT/f'renderer-parity-{width}.png'),full_page=True)
+    page.set_viewport_size({'width':1440,'height':1100})
+    checks.append('synthetic screenshot scenario: semantic bold/labeled link, exact line breaks, no exposed URL or duplicate source; desktop/390/320px PASS')
+    additional = 'https://www.etax.nat.gov.tw/'
+    render_fixture(text,[{'url':url},{'url':additional,'title':'額外來源'}])
+    assert page.locator('[data-sources] li').count() == 1
+    assert page.locator('[data-sources] a').inner_text() == '額外來源'
+    render_fixture(text,[{'url':url}],normalize=False)
+    assert page.locator('[data-source-section]').is_hidden()
+    checks.append('duplicate source suppressed in normalizer and direct renderer; genuinely additional structured citation retained')
+    render_fixture('裸網址 HTTPS://example.com/a_(b)。\n**[來源](https://example.com/other)**')
+    assert page.locator('[data-answer] a').count() == 2
+    assert page.locator('[data-answer] a').first.get_attribute('href') == 'https://example.com/a_(b)'
+    assert page.locator('[data-answer]').text_content() == '裸網址 HTTPS://example.com/a_(b)。\n來源'
+    assert page.locator('[data-answer] strong a').inner_text() == '來源'
+    assert page.locator('[data-source-section]').is_hidden()
+    checks.append('safe bare URL punctuation/parentheses and bold enclosing a labeled link render correctly without duplicate sources')
+    malicious = '\n'.join(f'[不安全]({destination})' for destination in [
+        'javascript:alert(1)','data:text/html,<script>alert(1)</script>',
+        'https://user:pass@example.com/','https://','https://[bad'])
+    malicious += '\n[未關閉](https://example.com/unclosed\n![不支援圖片](https://example.com/image.png)'
+    malicious += '\n<script>window.__rendererExecuted=true</script><img src=x onerror="window.__rendererExecuted=true">'
+    render_fixture(malicious)
+    assert page.locator('[data-answer]').text_content() == malicious
+    assert page.locator('[data-answer] a, [data-answer] script, [data-answer] img').count() == 0
+    assert page.evaluate('window.__rendererExecuted === undefined')
+    assert page.locator('[data-source-section]').is_hidden()
+    checks.append('unsafe/malformed/incomplete Markdown and unsupported images stay literal; raw script/HTML inert, no executable elements or navigation')
+    render_fixture(f'[<img onerror=alert(1)>]({url}) **<script>inert</script>**')
+    assert page.locator('[data-answer] img, [data-answer] script').count() == 0
+    assert page.locator('[data-answer] a').inner_text() == '<img onerror=alert(1)>'
+    assert page.locator('[data-answer] strong').inner_text() == '<script>inert</script>'
+    render_fixture(text,metadata={'kind':'official1999Faq','title':'合成 FAQ metadata','url':url})
+    assert page.locator('[data-faq]').is_visible()
+    assert page.locator('[data-faq] p').inner_text() == '合成 FAQ metadata'
+    assert page.locator('[data-source-section]').is_hidden()
+    render_fixture('下一個一般回答')
+    assert page.locator('[data-faq]').is_hidden()
+    assert page.locator('[data-answer] strong, [data-answer] a').count() == 0
+    checks.append('HTML in labels/bold remains inert; explicit FAQ metadata preserved; next generic response clears earlier formatting/metadata')
     query('empty', '空回應')
     assert page.get_by_role('heading', name='尚未取得解答').is_visible()
     query('error', '錯誤回應')

@@ -79,3 +79,17 @@ Codex Cloud 的 Chromium 在頁面載入前回報 `ERR_CERT_AUTHORITY_INVALID`�
 reset 後問答及 390px/CSP/CORS/console 檢查，才能放行正式資訊室交付。
 
 此次文件更新隨 candidate 重新打包；runtime 檔案未變更。尚未新增官方入口。
+
+## Renderer parity candidate 更新 — 2026-10-08
+
+本次重新打包安全粗體與 Markdown 連結呈現，以及答案 inline URL 的普通
+來源去重修正。實際交付 ZIP 的 SHA-256 以外附 `hosting.sha256` 為準；
+部署 run／commit／hash 另記於 repo 的 `docs/RENDERER_PARITY.md`。
+封面 UI、config、Messenger session/reset/first-turn routing 與 CX backend
+均未變更。資訊室最終路徑仍不需改程式。
+
+原本的人工作證已確認 Pages 可以送出真實問答；新版仍需 trusted-browser
+完成格式、追問、reset 後問答、390px 與 console/CSP/CORS 檢查，並取得
+Rental native Messenger 的 FAQ-route 格式 parity 證據。離線 renderer PASS
+不能代替上述 live 驗證；完成前仍是待驗證 candidate，尚不可當作已驗證
+正式交付版。尚未新增官方 1999 入口。

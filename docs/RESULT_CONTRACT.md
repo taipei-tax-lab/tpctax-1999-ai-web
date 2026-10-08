@@ -41,3 +41,23 @@ Custom form → `df-messenger.sendQuery(query)` → `df-request-sent` mutates re
 - https://docs.cloud.google.com/dialogflow/cx/docs/concept/integration/dialogflow-messenger
 
 Offline fixtures 不是稅務品質測試，不能證明 live SDK／Production 回答或路由；FAQ metadata fixture 明確標示合成。
+
+## 安全呈現實作與測試 — 2026-10-08
+
+`answerParts()` 是 normalization 的 inline URL 清單與 DOM renderer 共用的
+最小 parser。它只建立文字、`strong` 與安全 `a` 節點；Markdown 連結中的
+URL 可含成對括號，連結 label 可有粗體，粗體中可有安全連結。不建立巢狀
+anchor。未閉合、不安全或空 label 的連結保留原文；`![image](URL)` 保留
+原文，不載入圖片。不支援其他 Markdown 語法或 HTML 解譯。
+
+安全裸網址保留原字串作 link label，href 依 `safeUrl()` 正規化；移除句末
+標點與未配對的右括號時，標點仍保留為答案文字。所有 ordinary structured
+sources 以同一正規化 URL 與 inline 清單比對，在 normalizer 和 renderer
+兩處抑制重複項目；未重複的額外 citation 與 optional FAQ metadata 不變。
+`answer` 原文在 normalized model 中保持完整，呈現時僅移除核准格式的 delimiters。
+
+Node 與真實 Chromium DOM tests 覆蓋粗體／label／換行、裸 URL、去重、額外
+structured source、惡意／未閉合目的 URL、raw HTML/script 不執行，以及後續
+一般回答清除前次格式。Screenshot scenario 使用明確合成格式 fixture，
+不代表 live 回答或稅務品質證據；session/reset/currentPlaybook regression
+維持獨立測試。結果見 `NEXT_TASK.md` 與 `RENDERER_PARITY.md`。

@@ -7,9 +7,75 @@ export function safeUrl(value) {
   } catch { return null; }
 }
 
+function markdownLink(text, start) {
+  const labelEnd = text.indexOf('](', start + 1);
+  if (labelEnd < 0 || /[\n\r\[\]]/.test(text.slice(start + 1, labelEnd))) return null;
+  let depth = 1, end = labelEnd + 2;
+  for (; end < text.length && !/[\n\r]/.test(text[end]); end++) {
+    if (text[end] === '(') depth++;
+    if (text[end] === ')' && --depth === 0) break;
+  }
+  const closed = depth === 0;
+  return {label: text.slice(start + 1, labelEnd),
+    url: closed ? safeUrl(text.slice(labelEnd + 2, end)) : null,
+    end: closed ? end + 1 : end};
+}
+
+function bareUrl(text) {
+  let value = text.match(/^https?:\/\/[^\s<>"']+/i)?.[0];
+  if (!value) return null;
+  value = value.replace(/[.,;!?，。；！？、）]+$/, '');
+  // Keep balanced URL parentheses; only sentence-closing parentheses are removed.
+  while (value.endsWith(')') && (value.match(/\)/g)?.length || 0) > (value.match(/\(/g)?.length || 0)) {
+    value = value.slice(0, -1);
+  }
+  const url = safeUrl(value);
+  return url ? {text: value, url} : null;
+}
+
+/** Only strong, labeled HTTP(S) links and bare URLs. No response HTML parser. */
+export function answerParts(text, {bold = true, links = true, bare = true} = {}) {
+  const parts = [];
+  const literal = value => {
+    if (parts.at(-1)?.type === 'text') parts.at(-1).text += value;
+    else parts.push({type: 'text', text: value});
+  };
+  for (let i = 0; i < text.length;) {
+    const image = text.startsWith('![', i);
+    const link = links && (image || text[i] === '[') ? markdownLink(text, i + (image ? 1 : 0)) : null;
+    if (link) {
+      if (link.url && link.label && !image) {
+        parts.push({type: 'link', url: link.url,
+          children: answerParts(link.label, {links: false, bare: false})});
+      } else literal(text.slice(i, link.end));
+      i = link.end;continue;
+    }
+    if (bold && text.startsWith('**', i)) {
+      const end = text.indexOf('**', i + 2);
+      if (end > i + 2) {
+        parts.push({type: 'strong', children: answerParts(text.slice(i + 2, end), {bold: false, links, bare})});
+        i = end + 2;continue;
+      }
+    }
+    const url = bare ? bareUrl(text.slice(i)) : null;
+    if (url) {
+      parts.push({type: 'link', url: url.url, children: [{type: 'text', text: url.text}]});
+      i += url.text.length;continue;
+    }
+    literal(text[i]);i++;
+  }
+  return parts;
+}
+
 export function textUrls(text) {
-  return (text.match(/https?:\/\/[^\s<>"']+/g) || [])
-    .map(x => x.replace(/[.,;!?，。；！？、）)]*$/, '')).filter(x => safeUrl(x));
+  const urls = [];
+  const collect = parts => {
+    for (const part of parts) {
+      if (part.type === 'link') urls.push(part.url);
+      else if (part.children) collect(part.children);
+    }
+  };
+  collect(answerParts(text));return urls;
 }
 
 export function normalizeResult(detail = {}, officialOrigins = []) {
@@ -46,28 +112,28 @@ export function normalizeResult(detail = {}, officialOrigins = []) {
       addSource(url, faq.title);
     }
   }
-  for (const url of textUrls(answer)) addSource(url);
+  // Inline links already provide navigation; keep only genuinely additional citations.
+  const inline = new Set(textUrls(answer));
+  const additional = sources.filter(source => !inline.has(source.url));
   // Missing required answer is an empty-result state, never a synthesized answer.
-  return {answer, ...(sources.length ? {sources} : {}), ...(faqMetadata ? {faqMetadata} : {})};
+  return {answer, ...(additional.length ? {sources: additional} : {}), ...(faqMetadata ? {faqMetadata} : {})};
 }
 
 export function appendAnswer(container, answer) {
-  // DOM text nodes preserve wording and never interpret response HTML/Markdown as code.
-  let offset = 0;
-  for (const match of answer.matchAll(/https?:\/\/[^\s<>"']+/g)) {
-    const original = match[0];
-    const url = textUrls(original)[0];
-    if (!url) continue;
-    const urlText = original.replace(/[.,;!?，。；！？、）)]*$/, '');
-    container.append(document.createTextNode(answer.slice(offset, match.index)));
-    const link = document.createElement('a');link.href = safeUrl(url);link.textContent = urlText;
-    container.append(link);offset = match.index + urlText.length;
-  }
-  container.append(document.createTextNode(answer.slice(offset)));
+  const inline = new Set();
+  const append = (target, parts) => {
+    for (const part of parts) {
+      if (part.type === 'text') {target.append(document.createTextNode(part.text));continue;}
+      const node = document.createElement(part.type === 'strong' ? 'strong' : 'a');
+      if (part.type === 'link') {node.href = part.url;inline.add(part.url);}
+      append(node, part.children);target.append(node);
+    }
+  };
+  append(container, answerParts(answer));return inline;
 }
 
 export function renderResult(result, root) {
-  const answer = root.querySelector('[data-answer]');answer.replaceChildren();appendAnswer(answer, result.answer);
+  const answer = root.querySelector('[data-answer]');answer.replaceChildren();const inline = appendAnswer(answer, result.answer);
   const sources = root.querySelector('[data-sources]');sources.replaceChildren();
   const faq = root.querySelector('[data-faq]');faq.replaceChildren();faq.hidden = !result.faqMetadata;
   if (result.faqMetadata) {
@@ -76,7 +142,7 @@ export function renderResult(result, root) {
     const link = document.createElement('a');link.href = result.faqMetadata.url;link.textContent = '查看官方完整內容 →';
     faq.append(heading, title, link);
   }
-  const ordinary = (result.sources || []).filter(s => s.url !== result.faqMetadata?.url);
+  const ordinary = (result.sources || []).filter(s => safeUrl(s.url) && !inline.has(safeUrl(s.url)) && s.url !== result.faqMetadata?.url);
   root.querySelector('[data-source-section]').hidden = !ordinary.length;
   for (const s of ordinary) {
     const item = document.createElement('li');const link = document.createElement('a');link.href = s.url;

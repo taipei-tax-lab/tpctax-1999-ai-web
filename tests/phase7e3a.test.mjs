@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {normalizeResult, safeUrl} from '../assets/result-model.js';
+import {normalizeResult, safeUrl, textUrls} from '../assets/result-model.js';
 import {MessengerTransport} from '../assets/messenger-transport.js';
 const official = 'https://tpctax.gov.taipei';
 const raw = messages => ({raw:{queryResult:{responseMessages:messages}}});
@@ -9,7 +9,7 @@ test('answer-only raw response needs no FAQ or sources', () => {
 });
 test('parsed Messenger text wins and does not infer FAQ from official URL', () => {
   const result = normalizeResult({data:{messages:[{type:'text',text:`回答 ${official}/News.aspx`}]},...raw([{text:{text:['raw']}}])},[official]);
-  assert.equal(result.answer,`回答 ${official}/News.aspx`);assert.equal(result.sources.length,1);assert.equal(result.faqMetadata,undefined);
+  assert.equal(result.answer,`回答 ${official}/News.aspx`);assert.equal(result.sources,undefined);assert.equal(result.faqMetadata,undefined);
 });
 test('versioned explicit metadata alone enables FAQ; wrong origin/kind rejected', () => {
   const payload = {universalAnswer:{schemaVersion:1,answer:'回答',faqMetadata:{kind:'official1999Faq',title:'來源標題',url:official+'/News.aspx'}}};
@@ -24,6 +24,33 @@ test('unsafe URLs rejected, citations deduplicated, multiple sources retained', 
 });
 test('empty/malformed responses never invent answer', () => {
   for (const detail of [{}, {raw:null}, raw([]), {raw:{queryResult:{responseMessages:'bad'}}}]) assert.deepEqual(normalizeResult(detail),{answer:''});
+});
+test('inline Markdown and bare links suppress only duplicate structured sources', () => {
+  const answer = `**一、適用條件：**\n原文\n來源：[官方標題](${official}/News.aspx)\n另見 https://www.etax.nat.gov.tw/`;
+  const result = normalizeResult({data:{messages:[{type:'text',text:answer},
+    {type:'citation',url:official+'/News.aspx',title:'同一來源'},
+    {citations:[{url:'https://www.etax.nat.gov.tw/'},{url:official+'/extra',title:'額外資料'}]}]}});
+  assert.equal(result.answer, answer);
+  assert.deepEqual(result.sources,[{url:official+'/extra',title:'額外資料'}]);
+});
+test('inline URL canonicalization deduplicates versioned sources without losing FAQ metadata', () => {
+  const url = official+'/News.aspx';
+  const result = normalizeResult(raw([{text:{text:['[標題](https://TPCTAX.gov.taipei:443/News.aspx)']}},
+    {payload:{universalAnswer:{schemaVersion:1,sources:[{url},{url:official+'/other'}],
+      faqMetadata:{kind:'official1999Faq',title:'明確標題',url}}}}]),[official]);
+  assert.deepEqual(result.sources,[{url:official+'/other'}]);
+  assert.equal(result.faqMetadata.url,url);
+});
+test('unsafe or incomplete Markdown destinations stay inert and are not source candidates', () => {
+  for (const destination of ['javascript:alert(1)','data:text/html,x','https://user:pass@example.com/','https://','https://[bad']) {
+    assert.deepEqual(textUrls(`[label](${destination})`),[]);
+  }
+  assert.deepEqual(textUrls('[label](https://example.com/unclosed'),[]);
+  assert.deepEqual(textUrls('![image](https://example.com/image.png)'),[]);
+});
+test('safe labeled and bare links preserve balanced URL parentheses and sentence punctuation', () => {
+  assert.deepEqual(textUrls('**[標題](https://example.com/a_(b))**\nHTTPS://example.com/c_(d)。'),
+    ['https://example.com/a_(b)','https://example.com/c_(d)']);
 });
 function harness(timeout=100) {
   const root=new EventTarget();const requests=[];let params={}, session=0, settle, fail;

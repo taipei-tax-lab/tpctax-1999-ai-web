@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 ## Status
 
-**UI FROZEN — PAGES LIVE QUERY HUMAN-VERIFIED — RENDERER PARITY FIX NEXT**
+**UI FROZEN — SAFE RENDERER PARITY OFFLINE PASS — REDEPLOYMENT / TRUSTED LIVE VALIDATION NEXT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -35,7 +35,7 @@ Dialogflow CX backend source of truth:
 - FAQ source card is optional progressive enhancement only.
 - Official-site same-tab/new-tab/window behavior remains deliberately unspecified.
 - No official-site deployment has occurred.
-- No Production Messenger runtime validation has occurred from this repo.
+- Human Chrome evidence confirms a non-empty Production FAQ answer; full session/reset/network and Rental cross-surface validation remain pending.
 
 ## Standalone migration verification — 2026-10-07
 
@@ -997,3 +997,21 @@ deployed SHA `0247ad4b14f2069707ae969832db6960c2db01f9`, success at
 (211,729 bytes). Final hosted 11-file byte parity and exclusion probes PASS.
 Subsequent reporting-only commit is branch HEAD, not a new deployed artifact;
 runtime/ZIP unchanged. Gate 3 / E2E / IT-ready decisions above remain unchanged.
+
+
+## Safe renderer parity implementation — 2026-10-08
+
+Resumed main `88b14f699216bc1f7a2669216d33285fc7948e99` per NEXT_TASK.
+Only result-model normalization/rendering changes at runtime: semantic bold,
+safe labeled HTTP(S) Markdown links, preserved ordinary wording/line breaks,
+bare-link navigation and ordinary inline-source deduplication. Raw HTML stays
+inert text; unsafe/incomplete links/images remain literal. No new dependency.
+Additional explicit citations and optional FAQ metadata remain supported.
+
+Node 14 PASS; offline Chromium 17 grouped PASS, including synthetic screenshot
+scenario at desktop/390/320px, hostile input, metadata/generic replacement and
+unchanged session/reset/currentPlaybook regression. No offline external or
+Production requests. HTML/CSS/config/app/transport/demo and all CX resources
+remain unchanged. Current package/deployment/live evidence is maintained in
+NEXT_TASK and docs/RENDERER_PARITY.md. Formal IT release remains pending full
+trusted-browser and Rental parity evidence.

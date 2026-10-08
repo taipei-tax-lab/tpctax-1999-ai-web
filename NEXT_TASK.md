@@ -137,9 +137,22 @@ remain byte-identical. Production ZIP 215,245 bytes, SHA-256
 ## E. Deployment
 
 - [x] Regenerate `packages/hosting.zip` + checksum.
-- [ ] Deploy via existing GitHub Actions production-only Pages workflow.
-- [ ] Record deployed SHA/run/ZIP SHA-256.
-- [ ] Confirm hosted runtime files match production package.
+- [x] Deploy via existing GitHub Actions production-only Pages workflow.
+- [x] Record deployed SHA/run/ZIP SHA-256.
+- [x] Confirm hosted runtime files match production package.
+
+Deployment PASS: [Actions run 37748612115](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37748612115),
+deployed SHA `edd501268216e57c1f5b0eaa1f295f9c19f78ca0`, success 2026-10-08
+16:15:40 Asia/Taipei (08:15:40 UTC), github-pages artifact `11535839849`.
+Pages URL: <https://taipei-tax-lab.github.io/tpctax-1999-ai-web/>.
+Production ZIP SHA-256:
+`86e3fe7256f5464e599c2e8ec488338b98d1fa8de97dc5ab7273e9239c0373bd`.
+Actions source guard (`build_type=workflow`), configure/build/deploy PASS; Node
+21, deterministic rebuild, committed ZIP/checksum and exact production extraction
+checks PASS. Verified HTTPS GETs completed 16:16:04 Asia/Taipei: all **12/12**
+files return 200 with correct MIME and match committed ZIP bytes, including
+app.js, analytics.js, config and manifest. Six demo/test/tool/internal paths 404.
+HTTP file parity does not establish live browser execution.
 
 ## F. Human/browser acceptance
 
@@ -155,6 +168,17 @@ Where possible verify in a normal trusted browser:
 If Codex Cloud cannot perform the live checks due its existing proxy/CA
 limitations, leave them PENDING rather than FAIL.
 
+All six live checks remain **PENDING / unchecked**. Fresh real deployed Chromium
+151, 390×844, at 2026-10-08 16:16:00 Asia/Taipei, inherited Cloud proxy and TLS
+verification enabled, no mocked network, fails at the document GET with
+`net::ERR_CERT_AUTHORITY_INVALID`. Zero origin browser responses; page JavaScript,
+Messenger and GA4 never execute. **0 Production queries and 0 observed GA4
+collection requests**. This is the existing Cloud browser trust blocker, not an
+observed frontend/SDK/CSP/CORS failure. No TLS/proxy bypass or policy expansion.
+Trusted browser must still verify first/follow-up/post-reset clear + original
+question, console/network and real GA4 per-query delivery. Earlier human renderer/
+Rental/session PASS remains accepted; it does not prove this new live UX behavior.
+
 ## G. Documentation / handoff
 
 - [x] Update `PROJECT_STATE.md`.
@@ -162,17 +186,35 @@ limitations, leave them PENDING rather than FAIL.
 - [x] Audit `docs/ANALYTICS.md`: accepted-query analytics contract unchanged;
       leave file byte-identical as required.
 - [x] Audit performance/handoff docs: no resource/loading change; leave unchanged.
-- [ ] Commit/push and STOP for Web ChatGPT review.
+- [x] Commit/push and STOP for Web ChatGPT review.
+
+Implementation/package/checklist commit `edd501268216e57c1f5b0eaa1f295f9c19f78ca0`
+pushed to main and deployed. Final reporting-only commit updates this checklist,
+PROJECT_STATE and PAGES_DEPLOYMENT; no ZIP payload changes or second deployment.
+Main HEAD is distinct from the deployed SHA. STOP after its push for Web review.
 
 ## Completion summary
 
-Record:
+1. Clear point: existing accepted `df-request-sent` listener in app.js, after
+   transport pending/sent, cancellation and duplicate guards; dispatch existing
+   input event for the counter. Captured actual sent query still supplies heading.
+2. First/follow-up/post-reset clear + `0 / 1000`: offline **PASS**.
+3. Form submit alone, invalid/cancelled/sync/async pre-acceptance failure retain
+   text: **PASS**. Accepted later empty/error stays cleared; next draft retained.
+4. GA4 regression: **PASS**, one parameter-free `ai_query_submit` per accepted
+   query, counts 1/2/3, none for reset/clearing/invalid/duplicate notification.
+5. Node **21 PASS**, offline Chromium **24 grouped PASS**, desktop/390/320,
+   deterministic production/demo build, exact package/manifest/credential scan
+   **PASS**. No transport/renderer/session/backend/loading-resource change.
+6. Pages **PASS**: SHA `edd501268216e57c1f5b0eaa1f295f9c19f78ca0`,
+   [run 37748612115](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37748612115),
+   ZIP SHA-256 `86e3fe7256f5464e599c2e8ec488338b98d1fa8de97dc5ab7273e9239c0373bd`;
+   hosted 12/12 bytes match, six exclusions 404.
+7. New live UX/GA4 browser verification **PENDING** under Cloud certificate trust
+   blocker; all six acceptance boxes unchecked, no Production query sent.
+8. Ready for formal Revenue Service IT release: **NO**, pending trusted-browser
+   new UX/GA4 acceptance. Existing human renderer/Rental/session PASS carried.
 
-1. exact clear-input implementation point;
-2. first/follow-up/post-reset clear behavior PASS/FAIL;
-3. failed-before-acceptance preservation PASS/FAIL;
-4. GA4 per-query regression result;
-5. Node/Chromium/package result;
-6. Pages deployed SHA/run/ZIP SHA-256;
-7. live browser verification PASS/PENDING;
-8. ready for Revenue Service IT: YES/NO.
+Scratch evidence remains outside Git under `/workspace/work/clear-input/`;
+durable deployment details are in [PAGES_DEPLOYMENT.md](docs/PAGES_DEPLOYMENT.md).
+No official entry integration or CX backend changes. STOP for Web ChatGPT review.

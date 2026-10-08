@@ -1,7 +1,7 @@
 # GitHub Pages production artifact deployment
 
-Current deployment record (2026-10-08, Asia/Taipei): **per-query GA4 + deferred startup artifact
-deployment PASS; human renderer/Rental/session PASS; live GA4 PENDING;
+Current deployment record (2026-10-08, Asia/Taipei): **accepted-send input-clear artifact
+deployment PASS; human renderer/Rental/session PASS; new live UX/GA4 PENDING;
 Gate 3 CONDITIONAL PASS; GA4-verified IT release ready NO**.
 Operational acceptance checklist: [NEXT_TASK.md](../NEXT_TASK.md).
 Earlier renderer deployment: run
@@ -12,7 +12,72 @@ Renderer implementation history: [RENDERER_PARITY.md](RENDERER_PARITY.md).
 Later human acceptance in PROJECT_STATE/NEXT_TASK supersedes its live blockers.
 The earlier deployments below remain historical evidence.
 
-## Latest per-query GA4 and startup deferral deployment
+## Latest accepted-send input-clear deployment
+
+Resumed main `4f0fff232c31269b5d7661bf1ec5b79845db5e8f` under AGENTS.md and the
+current small UX task. Only two lines added in app.js after accepted pending-query
+validation and duplicate guard: clear textarea and dispatch the existing input
+event for counter `0 / 1000`. Existing captured actual sent query remains the
+answer heading. Form submit and pre-acceptance rejection retain text; duplicate
+notification and later answer preserve a newly typed draft. No added focus action.
+
+Analytics definition/module, session/reset, transport, renderer, CX resources,
+config, HTML/CSS/images, dependencies and accepted startup deferral unchanged.
+ANALYTICS/PERFORMANCE/IT_HANDOFF remain byte-identical under this task's conditional
+documentation rule. No new origin, resource-policy change or official-site entry.
+
+| Evidence | Value |
+| --- | --- |
+| Actions run | [37748612115](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37748612115) |
+| Deployed SHA | `edd501268216e57c1f5b0eaa1f295f9c19f78ca0` |
+| Source/configure/build/deploy | PASS / PASS / PASS / PASS |
+| Deployment success | 2026-10-08 16:15:40 Asia/Taipei (08:15:40 UTC) |
+| Pages URL | <https://taipei-tax-lab.github.io/tpctax-1999-ai-web/> |
+| github-pages artifact | `11535839849` |
+| Production ZIP size | 215,245 bytes |
+| Production ZIP SHA-256 | `86e3fe7256f5464e599c2e8ec488338b98d1fa8de97dc5ab7273e9239c0373bd` |
+
+Node 21 PASS; local Chromium 24 grouped PASS at desktop/390/320 with synthetic
+SDK/gtag and zero forwarded external/Production requests. Controlled delayed
+acceptance/rejection/answer proves no submit-time clear, preserved failed text,
+accepted clear before answer, counter/focus behavior, original multiline question
+and next-draft retention. First/follow-up/post-reset clear and GA4 counts 1/2/3
+PASS; explicit reset adds no event. Accepted empty/error responses remain cleared.
+Existing renderer/session/currentPlaybook/IME/scoped CSP/idle regressions PASS.
+These local fixtures do not establish real Messenger/GA4 delivery.
+
+Two independent production/demo builds byte-identical. Production allowlist is
+exactly 12 files; CRC/manifest/source bytes/live config/no-demo/fresh extraction,
+committed checksum and credential-pattern scans of both archives/changed text
+PASS. Actions confirms Pages `build_type=workflow`, reruns Node 14 existing + 7
+analytics tests and deterministic package verification, then uploads/deploys only
+fresh production extraction. Build and deploy jobs both PASS.
+
+Post-deployment verified HTTPS GETs completed 16:16:04 Asia/Taipei: all **12/12**
+payloads 200, correct MIME, byte-identical to committed hosting.zip, including the
+new app.js and unchanged analytics/config. Six demo/test/tool/repo-internal probes
+return 404. Captured document: ACAO `*`, HSTS `max-age=31556952`, Cache-Control
+`max-age=600`; no CSP/CSP-Report-Only, X-Frame-Options, Referrer-Policy,
+Permissions-Policy or COOP/COEP/CORP in that response. HTTP parity does not prove
+browser execution; agency final-path headers need separate readback.
+
+All six new live acceptance checks remain **PENDING / unchecked**. Fresh real
+deployed Chromium 151, 390×844, at 16:16:00 Asia/Taipei, inherited Cloud proxy,
+TLS verification enabled and no network mocks, stops on document GET with
+`net::ERR_CERT_AUTHORITY_INVALID`. Zero origin browser responses and no page
+JS/SDK/GA4 execution; **0 Production queries and 0 observed GA4 collection
+requests**. This is the existing Cloud trust blocker, not a demonstrated
+frontend/SDK/CSP/CORS failure. No certificate/proxy bypass or policy expansion.
+Trusted browser still needs first/follow-up/post-reset input clear, original
+question, console/network and real per-query GA4 checks. Earlier human renderer/
+Rental/session PASS remains accepted; formal IT-ready NO pending new live evidence.
+
+Implementation/package commit above is the deployed SHA. Final reporting-only
+commit updates NEXT_TASK, PROJECT_STATE and this record; no ZIP payload change or
+second deployment. Main HEAD differs from deployed SHA. Scratch evidence outside
+Git: `/workspace/work/clear-input/`. Push then STOP for Web ChatGPT review.
+
+## Earlier per-query GA4 and startup deferral deployment
 
 Resumed main `198bab784fd34dc94982ece217fd5e7fbc336341` under AGENTS.md.
 Custom event now only `ai_query_submit`, one per accepted first/follow-up/

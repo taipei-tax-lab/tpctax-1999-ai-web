@@ -1248,3 +1248,23 @@ startup scheduling unchanged; no dependency/new origin. Analytics/performance/
 IT handoff docs deliberately unchanged per conditional scope. Package/deployment
 and live pending evidence maintained in NEXT_TASK/PAGES_DEPLOYMENT. No official
 entry change. Commit/push then STOP for Web ChatGPT review.
+
+Accepted-send UX production deployment **PASS**:
+[run 37748612115](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37748612115),
+deployed SHA `edd501268216e57c1f5b0eaa1f295f9c19f78ca0`, success 2026-10-08
+16:15:40 Asia/Taipei, artifact `11535839849`, URL
+<https://taipei-tax-lab.github.io/tpctax-1999-ai-web/>. Production ZIP 215,245 bytes,
+SHA-256 `86e3fe7256f5464e599c2e8ec488338b98d1fa8de97dc5ab7273e9239c0373bd`.
+Independent production/demo builds byte-identical; exact 12-file manifest/source/
+CRC/checksum/live-config/no-demo checks and both archive/changed-file credential
+scans PASS. Actions source/configure/build/deploy, Node 21 and package checks PASS.
+Hosted HTTPS parity at 16:16:04: **12/12** exact bytes/MIME, six exclusions 404.
+
+Fresh live Chromium at 16:16:00 Asia/Taipei still fails document GET with Cloud
+`ERR_CERT_AUTHORITY_INVALID`, before origin responses/page JS/SDK/GA4.
+**0 Production queries and 0 observed analytics collection requests**. All six
+current live UX/GA4 acceptance checks remain PENDING/unchecked, not FAIL; no TLS/
+proxy bypass or policy change. Earlier human renderer/Rental/session PASS carried.
+Formal IT-ready NO pending trusted-browser validation of new behavior and GA4.
+Final reporting-only commit changes no runtime/ZIP/deployed SHA; main HEAD differs
+from deployed implementation. Push then STOP for Web ChatGPT review.

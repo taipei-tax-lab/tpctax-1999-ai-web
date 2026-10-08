@@ -985,6 +985,27 @@ migration or major UI/architecture rewrite is authorized. Priority is to avoid
 non-critical GA4 work competing with core page/Messenger startup while preserving
 current UX and frozen visuals.
 
+## Query input clear-after-send decision — 2026-10-08
+
+Human UX decision:
+
+After a valid query is accepted by Messenger for sending, the query textarea
+should clear immediately and the character counter should return to zero. This
+makes follow-up entry easier.
+
+Important boundary:
+- do not clear on mere button/form submit;
+- clear only at the existing accepted `df-request-sent` boundary;
+- preserve the submitted question separately so the result area can still show it
+  when the answer returns;
+- if send fails before acceptance, retain the typed question for retry;
+- reset remains a separate explicit session action.
+
+This should be implemented as a minimal frontend-only change. It must not alter:
+CX backend, Playbook/Tool routing, MessengerTransport/session semantics,
+renderer/Markdown behavior, per-query GA4 meaning (`ai_query_submit`), or the
+accepted GA4 startup deferral/performance behavior.
+
 ## Backend contract
 
 - project: `serviceagent-1150909`

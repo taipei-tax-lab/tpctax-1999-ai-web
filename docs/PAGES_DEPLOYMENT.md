@@ -1,0 +1,106 @@
+# GitHub Pages production artifact deployment
+
+Current decision (2026-10-08, Asia/Taipei): **artifact deployment PASS; real-browser
+Production E2E BLOCKED; Gate 3 CONDITIONAL PASS; IT release ready NO**.
+Operational acceptance checklist: [NEXT_TASK.md](../NEXT_TASK.md).
+
+## Source and first deployment
+
+Resumed existing `live-pages-candidate` at
+`f0a239488a6f52ddea0aa91b97efd44fe84105f6`, a descendant of main baseline
+`bcb49fcd34fd2420c31ed98df4eafc6465e8b270`. Owner had changed Pages Source to
+GitHub Actions. Fast-forwarded the exact candidate to main; no completed
+implementation work was repeated.
+
+Direct Pages administration API remains Forbidden. The existing workflow's
+fail-closed `gh api .../pages` comparison to `build_type=workflow` succeeded
+under Actions' pages-read permission, followed by configure-pages success.
+This verifies the source migration without modifying Pages settings.
+
+| Evidence | Value |
+| --- | --- |
+| Initial Actions run | [37714645831](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37714645831) |
+| Workflow | `.github/workflows/pages.yml` — Production package Pages |
+| Initial deployed SHA | `f0a239488a6f52ddea0aa91b97efd44fe84105f6` |
+| Source/build/deploy | PASS / PASS / PASS |
+| Deployment success | 2026-10-08 09:47:50 Asia/Taipei (01:47:50 UTC) |
+| Pages URL | <https://taipei-tax-lab.github.io/tpctax-1999-ai-web/> |
+| Initial github-pages artifact | `11523054017` |
+| Initial ZIP size | 211,148 bytes |
+| Initial ZIP SHA-256 | `c19ad3e5ebfc5d3a97c45aaf1cdd3f36dec33cf2b854b59d5be35335c57a4ebd` |
+
+Build logs confirm Node 10 tests PASS; two independent builds and committed
+ZIP compare; checksum, exact 11-file allowlist, manifest/source-byte parity and
+credential scan PASS. Uploaded directory is a fresh extraction of hosting.zip,
+not repository root. Official upload-pages-artifact/deploy-pages actions succeed.
+
+All 11 hosted files returned HTTP 200 and matched initial ZIP bytes, including
+MANIFEST.json and packaged IT handoff. HTML/JS/CSS/PNG/GIF/JSON MIME are correct.
+Exclusion probes returned 404 for demo.html, demo/mock-messenger.js,
+tests/phase7e3a.test.mjs, tools/package_static.py, AGENTS.md and the workflow.
+
+## Documentation artifact refresh
+
+IT_HANDOFF.md is a ZIP payload. It now accurately reports deployed status and
+browser blocker, so the candidate was rebuilt deterministically twice and
+verified against source. This is a documentation archive refresh, not a
+conditional E2E-PASS formal IT release. All nine runtime payloads (index.html
+and eight assets) remain byte-identical to the first deployed candidate.
+
+- Updated candidate ZIP: 211,729 bytes.
+- SHA-256: `bc5faed14477cf3eafc390a2889c0ee559c37cdecf0a24ba951d70d73fb9fe65`.
+- Exact 11-file allowlist, CRC/manifest/source-byte/credential checks: PASS.
+- Final documentation artifact deployment evidence is recorded below after
+  Actions completes; this file is not part of the production ZIP.
+
+## Available HTTPS evidence
+
+Retrieved through inherited Cloud proxy with TLS verification enabled.
+Pages document and official SDK script HTTP 200; curl explicitly reports
+`SSL certificate verify ok` for the Pages certificate issued by the
+configured environment proxy CA. This is HTTPS retrieval evidence, not a
+browser SDK initialization result.
+
+| Response | Relevant observed headers |
+| --- | --- |
+| Pages document | Content-Type `text/html; charset=utf-8`; ACAO `*`; HSTS `max-age=31556952`; Cache-Control `max-age=600` |
+| Pages document: absent in captured response | CSP, CSP-Report-Only, X-Frame-Options, Referrer-Policy, Permissions-Policy, COOP, COEP, CORP |
+| Official SDK script | Content-Type `text/javascript`; ACAO `*`; nosniff; CORP `cross-origin`; COOP `same-origin; report-to="dialogflow-console"`; Cache-Control `no-cache, must-revalidate` |
+| SDK Report-Only | `require-trusted-types-for 'script'; report-uri https://csp.withgoogle.com/csp/dialogflow-console` |
+
+Known SDK URL retrieved:
+`https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js`.
+Separate HEAD to `https://dialogflow.cloud.google.com/` returned 200; its root
+headers are not Messenger API/query/CORS evidence. At 09:50:32 Asia/Taipei,
+`https://fonts.googleapis.com/` HEAD returned proxy CONNECT 403 (curl 56), before
+origin. Fonts was not observed as a browser SDK request; do not assume necessity
+or infer the actual Messenger endpoint from this host probe.
+
+## Live browser blocker and gate decision
+
+Chromium 151, real deployed URL, 390×844 viewport, inherited proxy, no synthetic
+SDK/network fulfillment. Attempts at 09:48:20 and 09:49:33 Asia/Taipei stop at
+document GET with `net::ERR_CERT_AUTHORITY_INVALID`, with zero browser origin
+responses. A workspace-local NSS database import of the supplied public
+proxy CA with XDG_DATA_HOME did not resolve Chromium trust. No global
+certificate-ignore option or proxy bypass was used.
+
+**Production queries: 0.** Page JavaScript never executed. Messenger
+initialization, enabled button, initial Playbook routing, first/follow-up/reset/
+post-reset answers, browser resource/connect inventory, CSP/CORS/console and
+mobile live layout remain unverified. HTTPS file parity cannot replace those
+checks. HTTP retrieval hosts observed: taipei-tax-lab.github.io and
+www.gstatic.com; API root was only probed separately. Browser observed only
+the failed Pages document request; no connect destinations observed.
+
+This is a Cloud browser trust limitation, not demonstrated Pages/SDK/binding/
+frontend/origin CSP-CORS failure. Keep remaining F/G acceptance checks unchecked.
+Use a browser that trusts the execution proxy CA, or an ordinary trusted human
+browser, to complete the authorized minimal three-question sequence and collect
+actual SDK/connect/CSP/CORS/session evidence. Do not weaken production policy,
+change CX/Messenger binding/allowed domains, or add the official entry link.
+Agency final path/security headers still require their own validation.
+
+Small scratch reports/headers/screenshots remain outside tracked source under
+work/resume; durable results are recorded here and in NEXT_TASK.md. No Drive
+upload or message to others was performed. Commit/push then STOP for review.

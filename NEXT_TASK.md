@@ -1,29 +1,26 @@
 # NEXT_TASK
 
-## Human action required before resume
+## Resume status — 2026-10-08 (Asia/Taipei)
 
-Before Codex resumes deployment, the repository owner must change:
+The owner changed Pages Source to GitHub Actions. Resumed existing
+`live-pages-candidate` at `f0a239488a6f52ddea0aa91b97efd44fe84105f6`; no completed implementation
+or offline verification was redone. Fast-forwarded this exact candidate to
+`main` as prescribed by the prior handoff.
 
-**GitHub repo → Settings → Pages → Build and deployment → Source → GitHub Actions**
+- [x] Verify Pages Source switched successfully: Actions run's
+  `Require Actions Pages source` passed `build_type=workflow`.
+- [x] Complete production artifact deployment: build and deploy jobs PASS.
+- [x] Record Actions run / deployed SHA / Pages URL (see E).
+- [x] Continue available live validation: HTTPS hosted-file parity, exclusion
+  checks and response/security headers obtained; browser attempted twice.
+- [x] Leave blocked live acceptance items unchecked and record exact blockers.
 
-Current Pages is still branch/Jekyll publication of the repository root. The
-prepared workflow intentionally refuses to deploy until Pages `build_type=workflow`
-so the live candidate cannot accidentally republish the full repository.
-
-After the human changes Source to GitHub Actions, resume this same branch
-`live-pages-candidate`. Do not restart the task from scratch.
-
-Expected next actions after the setting change:
-
-- verify Pages now reports Actions/workflow source;
-- merge or fast-forward the reviewed candidate to `main` as appropriate;
-- let `.github/workflows/pages.yml` deploy the exact production artifact;
-- record the new Actions run and actual hosted candidate;
-- continue only the still-unchecked deployment/E2E checklist items.
-
-Codex Cloud network may still be unable to browse `taipei-tax-lab.github.io`.
-If so, do not label the deployed page failed. Record the limitation and leave
-real-browser E2E for human/Web ChatGPT browser validation.
+Direct `gh api .../pages` still returns Forbidden; verification comes from the
+successful fail-closed source guard in [37714645831](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37714645831), not a
+claim of direct administration access. Real-browser E2E remains BLOCKED by the
+Cloud Chromium proxy-CA trust failure; this is not a deployed-site FAIL.
+Next action is trusted-browser live validation of unchecked F/G items,
+then Web ChatGPT review. Do not repeat B/D or change CX/UI/session settings.
 
 ## Active task
 
@@ -102,13 +99,13 @@ Pages hostname: HEAD at 2026-10-08 00:59:27 UTC returned proxy CONNECT 403
 Evidence: source candidate changes exactly one config value, `liveEnabled=true`.
 All other runtime files/config fields match synchronized baseline; no CX mutation.
 Repository search finds `hostingUrl` only as config metadata, never a runtime read.
-Publishing this candidate to `main` is held until the existing branch-based Pages
-source is migrated, to avoid automatically republishing the full repository.
+The prior hold is resolved: the owner switched Pages Source, and the unchanged
+candidate was fast-forwarded to `main`; the workflow source guard passed.
 
 ### C. Production artifact parity
 
-- [ ] Ensure Pages deploys only production artifact contents.
-- [ ] Do not publish:
+- [x] Ensure Pages deploys only production artifact contents.
+- [x] Do not publish:
   - `demo.html`
   - `demo/`
   - tests
@@ -117,16 +114,16 @@ source is migrated, to avoid automatically republishing the full repository.
   - repository internals
 - [x] Prefer building the existing production package and deploying its extracted
       contents.
-- [ ] Confirm Pages runtime files and `hosting.zip` runtime files are byte-equivalent.
+- [x] Confirm Pages runtime files and `hosting.zip` runtime files are byte-equivalent.
 
-Evidence: `.github/workflows/pages.yml` prepares the official Actions route,
-checks Pages `build_type=workflow` first, rebuilds the production ZIP twice,
-compares it with the committed ZIP, verifies the checksum/allowlist/manifest/
-source bytes/credential scan, then uploads only a new directory extracted from
-that ZIP. No repository-root upload. Local extraction is byte-equivalent for all
-11 payload files. Actual Pages deployment parity remains unchecked until a
-successful new workflow/artifact and hosted readback. Existing branch-based
-publication still violates the required production-only scope.
+Evidence (resume): successful build/deploy [37714645831](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37714645831)
+rebuilds twice, compares committed ZIP, verifies checksum/manifest/allowlist/
+source parity/credential scan and uploads the fresh ZIP extraction only.
+Actual hosted GETs of all 11 payload files are HTTP 200 and byte-identical to
+`hosting.zip`, including `MANIFEST.json`; correct HTML/JS/CSS/image MIME.
+Hosted exclusion probes return 404 for `demo.html`, `demo/mock-messenger.js`,
+`tests/phase7e3a.test.mjs`, `tools/package_static.py`, `AGENTS.md` and the workflow.
+No repository-root/Jekyll upload. Prior offline checks in D remain valid.
 
 ### D. Pre-deployment verification
 
@@ -155,28 +152,36 @@ images/app/transport/model/demo bytes and other config fields remain unchanged.
 
 ### E. GitHub Pages deployment
 
-- [ ] If Pages is not configured, add the smallest standard official GitHub Pages
+- [x] If Pages is not configured, add the smallest standard official GitHub Pages
       Actions deployment.
-- [ ] Deploy the production artifact.
+- [x] Deploy the production artifact.
 - [x] Record actual GitHub Pages URL.
-- [ ] Record deployed commit SHA.
-- [ ] Record GitHub Actions workflow/run evidence.
+- [x] Record deployed commit SHA.
+- [x] Record GitHub Actions workflow/run evidence.
 - [x] Record live production ZIP SHA-256.
 - [x] Do not add the official 1999-site entry link yet.
 
 - [x] Prepared official Actions workflow with a fail-closed Pages source guard.
 - [x] Generated candidate live ZIP/checksum (not an E2E-approved IT release).
 
-Evidence: Pages is already enabled; the conditional new-site setup above does
-not apply. Migration from root Jekyll to Actions Source remains blocked because
-the available API/connector cannot administer Pages. Prepared workflow has not
-run or deployed. All changes are pushed only to `live-pages-candidate`: pushing
-live config to `main` now would republish the full repository through Jekyll.
-No live-candidate deployment SHA/run exists. URL is established by the prior
-deploy logs in A; that baseline is not candidate E2E evidence. Candidate ZIP:
-211,148 bytes, SHA-256
-`c19ad3e5ebfc5d3a97c45aaf1cdd3f36dec33cf2b854b59d5be35335c57a4ebd`.
-No official-site entry is added. Actual deployment/parity remains unchecked.
+Evidence (resume): Pages already exists, so no new-site setup was required.
+The owner's source migration is verified by the Actions `build_type=workflow`
+guard and `configure-pages` success. Standard prepared workflow deployed only
+production ZIP contents; both jobs succeeded.
+
+- Initial deployed SHA: `f0a239488a6f52ddea0aa91b97efd44fe84105f6`.
+- Initial run: [37714645831](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37714645831); deployment reported success at
+  **2026-10-08 09:47:50 Asia/Taipei** (01:47:50 UTC).
+- Pages URL: `https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`.
+- Artifact ID: `11523054017` (`github-pages`).
+- Initial ZIP: 211,148 bytes, SHA-256
+  `c19ad3e5ebfc5d3a97c45aaf1cdd3f36dec33cf2b854b59d5be35335c57a4ebd`.
+- Updated handoff documentation is also packaged; the subsequent documentation
+  artifact/run/hash are recorded in `docs/PAGES_DEPLOYMENT.md` and the final
+  completion summary. Runtime bytes remain identical.
+
+Official entry link remains absent. Artifact deployment PASS does not mean
+Messenger E2E PASS or formal IT release approval.
 
 ### F. Real browser Production E2E
 
@@ -194,22 +199,42 @@ No official-site entry is added. Actual deployment/parity remains unchecked.
 - [ ] No blocking JavaScript error.
 - [ ] Capture observed SDK/subresource hosts.
 - [ ] Capture observed Messenger connect destinations.
-- [ ] Capture relevant response/security headers.
+- [x] Capture relevant response/security headers.
 - [ ] 390px mobile live page works without layout regression.
 
 Keep query count minimal. Do not perform bulk tax-answer quality testing.
 
-Evidence: normal Chromium at the confirmed Pages URL (390px) failed document
-GET with `net::ERR_TUNNEL_CONNECTION_FAILED`; zero origin responses and zero
-Production queries. HEAD separately returned proxy CONNECT 403, curl 56.
-Effective restricted runtime revision 6 has custom hosts only
-`services.arpa.tpctax.dof.gov.taipei`, `www.gstatic.com`; Pages host is absent.
-HEAD to `dialogflow.cloud.google.com` and `fonts.googleapis.com` at
-2026-10-08 01:02:56 UTC also returned CONNECT 403 (no API/query request).
-No hosted SDK/subresources/connect destinations, origin security headers,
-CSP/CORS behavior or page JavaScript execution were observed in this attempt.
-All F acceptance checks remain unchecked, including mobile live behavior;
-offline mobile PASS is not a substitute.
+Evidence (resume): hosted Pages document, all 11 payloads and official SDK
+script are reachable using inherited proxy + verified TLS (HTTP 200).
+Pages headers: `Access-Control-Allow-Origin: *`,
+`Strict-Transport-Security: max-age=31556952`, `Cache-Control: max-age=600`;
+no CSP/CSP-Report-Only, X-Frame-Options, Referrer-Policy, Permissions-Policy,
+COOP/COEP/CORP present in captured document headers. SDK script:
+`Access-Control-Allow-Origin: *`, `X-Content-Type-Options: nosniff`,
+CORP `cross-origin`, COOP `same-origin; report-to="dialogflow-console"`,
+CSP-Report-Only `require-trusted-types-for 'script'` with Google's reporting URL.
+Actual headers and results are summarized in `docs/PAGES_DEPLOYMENT.md`.
+
+Chromium 151 at 390px attempted document GET twice (09:48:20 / 09:49:33
+Asia/Taipei); both stopped before origin response with
+`net::ERR_CERT_AUTHORITY_INVALID`. The inherited Cloud proxy issues certificates
+under its environment CA: curl reports `SSL certificate verify ok`; Chromium
+cannot trust that CA in this execution profile. A workspace-local NSS trust
+database with the environment-provided CA and XDG_DATA_HOME was attempted but
+did not resolve browser trust. TLS verification was kept enabled; no global
+certificate bypass, proxy bypass, backend or production policy change.
+
+`dialogflow.cloud.google.com/` HEAD is reachable (200) but is not a Messenger
+API/session test. `fonts.googleapis.com/` HEAD at 09:50:32 Asia/Taipei is blocked
+by proxy CONNECT 403 (curl 56). This probe is not an observed SDK request and
+does not establish that Fonts is required. Existing prior network-denial evidence
+is historical; this environment has improved Pages/SDK/API-host reachability.
+
+**0 Production queries**; no browser SDK initialization, query/reset/session,
+subresource/connect inventory, CSP/CORS/console behavior or mobile live layout
+could be observed. HTTP SDK retrieval is not browser SDK-load PASS. All F
+acceptance checks except the captured headers remain unchecked. Do not diagnose
+this as origin CSP/CORS, binding-domain, SDK or frontend failure.
 
 ### G. Gate decision
 
@@ -226,11 +251,12 @@ If E2E FAIL:
 - [x] Record whether failure is Pages / CSP-CORS / SDK / binding-domain / frontend.
 - [x] STOP without modifying Playbooks/Tools or broadly weakening security policy.
 
-Decision: **BLOCKED — Pages source migration and execution-environment network
-access**. No demonstrated frontend / SDK / Production binding / origin CSP-CORS
-failure. Gate 3 remains CONDITIONAL PASS; Pages closure and IT readiness are
-pending. Prepared archive is a candidate only; conditional PASS release steps
-above remain unchecked. No CX/UI/session/security change is proposed.
+Decision: **DEPLOYMENT PASS — REAL-BROWSER E2E BLOCKED BY CLOUD BROWSER CA
+TRUST**. Pages source migration and artifact parity are complete. Gate 3 remains
+CONDITIONAL PASS until a trusted real browser verifies F; IT readiness remains
+NO. No demonstrated frontend/SDK/binding/origin CSP-CORS failure. Updating the
+packaged handoff requires a deterministic candidate archive refresh; it does
+not check off the conditional E2E-PASS formal-release steps above.
 
 ### H. Documentation and handoff
 
@@ -267,7 +293,7 @@ Do not change without new explicit human instruction:
 - frozen UI.
 
 
-## Completion summary — 2026-10-08
+## Historical completion summary — initial candidate attempt, 2026-10-08
 
 - Candidate prepared and offline checks PASS; deployment and live E2E **BLOCKED**.
 - Actual previous/expected Pages URL:
@@ -298,3 +324,21 @@ Do not change without new explicit human instruction:
   documentation commit.
 - STOP for Web ChatGPT review after candidate commit/push. Unchecked acceptance
   items intentionally remain pending; no live PASS is claimed.
+
+
+## Completion summary — resumed deployment, 2026-10-08 (Asia/Taipei)
+
+- Pages Source migration verified; production-only deployment and hosted-byte
+  parity PASS. Exact run / SHA / final ZIP are in `docs/PAGES_DEPLOYMENT.md`.
+- Actual URL: `https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`.
+- Messenger initialized: UNVERIFIED / BLOCKED, not a demonstrated failure.
+- F: headers captured; all remaining acceptance checks pending. Browser document
+  GET fails `ERR_CERT_AUTHORITY_INVALID` at the Cloud proxy CA trust boundary;
+  Fonts hostname HEAD separately gets CONNECT 403. **0 Production queries**.
+- Observed HTTPS retrieval hosts: Pages and `www.gstatic.com`; API root HEAD
+  also reachable. No browser SDK/subresource/connect inventory was observed.
+- CSP/CORS/page-console behavior unverified because page JS never executed.
+- Gate 3 CONDITIONAL PASS; Revenue Service IT release ready: NO. Conditional
+  E2E-PASS release regeneration/readiness checks remain unchecked.
+- No CX/UI/session changes or official entry link. Updated checklist/state/
+  deployment/handoff documentation committed and pushed; STOP for review.

@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 ## Status
 
-**UI FROZEN — LIVE CANDIDATE PREPARED — PAGES MIGRATION / LIVE E2E BLOCKED**
+**UI FROZEN — PRODUCTION ARTIFACT DEPLOYED — LIVE E2E BLOCKED BY CLOUD BROWSER CA TRUST**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -28,7 +28,7 @@ Dialogflow CX backend source of truth:
 - Ready state hides the idle panel. Reset appears only after a successful answer, labeled `清除前次問答，重新提問`; it uses the existing real session reset, clears/focuses input and hides again until another successful answer.
 - No custom backend.
 - Dialogflow Messenger is the intended browser transport.
-- Candidate branch `live-pages-candidate`: `liveEnabled=true`; deployed/main baseline remains disabled pending Pages source migration.
+- `live-pages-candidate` fast-forwarded to `main`; `liveEnabled=true` production artifact deployed via Actions. Source guard confirms Pages `build_type=workflow`.
 - hostingUrl remains placeholder metadata, unused at runtime; final IT path does not require rebuilding.
 - First-turn initial Playbook is the 1999 FAQ Playbook.
 - Generic answer rendering works without FAQ metadata.
@@ -934,3 +934,26 @@ artifact deployment and the still-unchecked minimal real-browser E2E. Agency
 final path remains IT's decision and does not require rebuilding. No official
 1999 entry is added. Checklist and completion summary are in `NEXT_TASK.md`.
 STOP for Web ChatGPT review; do not reopen backend or weaken CSP.
+
+
+## Resumed Pages deployment — 2026-10-08 (Asia/Taipei)
+
+Owner switched Source to GitHub Actions. Resumed `f0a239488a6f52ddea0aa91b97efd44fe84105f6`,
+fast-forwarded to main, and completed [37714645831](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37714645831).
+Source guard, configure/build/package verification and deploy all PASS.
+Actual URL: `https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`. Hosted 11-file ZIP parity PASS;
+demo/test/tool/repo-internal exclusion probes 404. Existing offline checks and
+frozen runtime remain unchanged. Current deployment/run/hash details are in
+`docs/PAGES_DEPLOYMENT.md`; initial ZIP hash is
+`c19ad3e5ebfc5d3a97c45aaf1cdd3f36dec33cf2b854b59d5be35335c57a4ebd`.
+
+Pages/SDK and API-root verified HTTPS are reachable in the current environment.
+Actual Pages/SDK security headers captured. Chromium's document GET fails
+`ERR_CERT_AUTHORITY_INVALID` under Cloud proxy CA; workspace NSS import did not
+resolve trust. Fonts hostname probe gets proxy CONNECT 403. No TLS/proxy bypass.
+**0 Production queries**, no initialized Messenger or browser connect inventory.
+This supersedes the prior source-migration blocker without declaring live E2E
+PASS or a demonstrated frontend failure. Gate 3 CONDITIONAL PASS; IT-ready NO.
+Unchecked F/G remain for trusted-browser validation. Handoff document refresh
+produces an updated candidate archive with identical runtime bytes. No official
+entry link or backend mutation. Commit/push and STOP per `NEXT_TASK.md`.

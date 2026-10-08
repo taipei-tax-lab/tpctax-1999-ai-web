@@ -598,3 +598,30 @@ actual URL and perform only the authorized minimal E2E. Keep Gate 2A PASS and al
 CX/UI/session settings frozen. IT-ready **NO** pending live PASS. Even successful
 Pages E2E cannot establish the agency final path's security headers: inspect the
 actual agreed URL after mounting. STOP for Web ChatGPT review.
+
+
+## Resumed Actions deployment — 2026-10-08 (Asia/Taipei)
+
+**Production artifact deployment PASS; Gate 3 still CONDITIONAL PASS.**
+
+Owner switched Pages Source. Candidate was fast-forwarded to main; the prepared
+workflow's `build_type=workflow` guard, configure-pages, deterministic rebuild,
+committed ZIP comparison, allowlist/manifest/source/credential validation and
+deployment all succeeded. All 11 hosted payload files match the archive, and
+representative demo/test/tool/repo-internal probes return 404. Exact Actions
+run/SHA/ZIP and response headers are in `PAGES_DEPLOYMENT.md`.
+
+Current verified HTTPS reaches Pages, official SDK and Dialogflow root. Browser
+E2E is blocked before origin response by Chromium's proxy CA trust failure
+(`ERR_CERT_AUTHORITY_INVALID`); workspace-local CA/NSS import did not fix it.
+Fonts-host HEAD separately gets proxy CONNECT 403, not an observed SDK
+subresource dependency. No TLS/proxy bypass and **0 Production queries**.
+
+Captured Pages response has ACAO `*`, HSTS and cache headers, with no document
+CSP observed. SDK response has ACAO `*`, CORP/COOP, nosniff and Trusted Types
+Report-Only. These HTTP facts do not prove browser CORS/CSP/JS behavior. No
+connect destinations, first-turn routing, follow-up/reset behavior or mobile
+live layout observed. Keep all unchecked F/G live requirements pending;
+Gate 3 cannot close, and formal IT-ready remains NO. No speculative policy
+expansion, CX/backend/settings change or official entry link. Agency final-path
+headers still require independent inspection after mounting.

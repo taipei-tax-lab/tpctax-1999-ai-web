@@ -3,7 +3,7 @@
 交付檔：`hosting.zip`；另附 `hosting.sha256` 與 ZIP 內逐檔 `MANIFEST.json`。
 交付策略：先由專案方在 GitHub Pages 以相同 production package 完成 Messenger 真實問答 E2E；通過後，再提供資訊室已驗證 live package。
 
-目前 `packages/hosting.zip` 是 `liveEnabled=true` 的待驗證 candidate，尚未完成 live E2E，**尚不可作為已驗證正式交付版**。放行狀態請以 `NEXT_TASK.md` completion summary 為準。
+目前 `packages/hosting.zip` 是 `liveEnabled=true` 的 candidate，已透過 GitHub Actions 部署 production artifact，線上檔案與 ZIP 一致；真實瀏覽器 live E2E 因 Codex Cloud 的代理 CA 信任問題尚未完成，**尚不可作為已驗證正式交付版**。放行狀態請以 `NEXT_TASK.md` 最新 completion summary 與 `docs/PAGES_DEPLOYMENT.md` 為準。
 
 ## 掛載
 
@@ -63,3 +63,19 @@ browser E2E。
 因此資訊室收到的應是已完成 live 驗證的 package，而不是 disabled 預覽版。
 掛載後仍需回覆最終 HTTPS URL，以便做 agency-host 的簡短 headers/resource
 確認；不需要再次修改 Playbook、Messenger binding 或 allowed domain。
+
+
+## GitHub Pages 部署進度 — 2026-10-08（臺北時間）
+
+測試 URL：`https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`。
+Pages Source 已驗證為 Actions/workflow；production-only artifact 部署、
+ZIP 逐檔線上比對、排除 demo/tests/tools/repo 內部檔案均通過。
+
+Codex Cloud 的 Chromium 在頁面載入前回報 `ERR_CERT_AUTHORITY_INVALID`；
+相同代理下 curl/HTTPS 檔案比對通過憑證驗證。另有
+`fonts.googleapis.com` hostname 探測遭 CONNECT 403，但尚未觀察到 SDK
+實際是否需要此 host。未送出 Production 查詢，不能據此判定 Messenger
+或網站故障。需使用可信任代理 CA 的瀏覽器完成首次問答、追問、真實 reset、
+reset 後問答及 390px/CSP/CORS/console 檢查，才能放行正式資訊室交付。
+
+此次文件更新隨 candidate 重新打包；runtime 檔案未變更。尚未新增官方入口。

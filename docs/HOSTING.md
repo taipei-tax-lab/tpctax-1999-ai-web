@@ -20,9 +20,11 @@ HTTPS、JavaScript MIME、資料夾結構及目錄結尾斜線必須正確。
 決定，任一 agreed HTTPS directory path 均可，不需 rebuild。hostingUrl 是未使用
 metadata。資訊室實際操作及掛載回覆清單見 [IT_HANDOFF.md](IT_HANDOFF.md)。
 
-GitHub Pages 需改為 Actions source，使用 `.github/workflows/pages.yml`；
+GitHub Pages 已驗證為 Actions source，使用 `.github/workflows/pages.yml`；
 流程驗證 committed ZIP 與重建 ZIP 相同，再上傳解壓後 11 檔，不發布全 repo。
-現有 main/root Jekyll 發布需先遷移；候選版在獨立分支等待 review。
+原 main/root Jekyll 發布已遷移；候選版已 fast-forward 至 main 並部署。
+實際 Actions run、deployed SHA、ZIP hash、線上檔案比對及 E2E blocker
+見 [PAGES_DEPLOYMENT.md](PAGES_DEPLOYMENT.md)。
 
 Production binding 與兩個允許 hostname 已 PASS；不需更改 Console/CX。
 實際 SDK/subresources/connect/CSP/CORS/session/reset 仍須 live browser 驗證。

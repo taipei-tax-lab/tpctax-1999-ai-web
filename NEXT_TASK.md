@@ -2,326 +2,177 @@
 
 ## Active task
 
-**Renderer parity fix + trusted-browser live validation**
+**Final small frontend polish + minimal GA4 instrumentation**
 
-The GitHub Pages production artifact is deployed and reachable in the human
-owner's normal Chrome browser. This task fixes two observed presentation defects
-without reopening CX Playbook/Tool configuration.
+Do not modify CX backend resources, Messenger binding/domains, Playbooks, Tools,
+Data Stores, Router, Production mappings, session semantics, renderer contract,
+or frozen visual layout beyond the two approved changes below.
 
-## Human live evidence — 2026-10-08
+## Human acceptance carried forward — 2026-10-08
 
-From the owner-provided Chrome screenshot at:
+Trusted normal-Chrome checks already completed:
 
-`https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`
+- [x] 1999 live query works.
+- [x] Renderer Markdown/link/source de-duplication PASS.
+- [x] Rental cross-surface native Messenger parity PASS.
+- [x] Same-session follow-up works.
+- [x] `清除前次問答，重新提問` performs a real reset.
+- [x] Post-reset new query works.
 
-the following are now human-verified:
+Deferred, not blockers for this task:
 
-- [x] GitHub Pages production page loads in a normal trusted browser.
-- [x] Live Messenger initializes sufficiently to send a real Production query.
-- [x] Query button is usable.
-- [x] A real 1999 FAQ query returns a non-empty answer.
-- [x] The deployed page is using the live candidate rather than the disabled
-      `服務準備中` state.
-- [x] Presentation defect observed: Markdown bold syntax such as
-      `**一、適用條件：**` is displayed literally.
-- [x] Presentation defect observed: Markdown link syntax is not rendered as
-      linked label text; the URL is exposed and then duplicated again in the
-      general source list.
+- [ ] 390px trusted-browser live layout check.
+- [ ] Trusted-browser Console/network blocking JS/CSP/CORS check.
 
-Still not human-verified:
+## A. Agency logo/home link
 
-- [ ] Same-session follow-up.
-- [ ] Real session reset.
-- [ ] New query after reset.
-- [ ] 390px trusted-browser live layout.
-- [ ] Trusted-browser console/network check for blocking JS/CSP/CORS errors.
+Current `index.html` brand link points to `./index.html`.
 
-## A. Preserve backend and routing
+Approved change:
 
-- [x] Do not modify Router, Rental Playbook, 1999 FAQ Playbook, Tools, Data
-      Stores, Production versions, Environment mappings, Messenger binding, or
-      allowed domains.
-- [x] Confirm the fix is frontend-renderer-only unless later Rental live evidence
-      proves a backend change is necessary.
+- [ ] Change the upper-left Revenue Service brand/logo link to:
+      `https://tpctax.gov.taipei/`
+- [ ] Same-tab normal navigation.
+- [ ] Preserve current logo image, header layout and accessibility.
+- [ ] Apply equivalent brand-link behavior to `demo.html` if it shares the same
+      header markup.
+- [ ] Do not change the existing `返回本府1999常見問答` link.
 
-Evidence (execution start): synchronized `origin/main` at
-`88b14f6` (exact SHA recorded in completion).
-Read repository instructions and requested project/deployment documents.
-Only result normalization/rendering and focused tests/docs/packages are in scope;
-HTML/CSS, config, SDK/transport/session and all CX resources stay unchanged.
+## B. Minimal GA4 design
 
-## B. Safe Markdown subset for the custom 1999 renderer
+Goal: measure **visits that actually ask at least one question**, without
+collecting the question/answer content.
 
-Current cause: `assets/result-model.js` renders response text via DOM text nodes
-and only auto-links bare HTTP(S) URLs. It intentionally does not interpret
-Markdown.
+Use direct GA4 gtag integration; do not add GTM in this task.
 
-Implement a minimal safe renderer for the two formats actually observed and
-required:
+### Analytics contract
 
-- [x] `**text**` → semantic `<strong>`.
-- [x] `[label](https://...)` → semantic `<a>` whose visible text is `label`;
-      do not display the destination URL beside it.
-- [x] Preserve line breaks and all ordinary answer wording.
-- [x] Preserve safe bare HTTP(S) URL auto-linking for non-Markdown URLs.
-- [x] Reject unsafe/non-HTTP(S) Markdown destinations using the existing
-      `safeUrl()` rules.
-- [x] Do not use response `innerHTML`, raw HTML parsing, `eval`, or a broad
-      Markdown library that introduces unnecessary executable/HTML behavior.
-- [x] Any response HTML such as `<script>` must remain inert visible text.
-- [x] Keep current UI/frozen styling except minimal CSS if required for rendered
-      `strong` / inline link consistency.
+- [ ] Add a configurable GA4 Measurement ID in frontend config.
+- [ ] Never invent a Measurement ID.
+- [ ] If no human-supplied `G-XXXXXXXXXX` value exists, analytics must remain
+      safely disabled while implementation/tests can still complete.
+- [ ] Load GA4 only when a valid-looking configured Measurement ID is present.
+- [ ] Keep implementation in local external JS/module code; do not add inline
+      executable script merely for GA4.
+- [ ] Default GA4 page_view may be enabled so page visits can be compared with
+      actual question-start visits.
+- [ ] Send exactly one custom business event:
+      `ai_question_start`
+- [ ] Fire it only when the first valid user question in that browser page/tab
+      session is actually accepted for sending to Messenger.
+- [ ] Do not fire again for follow-up questions in the same tab session.
+- [ ] Use `sessionStorage` or an equivalent minimal browser-session guard to
+      prevent follow-up inflation.
+- [ ] Do not fire on example-button click alone.
+- [ ] Do not fire on empty/invalid form submission.
+- [ ] Do not fire merely when the page opens.
+- [ ] Do not fire on reset itself.
+- [ ] After reset, keep the same analytics page/tab-session guard; reset must
+      not create a second `ai_question_start` event.
+- [ ] If GA4 fails to load, query/Messenger behavior must continue normally.
 
-Do not implement images, tables, arbitrary HTML, or full Markdown unless a
-separate requirement appears.
+### Privacy / data-minimization
 
-## C. Inline-link / source de-duplication
+The custom event must NOT send:
 
-Desired citizen-facing result:
+- [ ] question text;
+- [ ] answer text;
+- [ ] FAQ/source title or URL;
+- [ ] tax category inferred from the question;
+- [ ] Playbook name/ID beyond anything GA4 already sees from the page itself;
+- [ ] any user-entered identifiers or contact information.
 
-`來源與詳細資訊請參考：地價稅按自用住宅用地優惠稅率課稅有哪些條件？如何申請？`
+Only the event name and ordinary GA4 page/session context are needed.
 
-where the question/title itself is the clickable link and the raw URL is hidden.
+## C. Implementation shape
 
-- [x] Extract/recognize safe URLs already represented by Markdown links in the
-      answer.
-- [x] Do not add those same URLs again as ordinary `sources[]` solely because
-      they appear inside the answer text.
-- [x] More generally, an HTTP(S) URL already rendered inline in the answer must
-      not be duplicated in the lower ordinary `參考資料` list.
-- [x] Preserve explicit structured citations that are genuinely additional and
-      are not already represented inline.
-- [x] Preserve optional `faqMetadata` behavior unless a direct duplicate is
-      demonstrated.
-- [x] Verify the screenshot scenario ends with the inline linked title and no
-      duplicate lower `tpctax.gov.taipei` source item.
+Preferred architecture:
 
-Evidence: one shared minimal parser produces DOM text/strong/anchor nodes and
-canonical inline URL inventory. Unsafe/incomplete Markdown and unsupported
-images remain literal; no response HTML parsing/dependency/CSS change.
-Normalization and rendering both remove ordinary inline-source duplicates;
-additional structured citations and explicit FAQ metadata are preserved.
-Screenshot scenario reconstruction is synthetic and PASS at desktop/390/320px;
-this does not claim a new live response or tax-quality result.
+- [ ] Add a small local analytics module, e.g. `assets/analytics.js`.
+- [ ] It conditionally bootstraps official GA4 gtag.js from
+      `https://www.googletagmanager.com/gtag/js?id=<MEASUREMENT_ID>`.
+- [ ] Keep GA4 failure isolated from the main query path.
+- [ ] Integrate one call at the first accepted Messenger query boundary.
+- [ ] No analytics dependency inside result rendering.
+- [ ] No analytics dependency inside CX transport/session reset logic.
 
 ## D. Tests
 
-Add/update focused tests for:
+Add focused tests for:
 
-- [x] bold rendering;
-- [x] Markdown link label rendering with hidden destination text;
-- [x] line-break preservation;
-- [x] safe bare URL linkification;
-- [x] duplicate inline/source suppression;
-- [x] additional structured source remains visible when not duplicated;
-- [x] `javascript:`, `data:`, credential-bearing and malformed links rejected;
-- [x] raw HTML/script remains inert text;
-- [x] no regression in generic answer / FAQ metadata rendering;
-- [x] reset/session/currentPlaybook behavior unchanged.
+- [ ] analytics disabled when Measurement ID missing;
+- [ ] invalid ID does not load/send;
+- [ ] valid ID requests the official gtag.js script;
+- [ ] first accepted question emits exactly one `ai_question_start`;
+- [ ] follow-up emits no second event;
+- [ ] reset + new question emits no second event in same tab session;
+- [ ] example click alone emits no event;
+- [ ] invalid/empty submit emits no event;
+- [ ] GA4 load/send failure does not block Messenger/query behavior;
+- [ ] no user question/answer/source content is included in event payload;
+- [ ] brand/logo link points to `https://tpctax.gov.taipei/`.
 
-Run:
+Then run:
 
-- [x] Node tests PASS.
-- [x] Offline Chromium PASS.
-- [x] production package integrity/manifest/repeat-build PASS.
-- [x] credential/secret scan PASS.
+- [ ] Node tests PASS.
+- [ ] Offline Chromium PASS.
+- [ ] package integrity/manifest/repeat-build PASS.
+- [ ] secret/credential scan PASS.
 
-Evidence: Node **14 PASS**, offline Chromium **17 grouped PASS**; browser
-checks use real normalizer/renderer with labeled synthetic fixtures, zero
-external/Production requests or page errors. Existing generic/FAQ, reset,
-expiry, timeout and one-shot currentPlaybook tests PASS. Screenshots and report:
-`/workspace/work/renderer-parity/browser/`. Config/HTML/CSS/app/transport/demo
-bytes are unchanged. Production/demo double builds byte-identical; 11-file CRC/manifest/source
-parity/credential scan PASS. Candidate ZIP 212,951 bytes, SHA-256
-`4abde0ae04a749b1e8ca8a6a7136d7f3f1adb80d6ea6d8ece05be672ba018d2a`.
+## E. Deployment / measurement-ID gate
 
-## E. GitHub Pages deployment
+- [ ] Regenerate production package after code changes.
+- [ ] If GA4 Measurement ID has NOT been supplied:
+      keep GA4 disabled, deploy only if human explicitly authorizes a no-GA4
+      interim build, and clearly record analytics as pending.
+- [ ] If GA4 Measurement ID HAS been supplied:
+      configure it, deploy to GitHub Pages, and verify actual GA4 script/network
+      requests in a normal browser where possible.
+- [ ] Record actual observed analytics external hosts for later IT CSP handoff;
+      do not guess broad wildcard CSP rules.
+- [ ] Update `docs/IT_HANDOFF.md` only with evidence-backed GA4 resource hosts.
 
-- [x] Regenerate live production `packages/hosting.zip` + checksum.
-- [x] Commit/push to `main`.
-- [x] GitHub Actions production-only Pages deployment PASS.
-- [x] Record deployed commit/run/ZIP SHA-256.
-- [x] Confirm hosted runtime files match the package.
+## F. GA4 reporting definition
 
-Evidence: renderer implementation commit `815178f0463be854b7a08ca7a95bf78bdae55d33`
-was pushed to main. Actions run
-[37722000091](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37722000091)
-source guard/build/production-only deploy PASS; deployment success
-**2026-10-08 11:17:38 Asia/Taipei**. Artifact `11526102071`.
-Actual URL: `https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`.
-ZIP SHA-256:
-`4abde0ae04a749b1e8ca8a6a7136d7f3f1adb80d6ea6d8ece05be672ba018d2a`
-(212,951 bytes). All 11 hosted payload GETs are 200, byte-identical with correct
-MIME, including renderer/manifest/IT document. Six representative demo/test/tool/
-repo-internal probes return 404. No full repo upload.
+Document the intended reporting meaning:
 
-Do not add the official 1999-site entry yet. No entry was added.
+- `page_view` = page visits.
+- `ai_question_start` = one page/tab session that actually asked at least one
+  valid question.
+- Event count of `ai_question_start` is the simplest operational
+  「發問人次」 measure for this implementation.
+- GA4 user/session metrics filtered to this event may later be used for unique
+  users or sessions if desired.
 
-## F. Rental cross-surface parity
+No additional custom events are authorized in this task.
 
-Architecture rule:
+## G. Documentation / handoff
 
-The same 1999 FAQ Playbook answer may also be surfaced from the Rental
-experience. The Rental experience uses official Dialogflow Messenger rendering,
-while this 1999 page uses a custom result renderer.
+- [ ] Create/update `docs/ANALYTICS.md` with the minimal contract above.
+- [ ] Update `PROJECT_STATE.md`.
+- [ ] Update `docs/IT_HANDOFF.md` if deployment/CSP facts change.
+- [ ] Update this checklist with evidence.
+- [ ] Commit/push and STOP for Web ChatGPT review.
 
-Google's official Dialogflow Messenger fulfillment documentation states that
-text responses support Markdown including `**Bold**` and
-`[Link text](Link URL)`:
-`https://docs.cloud.google.com/dialogflow/cx/docs/concept/integration/dialogflow-messenger/fulfillment`
+## Required human input
 
-Therefore:
+Before GA4 can be live-enabled, obtain the actual GA4 Web Data Stream
+Measurement ID in the form:
 
-- [x] Confirm by read-only project evidence that Rental still uses the official
-      Conversational Messenger / Production integration.
-- [x] Do not change the shared 1999 FAQ Playbook merely to compensate for the
-      custom 1999 frontend.
-- [x] After the 1999 frontend fix is deployed, run/obtain one Rental live
-      verification where a question is answered through the 1999 FAQ Playbook.
-- [x] Verify Rental shows bold text as bold, not literal `**`.
-- [x] Verify Rental shows the linked title as clickable text, not
-      `[title](URL)`.
-- [x] Verify there is no equivalent duplicate raw-URL/source presentation.
-- [x] If Rental native Messenger already renders correctly, record parity PASS
-      and make no backend mutation.
-- [ ] If Rental does not render correctly, capture exact screenshot/network/
-      response evidence and STOP for Web ChatGPT review before any backend
-      mutation.
+`G-XXXXXXXXXX`
 
-Evidence (read-only): Rental main `e3d786a3f4eb32ba1165644ac2008888b314f936`
-`site/messenger.html` and `assets/js/messenger-ui.js` embed native official
-SDK/chat-bubble and one-shot Rental Playbook on the same Production agent.
-Actual released Rental Pages HTML GET 200 matches that integration. Backend
-main `2f8205c78d62c3e7196f2e818a0edce10dae820b` STATE/7F closeout record
-Conversational Messenger Production cutover, exact accepted v2 Playbooks,
-6/6 Production smoke and Rental→FAQ return. This is retained-integration
-evidence, not newly observed live rendering or a fresh Console readback.
-Sources and limitations: `docs/RENDERER_PARITY.md`.
+Do not substitute a GTM Container ID and do not invent one.
 
-Post-deployment Rental live attempt at 11:18:12 Asia/Taipei uses the actual
-released Rental Pages URL in normal Chromium 151, inherited Cloud proxy and
-TLS validation enabled. Document GET fails `net::ERR_CERT_AUTHORITY_INVALID`,
-zero origin responses and zero Production queries. No native rendered FAQ
-answer, trace, screenshot or response could be obtained. Rental live parity is
-**BLOCKED**, not FAIL; remaining F checks stay unchecked. Native integration
-read-only evidence and backend historical smoke are not live rendering PASS.
-No backend/Playbook mutation or speculative rendering workaround was made.
+## Completion summary
 
-## G. Trusted-browser completion
+Record:
 
-After the revised Pages deployment, complete in a normal trusted browser:
-
-- [x] 1999 page: bold headings render correctly.
-- [x] 1999 page: linked title is clickable and raw destination URL is hidden.
-- [x] 1999 page: duplicate lower source entry is absent.
-- [ ] Same-session follow-up returns a non-empty answer.
-- [ ] `清除前次問答，重新提問` performs a real reset.
-- [ ] Post-reset new query returns a non-empty answer.
-- [ ] 390px live layout has no regression.
-- [ ] No blocking browser console JS/CSP/CORS error.
-- [x] Rental cross-surface parity verification completed.
-
-Codex Cloud certificate/proxy limitations are not grounds to label the hosted
-site failed. Leave human-only checks unchecked when the environment cannot
-perform them.
-
-Evidence: the revised 1999 Pages URL at 390×844 was attempted after deployment
-in the same trusted-TLS browser configuration and failed document GET with
-`net::ERR_CERT_AUTHORITY_INVALID` before any origin response. Page JS/SDK never
-executed; no query/follow-up/reset/format/network/mobile acceptance observed.
-All G live requirements remain unchecked. Prior owner-confirmed basic reachability
-above is preserved; it does not prove revised rendering or pending sessions.
-
-The environment's restricted network policy is enforced and allows Pages,
-www.gstatic.com and dialogflow.cloud.google.com. Verified HTTPS hosted-byte
-readback succeeds. The remaining blocker is Chromium's trust of the Cloud
-proxy certificate, not demonstrated origin CSP/CORS or frontend failure.
-Legacy NSS store exists; isolated namespace setup for a workspace trust-store
-remapping cannot run (`bwrap: setting up uid map: Read-only file system`).
-No home-directory writes, global certificate-ignore option, proxy bypass or
-security policy widening. **0 Production queries** in this task.
-
-## H. Documentation / completion
-
-- [x] Update `docs/RESULT_CONTRACT.md` to describe the safe Markdown subset and
-      inline-source de-duplication rule.
-- [x] Update `PROJECT_STATE.md`.
-- [x] Update `docs/DEPLOYMENT_GATES.md` only if deployment/live evidence changes
-      a gate decision.
-- [x] Update `docs/IT_HANDOFF.md` if the new live package hash changes.
-- [x] Update this checklist with evidence and completion summary.
-- [x] Commit/push and STOP for Web ChatGPT review.
-
-Evidence: RESULT_CONTRACT describes exact supported/inert syntax and canonical
-inline-source suppression. IT_HANDOFF is updated in the new hashed package;
-PROJECT_STATE and renderer/deployment evidence are updated. Gate 2A remains PASS,
-Gate 3 CONDITIONAL PASS; no deployment/live evidence changes a gate decision,
-so DEPLOYMENT_GATES.md needs no edit (conditional H item evaluated, N/A).
-Final reporting commit changes docs only; the deployed SHA/hash above remain
-unchanged. Commit/push then STOP for Web ChatGPT review.
-
-## Completion summary template
-
-At task end record:
-
-1. deployed Pages URL/run/SHA;
-2. live production ZIP SHA-256;
-3. renderer tests PASS/FAIL;
-4. screenshot scenario PASS/FAIL;
-5. remaining trusted-browser checks;
-6. Rental parity PASS/FAIL/BLOCKED;
-7. ready for Revenue Service IT: YES/NO.
-
-
-## Completion summary — 2026-10-08 (Asia/Taipei)
-
-1. Pages URL: `https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`; run
-   [37722000091](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37722000091);
-   deployed SHA `815178f0463be854b7a08ca7a95bf78bdae55d33`.
-2. Production ZIP SHA-256:
-   `4abde0ae04a749b1e8ca8a6a7136d7f3f1adb80d6ea6d8ece05be672ba018d2a`;
-   212,951 bytes / 11 files; hosted-byte parity and exclusions PASS.
-3. Renderer tests: Node 14 PASS; offline Chromium 17 grouped PASS; integrity/
-   manifest/source-byte/credential checks and deterministic double builds PASS.
-4. Screenshot scenario: **PASS in offline synthetic reconstruction** at
-   desktop/390/320px; newly deployed live format is still UNVERIFIED.
-5. Remaining trusted-browser checks: all G (format, follow-up, reset/post-reset,
-   390px and JS/CSP/CORS) remain unchecked because Chromium fails pre-origin
-   document GET with `ERR_CERT_AUTHORITY_INVALID`. Owner's prior basic live
-   query evidence is retained. **0 Production queries this task**.
-6. Rental parity: **BLOCKED** by the same Cloud browser CA failure. Native
-   Messenger / Production integration confirmed read-only, but one new
-   Rental→1999 FAQ response/rendering still needed. No backend mutation.
-7. Revenue Service IT ready: **NO** pending trusted-browser and Rental parity.
-
-Actual code fix/deployment completed; runtime UI/session/routing unchanged.
-Necessary project/checklist/deployment/handoff docs committed/pushed on main.
-STOP for Web ChatGPT review. Do not automatically resume backend work.
-
-
-### Human trusted-browser acceptance — 2026-10-08
-
-Owner-provided normal Chrome screenshots verify the revised deployed Pages build.
-
-1999 AI page:
-- PASS: Markdown delimiters are no longer exposed.
-- PASS: section labels render with intended emphasis.
-- PASS: the official detail-title text itself is clickable.
-- PASS: the raw destination URL is not shown.
-- PASS: no duplicate lower `tpctax.gov.taipei` ordinary source item is visible in the tested answer.
-
-Rental page:
-- PASS: a question routed through the shared 1999 FAQ behavior is rendered by native Conversational Messenger.
-- PASS: bold section labels render natively.
-- PASS: the official-reference label is the clickable link text.
-- PASS: no raw Markdown syntax or duplicate raw URL presentation is visible.
-
-Evidence source: four owner-provided normal-Chrome screenshots in Web ChatGPT review, 2026-10-08.
-This closes renderer-format and Rental cross-surface parity acceptance without any backend mutation.
-
-Still pending trusted-browser release checks:
-- same-session follow-up;
-- real reset;
-- post-reset new query;
-- 390px live layout;
-- browser console/network check for blocking JS/CSP/CORS errors.
+1. brand-link PASS/FAIL;
+2. analytics implementation PASS/FAIL;
+3. configured Measurement ID present: YES/NO (do not record secrets; GA4 ID is
+   non-secret but record only if human supplied it);
+4. `ai_question_start` once-per-tab-session tests PASS/FAIL;
+5. package/tests PASS/FAIL;
+6. Pages deployment status;
+7. GA4 live network verification PASS/PENDING;
+8. ready for Revenue Service IT: YES/NO.

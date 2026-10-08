@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 ## Status
 
-**UI FROZEN — CORE LIVE PASS — PER-QUERY GA4 + DEFERRED ANALYTICS IMPLEMENTED; LIVE GA4 PENDING**
+**UI FROZEN — CLEAR INPUT ON ACCEPTED SEND IMPLEMENTED; LIVE UX/GA4 PENDING**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -28,6 +28,7 @@ Dialogflow CX backend source of truth:
 - Shared CSS adds a slim official-red H1 marker and a smaller query-label marker; both text colors remain `#343434`.
 - Intro removed; common-tax examples are plain clickable quoted text between textarea and submit, with red `您可詢問` and a restrained red query top rule.
 - Ready state hides the idle panel. Reset appears only after a successful answer, labeled `清除前次問答，重新提問`; it uses the existing real session reset, clears/focuses input and hides again until another successful answer.
+- Accepted Messenger sends now clear textarea/counter at the existing accepted pending-query boundary; submit/pre-acceptance failure preserves text. The immutable submitted query still supplies the answer heading. No new focus or session action.
 - No custom backend.
 - Dialogflow Messenger is the intended browser transport.
 - `live-pages-candidate` fast-forwarded to `main`; `liveEnabled=true` production artifact deployed via Actions. Source guard confirms Pages `build_type=workflow`.
@@ -1226,3 +1227,24 @@ gets ERR_CERT_AUTHORITY_INVALID before origin/page JS; 0 Production queries,
 PENDING/unchecked, not FAIL. Formal GA4-verified IT-ready NO; no new resource/
 CSP/backend mutation. Final report-only main commit changes no ZIP/runtime or
 deployed SHA; push then STOP waiting for Web ChatGPT review.
+
+## Clear input after accepted send — 2026-10-08
+
+Resumed latest main `4f0fff232c31269b5d7661bf1ec5b79845db5e8f` under AGENTS.md.
+Only two app.js lines added after the existing accepted pending-request guard:
+clear textarea and dispatch input to reset the existing counter. The submit
+handler's captured trimmed query, which is the actual sent text, still supplies
+result heading after answer. No clear at form submit or pre-acceptance failure.
+Duplicate notifications do not clear a newly typed draft; a later answer also
+leaves that draft alone. No new focus change; explicit real reset remains intact.
+
+Node 21 PASS; offline Chromium 24 grouped PASS with controlled delayed acceptance/
+answer and async rejection. First/follow-up/post-reset clear/counter, original
+question heading, example/invalid/throw/cancel preservation, accepted empty/error,
+draft retention, GA 1/2/3/no-content, session/currentPlaybook/renderer/mobile/IME/
+idle/scoped CSP regressions PASS. Zero real external/Production requests.
+Runtime analytics/config/transport/renderer/HTML/CSS/images, CX resources and
+startup scheduling unchanged; no dependency/new origin. Analytics/performance/
+IT handoff docs deliberately unchanged per conditional scope. Package/deployment
+and live pending evidence maintained in NEXT_TASK/PAGES_DEPLOYMENT. No official
+entry change. Commit/push then STOP for Web ChatGPT review.

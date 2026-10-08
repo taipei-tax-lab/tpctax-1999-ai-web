@@ -79,6 +79,8 @@ async function initialize() {
         // Duplicate notifications for the same pending query must not count twice.
         if (trackedRequests.has(transport.pending)) return;
         trackedRequests.add(transport.pending);
+        // The form handler's captured query still supplies the result heading.
+        input.value = '';input.dispatchEvent(new Event('input'));
         analytics.queryAccepted();
       }
     });

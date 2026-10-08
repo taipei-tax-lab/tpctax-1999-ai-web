@@ -80,6 +80,8 @@ with sync_playwright() as p:
         page.locator('#query').fill(text)
         page.locator('#submit').click()
         page.wait_for_timeout(450)
+        assert page.locator('#query').input_value() == ''
+        assert page.locator('#counter').inner_text() == '0 / 1000'
     for fixture, title in [('empty', '尚未取得解答'), ('error', '暫時無法取得解答')]:
         query(fixture, '尚未成功回答')
         assert page.get_by_role('heading', name=title).is_visible()
@@ -94,7 +96,10 @@ with sync_playwright() as p:
     assert page.locator('#submit').is_disabled()
     assert page.locator('#reset').is_hidden()
     assert page.locator('#search-form').get_attribute('aria-busy') == 'true'
+    assert page.locator('#query').input_value() == ''
+    assert page.locator('#counter').inner_text() == '0 / 1000'
     page.locator('#result:not([hidden])').wait_for()
+    assert page.locator('#result-query').text_content() == '第一題'
     assert page.locator('[data-answer]').inner_text() == '銀錢收據之印花稅稅率為每件按金額千分之四計算。'
     assert page.locator('[data-faq]').is_hidden()
     assert page.locator('[data-source-section]').is_hidden()
@@ -231,16 +236,20 @@ with sync_playwright() as p:
         body=Path(__file__).resolve().parents[1].joinpath('assets/config.js').read_text().replace('liveEnabled: false','liveEnabled: true')))
     # Keep idle loading paused to prove early queries queue before gtag loads.
     page.add_init_script('window.requestIdleCallback=(callback)=>{window.pendingAnalytics=callback;return 1;}')
-    stub = '''window.stubRequests=[];window.stubSessions=[];window.stubDuplicate=false;
+    stub = '''window.stubRequests=[];window.stubSessions=[];window.stubDuplicate=false;window.stubHold=false;
     customElements.define('df-messenger-chat',class extends HTMLElement {});
     customElements.define('df-messenger',class extends HTMLElement {
       connectedCallback(){setTimeout(()=>this.dispatchEvent(new CustomEvent('df-messenger-loaded',{bubbles:true,composed:true})),0);}
       startNewSession(options){this.session=(this.session||0)+1;window.stubSessions.push({session:this.session,options});}
       setQueryParameters(p){this.params={...p};}
-      async sendQuery(query){const body={queryInput:{text:{text:query}},queryParams:{...this.params}};
+      async sendQuery(query){
+        if(window.stubHold)await new Promise((resolve,reject)=>{window.acceptStub=resolve;window.failStub=reject;});
+        const body={queryInput:{text:{text:query}},queryParams:{...this.params}};
         if(!this.dispatchEvent(new CustomEvent('df-request-sent',{detail:{data:{requestBody:body}},cancelable:true,bubbles:true,composed:true})))return;
         window.stubRequests.push({session:this.session,...structuredClone(body)});
+        window.lastStubBody=body;
         if(window.stubDuplicate)this.dispatchEvent(new CustomEvent('df-request-sent',{detail:{data:{requestBody:body}},cancelable:true,bubbles:true,composed:true}));
+        if(window.stubHold)await new Promise(resolve=>window.answerStub=resolve);
         this.dispatchEvent(new CustomEvent('df-response-received',{detail:{data:{messages:[{type:'text',text:'local SDK stub answer'}]}},cancelable:true,bubbles:true,composed:true}));}
     });'''
     context.route('https://www.gstatic.com/**', lambda r: r.fulfill(status=200,content_type='text/javascript',body=stub))
@@ -259,25 +268,37 @@ with sync_playwright() as p:
     assert page.evaluate('typeof window.pendingAnalytics === "function"')
     page.locator('[data-example]').first.click()
     assert business_events() == []
+    assert page.locator('#query').input_value() == page.locator('[data-example]').first.get_attribute('data-example')
     page.locator('#query').fill('')
     page.locator('#search-form').evaluate('(form) => form.dispatchEvent(new Event("submit", {cancelable:true}))')
     assert business_events() == []
-    page.locator('#query').evaluate('(input) => input.value="x".repeat(1001)')
+    page.locator('#query').fill('  \n  ')
+    page.locator('#search-form').evaluate('(form) => form.dispatchEvent(new Event("submit", {cancelable:true}))')
+    assert page.locator('#query').input_value() == '  \n  '
+    assert business_events() == []
+    page.locator('#query').evaluate('(input) => {input.value="x".repeat(1001);input.dispatchEvent(new Event("input"));}')
     page.locator('#search-form').evaluate('(form) => form.dispatchEvent(new Event("submit", {cancelable:true}))')
     assert business_events() == []
+    assert page.locator('#query').input_value() == 'x'*1001
+    assert page.locator('#counter').inner_text() == '1001 / 1000'
     # An unsolicited SDK request must be cancelled by the transport, not counted.
     page.evaluate('document.querySelector("df-messenger").dispatchEvent(new CustomEvent("df-request-sent", {detail:{data:{requestBody:{queryInput:{text:{text:"unsolicited"}}}}},cancelable:true,bubbles:true,composed:true}))')
     assert business_events() == []
+    assert page.locator('#query').input_value() == 'x'*1001
     page.evaluate('() => {window.originalSend=document.querySelector("df-messenger").sendQuery;document.querySelector("df-messenger").sendQuery=()=>{throw Error("not accepted")};}')
     page.locator('#query').fill('SDK rejected before sending');page.locator('#submit').click()
     page.get_by_role('heading',name='暫時無法取得解答').wait_for()
     assert business_events() == []
+    assert page.locator('#query').input_value() == 'SDK rejected before sending'
     page.evaluate('() => {document.querySelector("df-messenger").sendQuery=window.originalSend;}')
     for count, text in enumerate(['first SDK query', 'followup SDK query'], 1):
         page.evaluate('stubDuplicate='+str(count == 2).lower())
         page.locator('#query').fill(text);page.locator('#submit').click()
         page.locator('#result:not([hidden])').wait_for()
         assert page.locator('[data-answer]').inner_text() == 'local SDK stub answer'
+        assert page.locator('#query').input_value() == ''
+        assert page.locator('#counter').inner_text() == '0 / 1000'
+        assert page.locator('#result-query').text_content() == text
         assert business_events() == [['event','ai_query_submit']]*count
     requests = page.evaluate('stubRequests')
     assert business_events() == [['event','ai_query_submit']]*2
@@ -297,16 +318,51 @@ with sync_playwright() as p:
     request = page.evaluate('stubRequests.at(-1)')
     assert request['session'] == 2 and request['queryParams']['currentPlaybook'].endswith('f0512949-95f2-40c6-95d0-0c139b84b542')
     assert business_events() == [['event','ai_query_submit']]*3
+    assert page.locator('#query').input_value() == ''
+    assert page.locator('#counter').inner_text() == '0 / 1000'
+    assert page.locator('#result-query').text_content() == 'after real SDK reset'
     checks.append('citizen reset invokes SDK startNewSession(retainHistory:false) and rearms the next first-turn Playbook')
     assert page.locator('script[src*="googletagmanager"]').count() == 0
     page.evaluate('window.pendingAnalytics()')
     page.locator('script[src*="googletagmanager"]').wait_for(state='attached')
     assert business_events() == [['event','ai_query_submit']]*3
     checks.append('Messenger ready and first/follow-up/post-reset events retained before deferred GA4 loader; eventual official loader')
+    checks.append('accepted first/follow-up/post-reset send clears input/counter; result header retains sent text; accepted error/empty never restores input')
     page.reload();page.locator('#submit:not([disabled])').wait_for()
-    page.locator('#query').fill('after page refresh');page.locator('#submit').click()
-    page.locator('#result:not([hidden])').wait_for()
+    page.evaluate('stubHold=true')
+    text = '  延後接受的問題\n第二行  '
+    page.locator('#query').fill(text);page.locator('#submit').click()
+    page.get_by_role('heading',name='正在查詢解答').wait_for()
+    assert page.locator('#query').input_value() == text
+    assert page.locator('#counter').inner_text() == f'{len(text)} / 1000'
+    assert business_events() == []
+    page.evaluate('window.failStub(Error("rejected before acceptance"))')
+    page.get_by_role('heading',name='暫時無法取得解答').wait_for()
+    page.locator('#submit:not([disabled])').wait_for()
+    assert page.locator('#query').input_value() == text
+    assert business_events() == []
+    page.locator('#submit').click()
+    focus_before = page.evaluate('document.activeElement.id')
+    assert page.locator('#query').input_value() == text
+    page.evaluate('window.acceptStub()')
+    page.wait_for_function('document.querySelector("#query").value === ""')
+    assert page.locator('#counter').inner_text() == '0 / 1000'
+    assert page.evaluate('document.activeElement.id') == focus_before
+    assert page.locator('#result').is_hidden()
     assert business_events() == [['event','ai_query_submit']]
+    page.locator('#query').fill('下一題草稿')
+    page.evaluate('document.querySelector("df-messenger").dispatchEvent(new CustomEvent("df-request-sent",{detail:{data:{requestBody:window.lastStubBody}},cancelable:true,bubbles:true,composed:true}))')
+    assert page.locator('#query').input_value() == '下一題草稿'
+    assert business_events() == [['event','ai_query_submit']]
+    page.evaluate('window.answerStub()')
+    page.locator('#result:not([hidden])').wait_for()
+    assert page.locator('#result-query').text_content() == text.strip()
+    assert page.evaluate('stubRequests[0].queryInput.text.text') == text.strip()
+    assert page.locator('#query').input_value() == '下一題草稿'
+    assert page.locator('#counter').inner_text() == '5 / 1000'
+    assert page.locator('#result-title').evaluate('(e)=>e===document.activeElement')
+    assert business_events() == [['event','ai_query_submit']]
+    checks.append('delayed submit/rejection retains input; acceptance clears before answer with no focus steal; duplicate notification and later answer preserve next draft and original result query')
     # Queries continue when the GA4 script is blocked, with no storage gate.
     context.route('https://www.googletagmanager.com/gtag/js?*', lambda r:r.abort())
     page.evaluate('sessionStorage.clear()')
@@ -321,6 +377,7 @@ with sync_playwright() as p:
     page.locator('#query').fill('cancelled before SDK sending');page.locator('#submit').click()
     page.get_by_role('heading',name='尚未取得解答').wait_for()
     assert business_events() == [['event','ai_query_submit']]
+    assert page.locator('#query').input_value() == 'cancelled before SDK sending'
     page.evaluate('window.removeEventListener("df-request-sent",window.cancelTest,{capture:true})')
     page.evaluate('sessionStorage.clear()')
     page.reload();page.locator('#submit:not([disabled])').wait_for()
@@ -329,6 +386,7 @@ with sync_playwright() as p:
     page.locator('#result:not([hidden])').wait_for()
     assert page.locator('[data-answer]').inner_text() == 'local SDK stub answer'
     assert business_events() == []
+    assert page.locator('#query').input_value() == ''
     checks.append('GA4 per accepted query including follow-up/post-reset/refresh; no duplicate SDK notification, boot/example/empty/unsolicited/cancelled events; blocked loader/send does not block answers; no content parameters')
     checks.append('index/demo brand is accessible same-tab official agency homepage; demo analytics stays disabled')
     # Validate local module/deferred-loader compatibility without broad CSP rules.

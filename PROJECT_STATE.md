@@ -1,10 +1,10 @@
 # PROJECT_STATE
 
-Last updated: 2026-10-07
+Last updated: 2026-10-08
 
 ## Status
 
-**UI FROZEN — LIVE MESSENGER CANDIDATE AUTHORIZED — GITHUB PAGES E2E NEXT**
+**UI FROZEN — LIVE CANDIDATE PREPARED — PAGES MIGRATION / LIVE E2E BLOCKED**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -28,7 +28,7 @@ Dialogflow CX backend source of truth:
 - Ready state hides the idle panel. Reset appears only after a successful answer, labeled `清除前次問答，重新提問`; it uses the existing real session reset, clears/focuses input and hides again until another successful answer.
 - No custom backend.
 - Dialogflow Messenger is the intended browser transport.
-- `liveEnabled=false`.
+- Candidate branch `live-pages-candidate`: `liveEnabled=true`; deployed/main baseline remains disabled pending Pages source migration.
 - hostingUrl remains placeholder metadata, unused at runtime; final IT path does not require rebuilding.
 - First-turn initial Playbook is the 1999 FAQ Playbook.
 - Generic answer rendering works without FAQ metadata.
@@ -888,3 +888,49 @@ Environment binding is integration-side and must not be guessed from HTML attrib
   validation remains pending and does not block this package handoff;
 - final official 1999 link target and window behavior (normal link/button confirmed);
 - authorized live runtime validation after hosting.
+
+
+## Live Pages candidate execution — 2026-10-08
+
+Synced `main` at `bcb49fcd34fd2420c31ed98df4eafc6465e8b270` and executed
+`NEXT_TASK.md` within explicit human deployment/E2E authorization.
+Prepared candidate changes only runtime `assets/config.js` `liveEnabled=true`.
+UI, other config fields, session/currentPlaybook/reset, transport/model/renderer,
+all official assets, CX backend and integration/domain/binding remain unchanged.
+
+Pages already exists. Prior successful run
+[37700742476](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37700742476)
+checks out `main` and builds Jekyll from repository root; its uploaded artifact
+includes demo/tests/tools/docs. Deploy logs confirm public URL
+`https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`. This source cannot safely
+publish this live candidate while satisfying the production-only requirement.
+No checked-in workflow was overwritten. New official Actions workflow checks
+Pages `build_type=workflow`, rebuilds/compares/verifies the committed production
+ZIP and uploads only its exact extracted contents. Settings must first switch
+Pages Source to GitHub Actions; available connector cannot administer Pages and
+direct Pages API read is Forbidden.
+
+Candidate is isolated and pushed on `live-pages-candidate`; `main`/existing Pages
+publication remains the synced baseline. No live-candidate deployment occurred.
+Runtime restricted networking also blocks the Pages hostname: Chromium document
+GET fails `net::ERR_TUNNEL_CONNECTION_FAILED`; HEAD gets proxy CONNECT 403. No
+origin headers/CSP/CORS/SDK/connect evidence and **0 Production queries**.
+`dialogflow.cloud.google.com` and `fonts.googleapis.com` HEAD are similarly
+blocked. No proxy bypass or network/security widening was performed.
+
+Candidate package: 211,148 bytes, SHA-256
+`c19ad3e5ebfc5d3a97c45aaf1cdd3f36dec33cf2b854b59d5be35335c57a4ebd`.
+Node 10 PASS; offline Chromium 12 grouped PASS; extracted live-config candidate
+6 local subpath cases / 18 viewport checks using synthetic SDK only PASS.
+Integrity/11-file allowlist/manifest/source parity/official assets/credential scan
+and deterministic double builds PASS. New verifier rejects extra demo files,
+stale config and synthetic credentials. Offline disabled-state test explicitly
+injects that fixture while live bootstrap uses the candidate config.
+
+Gate 3 retains **CONDITIONAL PASS** for prior local audit; Pages live validation
+is **BLOCKED**, and IT release readiness is **NO**. Required next inputs are Pages
+source migration and effective environment hostname access, followed by exact
+artifact deployment and the still-unchecked minimal real-browser E2E. Agency
+final path remains IT's decision and does not require rebuilding. No official
+1999 entry is added. Checklist and completion summary are in `NEXT_TASK.md`.
+STOP for Web ChatGPT review; do not reopen backend or weaken CSP.

@@ -25,7 +25,7 @@
 - 前端最小契約是 `answer`；`sources[]` 與 FAQ metadata 都是 optional。
 - 不把 UI 綁死在 FAQ-only response shape。
 - 官方頁面未確定是同分頁、新分頁或新視窗，本站不得依賴 opener / close / referrer。
-- 正式 hosting URL、Messenger allowed domain、CSP 與 Production binding 尚待部署前確認。
+- 正式 origin、Messenger allowed domain 與 Production binding 已確認；資訊室 final path 待回覆。Gate 3 為 CONDITIONAL PASS，live candidate／Pages E2E 進度以 `NEXT_TASK.md` 為準。
 
 ## Migration provenance
 

@@ -1,0 +1,65 @@
+name: Production package Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - assets/**
+      - docs/IT_HANDOFF.md
+      - tools/package_static.py
+      - tools/verify_hosting.py
+      - packages/hosting.zip
+      - packages/hosting.sha256
+      - .github/workflows/pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require Actions Pages source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq .build_type)" = workflow || {
+            echo '::error::Set Settings > Pages > Source to GitHub Actions before deployment.'
+            exit 1
+          }
+      - uses: actions/configure-pages@v5
+      - name: Test and extract exact release package
+        run: |
+          npm test
+          python3 tools/package_static.py --output-dir "$RUNNER_TEMP/build-one"
+          python3 tools/package_static.py --output-dir "$RUNNER_TEMP/build-two"
+          cmp "$RUNNER_TEMP/build-one/hosting.zip" "$RUNNER_TEMP/build-two/hosting.zip"
+          cmp packages/hosting.zip "$RUNNER_TEMP/build-one/hosting.zip"
+          (cd packages && sha256sum --check hosting.sha256)
+          python3 tools/verify_hosting.py packages/hosting.zip --extract "$RUNNER_TEMP/pages"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/pages
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy exact production artifact
+        id: deployment
+        uses: actions/deploy-pages@v5

@@ -552,3 +552,49 @@ artifact should be derived from the same production packager/allowlist used for
 Gate 3 closes for the GitHub Pages host only after real browser network/CSP/CORS
 capture. Agency-host security headers still require a later lightweight
 confirmation after IT mounts the same package.
+
+
+## Authorized live candidate attempt — 2026-10-08
+
+**Deployment / E2E BLOCKED; Gate 3 remains CONDITIONAL PASS, not closed.**
+Current operational evidence and incomplete checks: `NEXT_TASK.md`.
+
+- Synced baseline: `bcb49fcd34fd2420c31ed98df4eafc6465e8b270`.
+- Existing Pages run
+  [37700742476](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37700742476)
+  succeeded on that baseline. Logs establish `main` / root Jekyll publication,
+  including demo/tests/tools, and URL
+  `https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`.
+- Prepared `live-pages-candidate` switches only runtime `liveEnabled=true`.
+  Official Actions workflow requires Pages `build_type=workflow`, uploads only
+  the verified extracted production ZIP, and prevents stale/extra payloads.
+  No main push, source migration or new Pages deployment has occurred: directly
+  reading Pages settings via `gh api` is Forbidden and no connector Pages
+  administration operation is available. Publishing live config to the current
+  branch source would violate production-only scope, so it is withheld.
+- Runtime revision 6 restricted policy custom hosts are only agency origin and
+  `www.gstatic.com`. Pages HEAD at 00:59:27 UTC gets proxy CONNECT 403 / curl 56;
+  real Chromium document GET gets `net::ERR_TUNNEL_CONNECTION_FAILED`, without
+  any origin response. API-host and Google Fonts CSS-host HEAD at 01:02:56 UTC
+  also get CONNECT 403. These are execution-environment failures, not agency/
+  Pages CSP, Google CORS, tax query failures or binding/domain failures.
+- No live SDK/subresource/connect-host capture, hosted headers or response
+  behavior was obtained. **0 Production queries**. Worker/frame/WebSocket/event
+  stream and any wildcard/unsafe-inline/extra script/connect permissions remain
+  unproven; no expansion is proposed. Local frontend remains same-origin;
+  known absolute SDK script URL is unchanged. Do not infer an endpoint from
+  regional CX REST APIs or label missing origin headers absent.
+- Candidate ZIP: 211,148 bytes; SHA-256
+  `c19ad3e5ebfc5d3a97c45aaf1cdd3f36dec33cf2b854b59d5be35335c57a4ebd`.
+  Node 10 PASS; offline Chromium 12 grouped PASS; 6 extracted-package subpath
+  cases / 18 viewport checks with intercepted synthetic SDK PASS. Strict scoped
+  local CSP has no violations. Integrity/manifest/source parity/credential scan/
+  official image hashes/repeat builds PASS; verifier rejects three bad archive
+  variants. These results cannot close live SDK/CORS/session/reset checks.
+
+Next required changes are repository Pages Source → GitHub Actions and supported
+environment hostname access. Then deploy the exact candidate, record run/SHA/
+actual URL and perform only the authorized minimal E2E. Keep Gate 2A PASS and all
+CX/UI/session settings frozen. IT-ready **NO** pending live PASS. Even successful
+Pages E2E cannot establish the agency final path's security headers: inspect the
+actual agreed URL after mounting. STOP for Web ChatGPT review.

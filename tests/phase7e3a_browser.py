@@ -24,6 +24,12 @@ with sync_playwright() as p:
     page = context.new_page()
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
+    # Retain disabled-mode coverage even when the release candidate is live.
+    config_source = Path(__file__).resolve().parents[1].joinpath('assets/config.js').read_text()
+    def disabled_config(r):
+        r.fulfill(status=200, content_type='text/javascript',
+                  body=config_source.replace('liveEnabled: true', 'liveEnabled: false'))
+    context.route('**/assets/config.js', disabled_config)
     page.goto(BASE + 'index.html')
     page.get_by_role('heading', name='服務準備中').wait_for()
     assert page.locator('#submit').is_disabled()
@@ -31,7 +37,8 @@ with sync_playwright() as p:
     assert page.locator('#reset').is_hidden()
     assert page.locator('df-messenger').count() == 0
     assert not external
-    checks.append('hosting default disabled; no SDK or external traffic')
+    checks.append('isolated disabled-config fixture; no SDK or external traffic')
+    context.unroute('**/assets/config.js', disabled_config)
     page.goto(BASE + 'demo.html')
     page.locator('#submit:not([disabled])').wait_for()
     assert page.locator('#status').is_hidden()

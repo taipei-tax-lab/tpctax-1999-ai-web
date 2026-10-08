@@ -1,7 +1,9 @@
 # 資訊室靜態網頁交付
 
 交付檔：`hosting.zip`；另附 `hosting.sha256` 與 ZIP 內逐檔 `MANIFEST.json`。
-目前交付策略已改為：先由專案方在 GitHub Pages 以相同 production package 完成 Messenger 真實問答 E2E；通過後，再提供資訊室該已驗證 live package。資訊室不需要先掛 disabled 版。
+交付策略：先由專案方在 GitHub Pages 以相同 production package 完成 Messenger 真實問答 E2E；通過後，再提供資訊室已驗證 live package。
+
+目前 `packages/hosting.zip` 是 `liveEnabled=true` 的待驗證 candidate，尚未完成 live E2E，**尚不可作為已驗證正式交付版**。放行狀態請以 `NEXT_TASK.md` completion summary 為準。
 
 ## 掛載
 
@@ -27,10 +29,10 @@
 ## Headers 與後續 live 檢查
 
 若伺服器有 CSP/security headers，請提供實際頁面及資源的 response headers；
-不要預先加入 wildcard、全面允許 inline，或停用 CSP。首次 disabled 版不會
-載入 Messenger；它通過不代表 live SDK/CORS 已通過。
+不要預先加入 wildcard、全面允許 inline，或停用 CSP。GitHub Pages 驗證
+不能代替資訊室實際掛載路徑的 headers／CSP／CORS 驗證。
 
-後續 live 設定版需載入官方 Dialogflow Messenger SDK：
+live package 需載入官方 Dialogflow Messenger SDK：
 `https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js`。
 SDK/resource/API 若被擋，由後續 browser E2E 依實際 request/CSP/CORS 證據，
 交付精確來源清單再調整。避免拿網站 root 的 headers 代替此頁的 headers。
@@ -44,9 +46,10 @@ SDK/resource/API 若被擋，由後續 browser E2E 依實際 request/CSP/CORS �
   Referrer-Policy、Permissions-Policy、COOP／COEP／CORP、相關 CORS headers
   （如未設定，請註明）。可直接提供 headers 擷取，不需另做長篇報告。
 
-收到上述資訊後，專案方核對掛載並另行確認 live switch／Production E2E
-時段及授權；再交付 config-only 更新。更新 `assets/config.js` 時請清除或
-重新驗證該檔及頁面的快取，避免瀏覽器繼續使用 disabled 版。
+收到上述資訊後，專案方核對已驗證 package 的掛載及正式路徑的
+headers/resource，於約定時段做 agency-host 的最小 live browser 確認。
+選定 final path 不需 rebuild 或再做 live switch；請清除或重新驗證頁面與
+`assets/config.js` 的快取，避免瀏覽器使用前一版。
 
 Rollback：移除／停用入口連結，或換回前一版 static package（含快取更新）。
 

@@ -176,13 +176,13 @@ Therefore:
       Conversational Messenger / Production integration.
 - [x] Do not change the shared 1999 FAQ Playbook merely to compensate for the
       custom 1999 frontend.
-- [ ] After the 1999 frontend fix is deployed, run/obtain one Rental live
+- [x] After the 1999 frontend fix is deployed, run/obtain one Rental live
       verification where a question is answered through the 1999 FAQ Playbook.
-- [ ] Verify Rental shows bold text as bold, not literal `**`.
-- [ ] Verify Rental shows the linked title as clickable text, not
+- [x] Verify Rental shows bold text as bold, not literal `**`.
+- [x] Verify Rental shows the linked title as clickable text, not
       `[title](URL)`.
-- [ ] Verify there is no equivalent duplicate raw-URL/source presentation.
-- [ ] If Rental native Messenger already renders correctly, record parity PASS
+- [x] Verify there is no equivalent duplicate raw-URL/source presentation.
+- [x] If Rental native Messenger already renders correctly, record parity PASS
       and make no backend mutation.
 - [ ] If Rental does not render correctly, capture exact screenshot/network/
       response evidence and STOP for Web ChatGPT review before any backend
@@ -211,15 +211,15 @@ No backend/Playbook mutation or speculative rendering workaround was made.
 
 After the revised Pages deployment, complete in a normal trusted browser:
 
-- [ ] 1999 page: bold headings render correctly.
-- [ ] 1999 page: linked title is clickable and raw destination URL is hidden.
-- [ ] 1999 page: duplicate lower source entry is absent.
+- [x] 1999 page: bold headings render correctly.
+- [x] 1999 page: linked title is clickable and raw destination URL is hidden.
+- [x] 1999 page: duplicate lower source entry is absent.
 - [ ] Same-session follow-up returns a non-empty answer.
 - [ ] `清除前次問答，重新提問` performs a real reset.
 - [ ] Post-reset new query returns a non-empty answer.
 - [ ] 390px live layout has no regression.
 - [ ] No blocking browser console JS/CSP/CORS error.
-- [ ] Rental cross-surface parity verification completed.
+- [x] Rental cross-surface parity verification completed.
 
 Codex Cloud certificate/proxy limitations are not grounds to label the hosted
 site failed. Leave human-only checks unchecked when the environment cannot
@@ -297,3 +297,31 @@ At task end record:
 Actual code fix/deployment completed; runtime UI/session/routing unchanged.
 Necessary project/checklist/deployment/handoff docs committed/pushed on main.
 STOP for Web ChatGPT review. Do not automatically resume backend work.
+
+
+### Human trusted-browser acceptance — 2026-10-08
+
+Owner-provided normal Chrome screenshots verify the revised deployed Pages build.
+
+1999 AI page:
+- PASS: Markdown delimiters are no longer exposed.
+- PASS: section labels render with intended emphasis.
+- PASS: the official detail-title text itself is clickable.
+- PASS: the raw destination URL is not shown.
+- PASS: no duplicate lower `tpctax.gov.taipei` ordinary source item is visible in the tested answer.
+
+Rental page:
+- PASS: a question routed through the shared 1999 FAQ behavior is rendered by native Conversational Messenger.
+- PASS: bold section labels render natively.
+- PASS: the official-reference label is the clickable link text.
+- PASS: no raw Markdown syntax or duplicate raw URL presentation is visible.
+
+Evidence source: four owner-provided normal-Chrome screenshots in Web ChatGPT review, 2026-10-08.
+This closes renderer-format and Rental cross-surface parity acceptance without any backend mutation.
+
+Still pending trusted-browser release checks:
+- same-session follow-up;
+- real reset;
+- post-reset new query;
+- 390px live layout;
+- browser console/network check for blocking JS/CSP/CORS errors.

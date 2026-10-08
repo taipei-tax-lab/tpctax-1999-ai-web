@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 ## Status
 
-**UI FROZEN — SAFE RENDERER DEPLOYED / OFFLINE PASS — TRUSTED LIVE / RENTAL PARITY BLOCKED**
+**UI FROZEN — SAFE RENDERER LIVE PASS — RENTAL PARITY PASS — FINAL SESSION/MOBILE CHECKS PENDING**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -900,6 +900,30 @@ Dialogflow Messenger. Official Messenger text responses support Markdown bold
 and Markdown links. After the custom 1999 renderer is fixed, verify one Rental
 FAQ-route answer. Do not mutate the launch-ready backend unless direct Rental
 evidence shows native rendering is not correct.
+
+## Trusted-browser renderer and Rental parity acceptance — 2026-10-08
+
+Owner-provided normal Chrome evidence verifies the deployed renderer fix and cross-surface parity.
+
+1999 AI:
+- literal Markdown bold markers are gone;
+- section headings render with emphasis;
+- the official detail title is the clickable link label;
+- raw destination URL is hidden;
+- duplicate ordinary source entry is absent in the tested answer.
+
+Rental:
+- native Conversational Messenger renders bold text correctly;
+- native linked-label rendering is correct;
+- no equivalent duplicate raw-URL presentation is visible.
+
+Decision:
+- custom 1999 renderer parity PASS;
+- Rental cross-surface parity PASS;
+- no CX backend/Playbook/Tool mutation required.
+
+Remaining pre-IT trusted-browser checks are limited to same-session follow-up,
+real reset/post-reset query, 390px live layout and a blocking-error console/network check.
 
 ## Backend contract
 

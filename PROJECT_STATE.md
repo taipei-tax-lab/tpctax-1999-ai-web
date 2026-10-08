@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 ## Status
 
-**UI FROZEN — SAFE RENDERER LIVE PASS — RENTAL PARITY PASS — FINAL SESSION/MOBILE CHECKS PENDING**
+**UI FROZEN — RENDERER/RENTAL/SESSION PASS — LOGO LINK + MINIMAL GA4 NEXT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -924,6 +924,38 @@ Decision:
 
 Remaining pre-IT trusted-browser checks are limited to same-session follow-up,
 real reset/post-reset query, 390px live layout and a blocking-error console/network check.
+
+## Trusted-browser session acceptance — 2026-10-08
+
+The owner additionally confirms in normal Chrome:
+
+- same-session follow-up works;
+- real session reset works;
+- a new post-reset query returns normally.
+
+These close the core live session/reset checks. The 390px live-layout and
+Console/network blocking-error checks are intentionally deferred and are not
+treated as current blockers.
+
+## Final small frontend decisions
+
+1. The upper-left Revenue Service brand/logo must link to the official agency
+   homepage: `https://tpctax.gov.taipei/`, not back to the standalone AI page.
+
+2. Add minimal GA4 measurement:
+   - direct GA4 gtag integration, not GTM for this task;
+   - automatic page view may remain;
+   - exactly one custom event: `ai_question_start`;
+   - fire once per browser page/tab session when the first valid question is
+     actually accepted for sending;
+   - follow-ups and reset/post-reset questions in the same tab session must not
+     increment this event;
+   - never send question, answer, source, inferred tax topic, identifier or
+     contact-information content to GA4;
+   - analytics failure must never block the AI query path.
+
+The actual GA4 Measurement ID is not yet recorded in this project and must be
+supplied by the human owner before live analytics activation.
 
 ## Backend contract
 

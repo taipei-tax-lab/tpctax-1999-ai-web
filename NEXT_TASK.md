@@ -122,12 +122,9 @@ Then run:
 ## E. Deployment / measurement-ID gate
 
 - [ ] Regenerate production package after code changes.
-- [ ] If GA4 Measurement ID has NOT been supplied:
-      keep GA4 disabled, deploy only if human explicitly authorizes a no-GA4
-      interim build, and clearly record analytics as pending.
-- [ ] If GA4 Measurement ID HAS been supplied:
-      configure it, deploy to GitHub Pages, and verify actual GA4 script/network
-      requests in a normal browser where possible.
+- [x] GA4 Measurement ID has been supplied by the human owner.
+- [ ] Configure `G-S891SFSMBH`, deploy to GitHub Pages, and verify actual GA4
+      script/network requests in a normal browser where possible.
 - [ ] Record actual observed analytics external hosts for later IT CSP handoff;
       do not guess broad wildcard CSP rules.
 - [ ] Update `docs/IT_HANDOFF.md` only with evidence-backed GA4 resource hosts.
@@ -156,12 +153,16 @@ No additional custom events are authorized in this task.
 
 ## Required human input
 
-Before GA4 can be live-enabled, obtain the actual GA4 Web Data Stream
-Measurement ID in the form:
+GA4 Web Data Stream Measurement ID supplied by the human owner:
 
-`G-XXXXXXXXXX`
+`G-S891SFSMBH`
 
-Do not substitute a GTM Container ID and do not invent one.
+This is the approved GA4 Measurement ID for this task.
+
+- [x] Human-supplied GA4 Measurement ID received.
+- [ ] Configure the frontend with exactly `G-S891SFSMBH`.
+- [ ] Do not substitute a GTM Container ID.
+- [ ] Do not invent or derive any other analytics identifier.
 
 ## Completion summary
 

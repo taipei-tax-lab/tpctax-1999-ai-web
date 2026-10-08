@@ -78,13 +78,18 @@ business event is implemented. Delivery can undercount when analytics is blocked
   byte-identical under this task's resource/CSP-only update rule; its earlier
   once-per-tab release description is historical. Current analytics meaning is
   defined here and in NEXT_TASK/PROJECT_STATE.
-- Prior Cloud probe rejected official gtag CONNECT with HTTP 403 before origin;
-  real Chromium rejected Pages with proxy `ERR_CERT_AUTHORITY_INVALID` before
+- Current Cloud probe at 15:24:14 Asia/Taipei rejected official gtag CONNECT
+  with HTTP 403 (curl 56) before origin; deployed Pages Chromium at 15:24:38
+  rejected the document with proxy `ERR_CERT_AUTHORITY_INVALID` before
   page JS. Actual gtag subresource/collection hosts remain unobserved; no guessed
   wildcard/connect-src policy is proposed.
 
 Current Pages run/SHA/ZIP parity and post-deployment live result are recorded in
 [PAGES_DEPLOYMENT.md](PAGES_DEPLOYMENT.md) and [NEXT_TASK.md](../NEXT_TASK.md).
+Deployed `49ade8ed9904b8f5f379fe5e1d61ff40ba4e6fca`, [run 37743130011](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37743130011),
+15:23:50 Asia/Taipei: PASS; all 12 hosted files match production ZIP. The actual
+browser run has zero origin responses/page JS, 0 Production queries and
+0 observed analytics collection requests. All seven live items stay unchecked.
 GA4 live verification remains PENDING where proxy trust/access prevents it.
 A trusted browser should observe page measurement, then query events 1/2/3 for
 first/follow-up/post-reset; reset alone adds none, custom payload has no question

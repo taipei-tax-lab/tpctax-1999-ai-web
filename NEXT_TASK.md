@@ -190,9 +190,9 @@ Run:
 - [x] deterministic repeat build PASS.
 - [x] credential/secret scan PASS.
 - [x] regenerate `packages/hosting.zip` + checksum.
-- [ ] deploy via existing GitHub Actions production-only Pages workflow.
-- [ ] record deployed SHA/run/ZIP SHA-256.
-- [ ] confirm hosted runtime files match production package.
+- [x] deploy via existing GitHub Actions production-only Pages workflow.
+- [x] record deployed SHA/run/ZIP SHA-256.
+- [x] confirm hosted runtime files match production package.
 
 Evidence: Node 21 PASS; offline Chromium 22 grouped PASS with synthetic scripts,
 no page errors/external/Production requests. New package is exactly 12 files;
@@ -203,6 +203,16 @@ SHA-256 `768190825d260b95d18af44e15ffdabfaa95557b245cf57ad5d18fe34520acc6`;
 committed checksum verifies. Demo ZIP 230,859 bytes, SHA-256
 `2a0983c4296606e497248dddae3b6316eb41838dc897470b1fa1e6aaaa3a9cf2`.
 No packaging/workflow allowlist change required; IT_HANDOFF bytes unchanged.
+
+Deployment: [Actions run 37743130011](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37743130011)
+PASS, deployed SHA `49ade8ed9904b8f5f379fe5e1d61ff40ba4e6fca`, success
+2026-10-08 **15:23:50 Asia/Taipei**, github-pages artifact `11534411703`.
+URL <https://taipei-tax-lab.github.io/tpctax-1999-ai-web/>. Source guard confirms
+`build_type=workflow`; configure-pages, Node 14+7, deterministic rebuild/committed
+ZIP/checksum/manifest/source/credential and production-only build/deploy PASS.
+Post-deployment HTTPS GETs at 15:24:38: **12/12 files HTTP 200 and byte-identical**
+to ZIP; correct runtime MIME. Six demo/test/tool/repo-internal probes return 404.
+Online app/analytics contain only the new event wiring; ID/header unchanged.
 
 ## G. GA4 live verification
 
@@ -220,6 +230,19 @@ If Codex Cloud cannot access GA4 or cannot trust the browser proxy certificate,
 leave these human-only items unchecked and clearly mark them PENDING rather than
 FAIL.
 
+**All seven live items PENDING, not FAIL.** Fresh official gtag HTTPS probe
+at 2026-10-08 15:24:14 Asia/Taipei gets Cloud proxy CONNECT HTTP 403 (curl 56),
+before origin. Actual deployed Pages Chromium 151 at 15:24:38, 390×844,
+inherited proxy/TLS verification enabled, no mocked network, stops at document
+GET with `net::ERR_CERT_AUTHORITY_INVALID`. Zero browser origin responses;
+page JS/SDK/gtag never execute, **0 Production queries / 0 observed GA4 collection
+requests**. No page_view/custom-event delivery, follow-up/reset GA count or real
+Google CSP/CORS can be claimed from this run. Ordinary HTTPS file parity and
+offline queue fixtures do not substitute for these checks. Current environment
+policy excludes gtag host; no TLS/proxy bypass, policy broadening or backend
+mutation. Existing human renderer/Rental/session PASS is carried forward.
+Trusted-browser 1/2/3/no-reset/no-content/failure checks remain unchecked.
+
 ## H. Documentation / handoff
 
 - [x] Update `docs/ANALYTICS.md` from once-per-tab semantics to per-query semantics.
@@ -230,7 +253,12 @@ FAIL.
 - [x] Audit `docs/IT_HANDOFF.md`: external resource/CSP requirements unchanged,
       so file remains byte-identical as required; old count description historical.
 - [x] Update this checklist with evidence.
-- [ ] Commit/push and STOP for Web ChatGPT review.
+- [x] Commit/push and STOP for Web ChatGPT review.
+
+Implementation/package commit `49ade8ed9904b8f5f379fe5e1d61ff40ba4e6fca` pushed
+to main and deployed. Final reporting-only commit updates checklist/state and
+analytics/performance/deployment docs; no ZIP payload or runtime change and no
+second deployment. STOP after push for Web ChatGPT review.
 
 ## Completion summary
 
@@ -244,3 +272,20 @@ Record:
 6. Pages deployed SHA/run/ZIP SHA-256;
 7. GA4 live verification PASS/PENDING;
 8. ready for Revenue Service IT: YES/NO.
+
+### Result — 2026-10-08 (Asia/Taipei)
+
+| Item | Result |
+| --- | --- |
+| Final custom event | `ai_query_submit` only; event count = 查詢次數, not unique people/發問人次 |
+| Per-query behavior | PASS — first/follow-up/post-reset = 1/2/3; reset/example/invalid/cancelled/unsolicited = 0; no custom content parameters |
+| Performance change | Immediate queue; official GA loader after core settles, then idle/1500ms or timer fallback. SDK remains eager; no visual/modulepreload/host/image change |
+| Verified before/after | GA request before ready 7/7→0/7; median ready 727.6→721.9ms within noise, no material speed claim; 0 screenshot pixel changes at 1280/390/320px |
+| Tests/package | PASS — Node 21, Chromium 22 grouped, 18 extracted-subpath viewport cases; exact 12-file manifest/source/credential and repeat builds |
+| Pages | PASS — deployed `49ade8ed9904b8f5f379fe5e1d61ff40ba4e6fca`, run `37743130011`, ZIP `768190825d260b95d18af44e15ffdabfaa95557b245cf57ad5d18fe34520acc6`, 12/12 hosted parity |
+| GA4 live | PENDING — all G items unchecked; Cloud CONNECT 403 / Chromium proxy CA trust, no observed collection hosts/receipt |
+| Revenue Service IT ready | NO — formal GA4-verified release pending trusted-browser evidence; agency final-path headers still need readback |
+
+Required docs and durable evidence updated; IT resource handoff unchanged because
+no resource/CSP requirement changes. Human core acceptance remains PASS. Final
+docs commit/push then **STOP**, waiting for Web ChatGPT review.

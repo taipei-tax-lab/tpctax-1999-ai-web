@@ -90,7 +90,8 @@ graph remains unchanged; only the GA readiness ordering is intentionally altered
 ## Reproduction and regression evidence
 
 Serve snapshots under any local directory URL: baseline from git archive
-`198bab7`, applied runtime from current main. Optional experimental snapshot
+`198bab7`, applied runtime from deployed `49ade8e` (current main has the same
+runtime). Optional experimental snapshot
 adds modulepreload links for config.js, result-model.js, messenger-transport.js
 and analytics.js; all other candidate bytes match applied runtime.
 
@@ -115,3 +116,12 @@ committed. Scratch snapshot names are local test fixtures, not hosting paths.
   Exact manifest/repeat-build and hosted deployment results are in NEXT_TASK/
   PAGES_DEPLOYMENT. No cache/security policy weakening,
   new external resource or dependency is needed for the applied optimization.
+
+Deployed result: [Actions 37743130011](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37743130011),
+SHA `49ade8ed9904b8f5f379fe5e1d61ff40ba4e6fca`, 15:23:50 Asia/Taipei. Production
+ZIP 215,196 bytes, SHA-256
+`768190825d260b95d18af44e15ffdabfaa95557b245cf57ad5d18fe34520acc6`;
+12/12 hosted byte parity PASS, exclusions 404. Field/live load timings remain
+unavailable: fresh browser at 15:24:38 stops at document GET with proxy
+ERR_CERT_AUTHORITY_INVALID; fresh gtag probe at 15:24:14 gets CONNECT 403.
+No actual Google script execution/collection/Production query is inferred.

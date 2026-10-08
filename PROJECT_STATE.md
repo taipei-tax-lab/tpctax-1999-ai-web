@@ -1193,3 +1193,15 @@ renderer/Rental/session PASS remains accepted.
 Offline/package/deployment and current live blocker are recorded in NEXT_TASK
 and PAGES_DEPLOYMENT. GA4 network/receipt remains PENDING under Cloud access/trust;
 no guessed collection hosts or CSP changes. Commit/push and STOP for Web review.
+
+Per-query/deferral production deployment PASS: [run 37743130011](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37743130011),
+deployed SHA `49ade8ed9904b8f5f379fe5e1d61ff40ba4e6fca`, 2026-10-08 15:23:50
+Asia/Taipei, URL `https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`.
+Source guard/build/deploy and Actions Node 21/package checks PASS; artifact
+`11534411703`. Hosted 12/12 bytes match, six exclusions 404. Fresh gtag at
+15:24:14 gets proxy CONNECT 403 (curl 56), and real deployed Chromium at 15:24:38
+gets ERR_CERT_AUTHORITY_INVALID before origin/page JS; 0 Production queries,
+0 observed GA4 collection requests. All current live analytics checks remain
+PENDING/unchecked, not FAIL. Formal GA4-verified IT-ready NO; no new resource/
+CSP/backend mutation. Final report-only main commit changes no ZIP/runtime or
+deployed SHA; push then STOP waiting for Web ChatGPT review.

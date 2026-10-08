@@ -131,3 +131,24 @@ duplicated raw URL, with response/route evidence. If Rental is wrong, capture
 the precise response/screenshot/trace and STOP before any backend mutation.
 Existing owner-confirmed basic 1999 query remains valid prior evidence, not
 new renderer/session/Rental acceptance. Gate decisions unchanged; IT-ready NO.
+
+
+## Human trusted-browser acceptance — 2026-10-08
+
+Normal Chrome screenshots supplied by the owner verify the deployed result:
+
+### 1999 custom renderer
+- bold Markdown is rendered, not exposed as literal `**`;
+- the official detail-title text is the hyperlink;
+- destination URL text is hidden;
+- the tested answer has no duplicated lower ordinary source entry.
+
+### Rental native Messenger
+- bold labels render natively;
+- the official-reference label is clickable;
+- raw Markdown syntax and duplicate raw URL are not visible.
+
+Cross-surface renderer parity: **PASS**.
+No backend mutation is required.
+
+Remaining release checks are session/reset/mobile/console behavior only.

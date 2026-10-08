@@ -14,7 +14,7 @@
 
 1. 優先 Messenger `event.detail.data.messages` 中 `type=text`、string `text`；多段以空行連接，保留原字句。
 2. 若 parsed text 不存在，讀取 `event.detail.raw.queryResult.responseMessages[].text.text[]`。
-3. 僅採用明確 citation message／citation list 或以下 versioned extension 的 sources；原文中的 absolute HTTP(S) URL 可點擊並列為一般來源。沒有猜測來源 title；僅有 URL 時用實際 hostname 作 link label。
+3. 僅採用明確 citation message／citation list 或以下 versioned extension 的 sources。答案原文中的安全 HTTP(S) URL／Markdown link 可在答案內點擊；若該 URL 已在答案內呈現，不再重複列入下方一般「參考資料」。只有額外且未在答案內呈現的 structured source 才另列。沒有猜測來源 title；僅有額外 URL 時用實際 hostname 作 link label。
 4. 不讀 diagnosticInfo 作 FAQ metadata，不從 active Playbook、question、官方 domain 或 URL pattern 推定 FAQ。
 
 可選未來 extension：`responseMessages[].payload.universalAnswer`，`schemaVersion=1`，含 optional `answer`、`sources[]`、`faqMetadata`。只有主要 text 缺少時才採用 extension answer。這不是已觀察的 Production 契約，也不要求更改任何 CX resource。
@@ -25,7 +25,7 @@ FAQ card 必須同時具備 versioned extension、明確 `kind=official1999Faq`�
 
 已驗證歷史 Phase7C Drive archive `1bW4PwMhsAAZSilbqRTgYDWUug8_0bYa4`（SHA-256 `c9af5e71aaa30950dddd6e3ec0339d0a818bfd5b3549733bd277d915455436fc`）；其中 `041_response.json` 的 primary responseMessages 只有「銀錢收據之印花稅稅率為每件按金額千分之四計算。」文字，並無 FAQ title/source structured message。本輪沒有重新向 CX 查詢。
 
-Renderer 使用 text nodes／textContent；不插入 response HTML、不執行 Markdown、不改寫答案。每次新結果清除舊的 answer／FAQ／sources，只顯示最新 query；無完整 conversation transcript。超連結為一般 HTTP(S) navigation；metadata 驗證僅檢查格式與允許 origin，不宣稱 FAQ 存在或其內容已人工驗證。
+Renderer 仍禁止插入或執行 response HTML，但允許以 DOM node 安全呈現已明確核准的最小 Markdown 子集：`**粗體**` 與 `[連結文字](HTTP(S) URL)`；不使用 `innerHTML`，不執行任意 HTML／script，也不擴充圖片、表格等完整 Markdown。裸 HTTP(S) URL 保留安全自動連結。Markdown link 只顯示 link label，不顯示目的 URL 文字；相同 URL 若已在 answer inline 呈現，下方普通 sources 不重複顯示。每次新結果清除舊的 answer／FAQ／sources，只顯示最新 query；無完整 conversation transcript。metadata 驗證僅檢查格式與允許 origin，不宣稱 FAQ 存在或其內容已人工驗證。
 
 ## Messenger 與 session
 

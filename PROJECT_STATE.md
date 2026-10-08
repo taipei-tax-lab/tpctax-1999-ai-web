@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 ## Status
 
-**UI FROZEN — CORE LIVE PASS — PER-QUERY GA4 + LOW-RISK PERFORMANCE OPTIMIZATION NEXT**
+**UI FROZEN — CORE LIVE PASS — PER-QUERY GA4 + DEFERRED ANALYTICS IMPLEMENTED; LIVE GA4 PENDING**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -23,7 +23,7 @@ Dialogflow CX backend source of truth:
 - Static search-style page.
 - Current official TRS header wordmark stored unchanged as `assets/trs-header.png` in both headers; local official city background in `assets/official-page-bg.png`.
 - Both header brand links navigate in the same tab to `https://tpctax.gov.taipei/`; canonical FAQ return link is unchanged.
-- Direct gtag GA4 uses human-approved `G-S891SFSMBH`; only custom event is `ai_question_start`, once per tab storage session at an accepted Messenger query. Demo is analytics-disabled. Contract/tests/blockers: `docs/ANALYTICS.md`.
+- Direct gtag GA4 uses human-approved `G-S891SFSMBH`; only custom event is now `ai_query_submit`, one per accepted Messenger query including follow-up/post-reset. No analytics sessionStorage/tab guard. Immediate queue; gtag loader after core initialization at idle. Demo is analytics-disabled. Contract/tests/blockers: `docs/ANALYTICS.md`; controlled startup evidence: `docs/PERFORMANCE.md`.
 - Earlier `assets/trs-logo.gif` retained unchanged as the original standalone-mark source.
 - Shared CSS adds a slim official-red H1 marker and a smaller query-label marker; both text colors remain `#343434`.
 - Intro removed; common-tax examples are plain clickable quoted text between textarea and submit, with red `您可詢問` and a restrained red query top rule.
@@ -1158,3 +1158,38 @@ origin with proxy `ERR_CERT_AUTHORITY_INVALID`, no page JS and 0 Production
 queries/observed GA4 collection requests. GA4 live checkbox stays unchecked.
 Final docs-only commit is main HEAD, not a new deployed SHA or changed ZIP;
 commit/push and STOP for Web review.
+
+## Per-query GA4 and startup ordering — 2026-10-08
+
+Resumed latest main `198bab784fd34dc94982ece217fd5e7fbc336341` under AGENTS.md.
+Human-approved semantics supersede earlier tab-session count: only
+`ai_query_submit` is emitted, once per accepted query; first/follow-up/post-reset
+all count, examples/invalid/reset/unsolicited/cancelled requests do not. No custom
+parameters or question/answer/source content. Per-request WeakSet protects only
+repeated SDK notification; tab/storage guard removed. Analytics failure never
+blocks queries; later queries still attempt events after an earlier GA failure.
+
+Immediate gtag queue retains early page/query events. Official async loader moves
+to core initialization finally, then bounded idle/timer fallback. SDK remains
+eager and never awaits GA. Only app/analytics runtime bytes change; no UI/CSS/
+HTML/image/config, renderer, transport/session/routing/binding/backend mutation.
+No new external origin. IT_HANDOFF is unchanged per current task's resource/CSP-
+only update rule; its older count description is historical, ANALYTICS is current.
+
+Controlled serial rotated seven-run comparison: median button ready
+727.6→721.9ms, FCP 364→356ms, DCL 518.6→513.2ms. Overlapping ranges, no material
+speed gain/field LCP claim. Verified GA request before ready 7/7→0/7; five local
+JS requests unchanged, JS grows 418 bytes. Four modulepreloads were rejected:
+first paint 364→424ms. Baseline/applied screenshots at 1280/390/320px have zero
+changed pixels. Exact sizes/conditions/waterfall/tool: docs/PERFORMANCE.md.
+
+Node 21 PASS; offline Chromium 22 grouped PASS, zero real external/Production
+requests and page errors. Deterministic two builds, exact 12-file ZIP/manifest/
+source/credential checks PASS. Production ZIP 215,196 bytes, SHA-256
+`768190825d260b95d18af44e15ffdabfaa95557b245cf57ad5d18fe34520acc6`.
+Extracted production subpath/directory/index/1280/390/320 checks: 18 PASS with
+accepted event counts 1/2/3 and unchanged session/routing. Existing human
+renderer/Rental/session PASS remains accepted.
+Offline/package/deployment and current live blocker are recorded in NEXT_TASK
+and PAGES_DEPLOYMENT. GA4 network/receipt remains PENDING under Cloud access/trust;
+no guessed collection hosts or CSP changes. Commit/push and STOP for Web review.

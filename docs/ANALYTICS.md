@@ -1,111 +1,92 @@
-# Minimal GA4 measurement
+# Minimal per-query GA4 measurement
 
-## Configuration and event contract
+## Current contract — 2026-10-08
 
-The owner supplied and authorized the public GA4 Web Data Stream Measurement ID
-`G-S891SFSMBH` on 2026-10-08. `assets/config.js` exposes `ga4MeasurementId`;
-an absent or invalid-looking value disables analytics. No GTM container is used.
-The isolated `demo.html` always disables analytics, including with this ID set.
+The owner-authorized GA4 Web Data Stream ID remains `G-S891SFSMBH` in
+`assets/config.js`. Missing/invalid-looking IDs disable analytics; demo always
+keeps analytics disabled. This uses official direct gtag, without GTM, inline
+executable scripts, extra dependencies or changes to the GA4 property settings.
 
-`assets/analytics.js` creates the standard gtag queue and loads the official
-async script `https://www.googletagmanager.com/gtag/js?id=G-S891SFSMBH`.
-All bootstrap logic is in local external modules; no inline executable script
-or new runtime dependency is added. Default `page_view` is enabled.
+The only custom business event emitted by this frontend is now:
 
-The only custom business event emitted by this frontend is
-`gtag('event', 'ai_question_start')`, with **no custom parameters**.
-`assets/app.js` listens after the existing Messenger transport's request handler
-and marks the first non-cancelled `df-request-sent` text request that the
-transport has accepted for a pending user query. Opening the page, filling an
-example, empty/invalid input, unsolicited SDK events and a send failure before
-acceptance do not emit it. Acceptance counts a question start; it does not
-assert that a successful answer or GA delivery followed.
+```js
+gtag('event', 'ai_query_submit');
+```
 
-The sessionStorage key `tpctax1999:question-start:G-S891SFSMBH` prevents duplicate
-events for follow-ups, reset/post-reset questions and refreshes within the same
-tab's storage session. Reset still performs the existing real Messenger reset
-and never clears this analytics guard. If storage is denied, an in-memory guard
-protects the current document; refresh persistence cannot be guaranteed in that
-case. Clearing browser storage can begin another count. This is not a unique
-person identifier or an exact GA4 session definition.
+It has **no custom parameters**. The name replaces `ai_question_start`; the two
+names are never emitted together. Historical GA reports retain the earlier name
+and once-per-tab meaning; use the new event for current per-query reporting.
 
-Bootstrap, storage and event-send exceptions are caught. A blocked loader leaves
-queued calls without preventing Messenger queries. The marker is not retried
-after a failed send; delivery can therefore be undercounted when analytics is
-blocked. Renderer, transport/session implementation and CX backend are unchanged.
+Every valid user query actually accepted for Messenger sending counts once:
+first query +1, same-session follow-up +1, post-reset query +1. Reset itself,
+example click alone, page opening, invalid/empty input, unsolicited/cancelled SDK
+requests and a send exception before acceptance count zero. Acceptance does not
+assert a successful answer or GA delivery. No question replay/retry is added.
 
-## Data minimization
+`assets/app.js` uses the existing transport's non-cancelled `df-request-sent`
+pending text-query boundary. A WeakSet of pending request objects prevents a
+duplicate SDK notification from counting the **same query** twice; new requests
+always get their own count. No analytics sessionStorage access or once-per-tab
+in-memory guard remains. Old stored markers are ignored without touching them.
+Renderer, CX transport/session implementation and backend resources are unchanged.
 
-The question marker accepts no question/answer/source metadata and adds no
-event parameters. It sends no question, answer, source title/URL, inferred tax
-category, Playbook ID/name, entered identifier or contact information. Ordinary
-GA page/session context remains subject to the owner's GA4 property settings.
-The configured page location is origin plus pathname, excluding query/hash;
-page referrer is blank. Google signals and ad personalization signals are
-disabled in the local configuration. No GA4 property setting is changed here.
+## Startup and failure isolation
 
-## Reporting meaning
+The standard gtag queue, `js` and `config` calls are created immediately; automatic
+`page_view` is enabled. Early query events are queued even before gtag.js loads.
+After core UI/Messenger initialization settles (ready or unavailable), app calls
+`loadAfterCore()`. The official async loader is scheduled with
+`requestIdleCallback(..., {timeout: 1500})`, falling back to `setTimeout(..., 0)`
+when the API is absent or throws. There is only one loader schedule per document.
 
-| Metric | Intended use |
+Messenger starts immediately as before; no submit-time SDK load or new await
+is introduced. A failing SDK still reaches analytics scheduling through finally.
+A slow/unavailable SDK can defer GA4 until its existing initialization timeout;
+GA4 delivery is not guaranteed if a visitor leaves early. Bootstrap, scheduling,
+loader and send exceptions stay analytics-only. Blocked GA4 leaves queued calls
+without blocking queries. A failed event is not retried, and later valid queries
+still attempt their own event. See [PERFORMANCE.md](PERFORMANCE.md).
+
+## Privacy and reporting
+
+The marker accepts no business data and adds no event parameters: no question,
+answer, source title/URL, inferred category, Playbook ID/name, entered identifier
+or contact information. Ordinary GA4 context depends on the owner's property
+settings. Configured page location is origin + pathname (query/hash excluded),
+referrer is blank; Google signals/ad personalization signals remain disabled.
+
+| Metric | Meaning |
 | --- | --- |
-| `page_view` | Page visits, including a view after refresh |
-| `ai_question_start` event count | Simplest operational 「發問人次」: tab storage sessions that started at least one valid question |
-| GA4 user/session metrics filtered to `ai_question_start` | Optional later analysis of users or GA4 sessions; not equivalent to the raw event count |
+| `page_view` | Page views, including refresh |
+| `ai_query_submit` event count | **查詢次數**: total accepted valid query submissions, including follow-up and post-reset |
+| GA4 users/sessions filtered to `ai_query_submit` | Separate optional analysis of users/sessions; not the raw query count |
 
-Follow-ups and post-reset questions in the same tab do not increase the custom
-event count. It is neither total questions nor unique people. No additional
-custom event is authorized or implemented.
+Do not label this event count unique people or「發問人次」. No additional custom
+business event is implemented. Delivery can undercount when analytics is blocked.
 
-## Validation and resource evidence — 2026-10-08 (Asia/Taipei)
+## Validation and resource evidence
 
-- Node: 14 existing tests plus 5 focused analytics tests PASS (19 total).
-- Offline Chromium: 19 grouped checks PASS, including accepted-query wiring,
-  first/follow-up/reset/refresh guards, invalid/example/unsolicited exclusions,
-  exact no-content payload, loader/send failures and both brand links.
-  SDK and gtag scripts were locally intercepted; 0 real GA/Production requests.
-  These checks establish code behavior, not GA4 receipt or live SDK behavior.
-- The required bootstrap origin is `https://www.googletagmanager.com` based on
-  the configured official URL and an actual HTTPS probe at 12:54:12 Asia/Taipei.
-  The Cloud proxy rejected CONNECT with HTTP 403 (curl 56), before any origin
-  response. No gtag code, subresource or collection request was retrieved.
-  Analytics collection hosts are **unobserved**; no guessed wildcard CSP list
-  is proposed. See [IT_HANDOFF.md](IT_HANDOFF.md).
+- Node: 14 existing + 7 analytics tests PASS (21 total).
+- Offline Chromium: 22 grouped checks PASS; verifies per-query counts 1/2/3, no extra count for reset,
+  examples/invalid/cancelled/unsolicited input or duplicate SDK notification,
+  exact no-parameter payload, early queue retention, eventual deferred loader,
+  blocked GA loader/send, scoped local CSP and unavailable-SDK scheduling.
+  Google scripts are local fixtures; no real GA/Production request is sent.
+- Known required external bootstrap URL is unchanged:
+  `https://www.googletagmanager.com/gtag/js?id=G-S891SFSMBH`.
+  No new external origin or CSP requirement is added. `IT_HANDOFF.md` is left
+  byte-identical under this task's resource/CSP-only update rule; its earlier
+  once-per-tab release description is historical. Current analytics meaning is
+  defined here and in NEXT_TASK/PROJECT_STATE.
+- Prior Cloud probe rejected official gtag CONNECT with HTTP 403 before origin;
+  real Chromium rejected Pages with proxy `ERR_CERT_AUTHORITY_INVALID` before
+  page JS. Actual gtag subresource/collection hosts remain unobserved; no guessed
+  wildcard/connect-src policy is proposed.
 
-Pages deployment and the post-deployment live verification result are recorded
-in [PAGES_DEPLOYMENT.md](PAGES_DEPLOYMENT.md) and [NEXT_TASK.md](../NEXT_TASK.md).
-
-Deployment PASS: [run 37730302359](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37730302359),
-deployed SHA `9cd6aabad0862b34127211e98550e9b987aefcc7`, 13:01:49 Asia/Taipei.
-All 12 hosted payloads match the production ZIP, including analytics module,
-approved config and brand href; six exclusion probes are 404.
-Real Chromium 151 at 13:02:19 Asia/Taipei, TLS verification enabled and no
-network mocks, stops at the Pages document with `ERR_CERT_AUTHORITY_INVALID`
-under the Cloud proxy. No browser origin response or page JS execution;
-0 Production queries and 0 observed analytics collection requests. The separate
-gtag CONNECT 403 above blocks official-loader retrieval too. Human acceptance
-of previous renderer/Rental/session work remains PASS; none is redone here.
-
-GA4 live script/collection verification remains PENDING until an ordinary
-trusted browser can observe the official loader and `page_view`, then one
-`ai_question_start` with no question/answer/source payload. Follow-up and
-reset/post-reset should add no second custom event. Loading the page alone
-must not add it. A queued call or offline fixture is not evidence of GA receipt.
-
-
-## Revision — per-query counting
-
-Human decision on 2026-10-08 supersedes the earlier once-per-tab interpretation.
-
-The next implementation must count **every accepted Messenger query** once.
-Follow-ups and post-reset questions therefore each increment the GA4 custom
-event count. Reset, example clicks and invalid submissions do not.
-
-Preferred event name: `ai_query_submit`.
-
-The raw custom-event count must be reported as **查詢次數**, not unique users or
-「發問人次」. Unique users/sessions, if needed later, should come from GA4's own
-user/session dimensions filtered by the query event.
-
-The privacy/data-minimization rule remains unchanged: no question, answer,
-source, inferred tax category or user-entered identifier is sent as a custom
-event parameter.
+Current Pages run/SHA/ZIP parity and post-deployment live result are recorded in
+[PAGES_DEPLOYMENT.md](PAGES_DEPLOYMENT.md) and [NEXT_TASK.md](../NEXT_TASK.md).
+GA4 live verification remains PENDING where proxy trust/access prevents it.
+A trusted browser should observe page measurement, then query events 1/2/3 for
+first/follow-up/post-reset; reset alone adds none, custom payload has no question
+text, and GA failure must leave AI queries usable. A queued fixture call does
+not prove GA receipt.

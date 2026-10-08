@@ -1,9 +1,7 @@
-/** One question-start per tab session. Never accepts question/answer metadata. */
+/** One event per accepted query. Never accepts question/answer metadata. */
 export function createAnalytics(measurementId, runtime = globalThis, enabled = true) {
-  const disabled = {questionAccepted() {}};
+  const disabled = {queryAccepted() {}, loadAfterCore() {}};
   if (!enabled || typeof measurementId !== 'string' || !/^G-[A-Z0-9]{10}$/.test(measurementId)) return disabled;
-  const key = `tpctax1999:question-start:${measurementId}`;
-  let recorded = false;
   try {
     runtime.dataLayer ||= [];
     runtime.gtag ||= function () { runtime.dataLayer.push(arguments); };
@@ -15,19 +13,29 @@ export function createAnalytics(measurementId, runtime = globalThis, enabled = t
       allow_google_signals: false,
       allow_ad_personalization_signals: false,
     });
-    const script = runtime.document.createElement('script');
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
-    runtime.document.head.append(script);
   } catch { return disabled; }
+  let scheduled = false;
   return {
-    questionAccepted() {
-      if (recorded) return;
-      try { recorded = runtime.sessionStorage.getItem(key) === '1'; } catch { /* In-memory guard when storage is unavailable. */ }
-      if (recorded) return;
-      recorded = true;
-      try { runtime.sessionStorage.setItem(key, '1'); } catch { /* Followups/reset still share the in-memory guard. */ }
-      try { runtime.gtag('event', 'ai_question_start'); } catch { /* Analytics can never block a query. */ }
+    queryAccepted() {
+      try { runtime.gtag('event', 'ai_query_submit'); } catch { /* Analytics can never block a query. */ }
+    },
+    loadAfterCore() {
+      if (scheduled) return;
+      scheduled = true;
+      const load = () => {
+        try {
+          const script = runtime.document.createElement('script');
+          script.async = true;
+          script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+          runtime.document.head.append(script);
+        } catch { /* A blocked loader leaves the query path and queue intact. */ }
+      };
+      try {
+        if (typeof runtime.requestIdleCallback === 'function') runtime.requestIdleCallback(load, {timeout: 1500});
+        else runtime.setTimeout(load, 0);
+      } catch {
+        try { runtime.setTimeout(load, 0); } catch { /* Scheduling failure is analytics-only. */ }
+      }
     },
   };
 }

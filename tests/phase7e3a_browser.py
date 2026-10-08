@@ -229,15 +229,18 @@ with sync_playwright() as p:
     # Exercise live bootstrap with a local synthetic SDK; never load Google's SDK.
     context.route('**/assets/config.js', lambda r: r.fulfill(status=200, content_type='text/javascript',
         body=Path(__file__).resolve().parents[1].joinpath('assets/config.js').read_text().replace('liveEnabled: false','liveEnabled: true')))
-    stub = '''window.stubRequests=[];window.stubSessions=[];
+    # Keep idle loading paused to prove early queries queue before gtag loads.
+    page.add_init_script('window.requestIdleCallback=(callback)=>{window.pendingAnalytics=callback;return 1;}')
+    stub = '''window.stubRequests=[];window.stubSessions=[];window.stubDuplicate=false;
     customElements.define('df-messenger-chat',class extends HTMLElement {});
     customElements.define('df-messenger',class extends HTMLElement {
       connectedCallback(){setTimeout(()=>this.dispatchEvent(new CustomEvent('df-messenger-loaded',{bubbles:true,composed:true})),0);}
       startNewSession(options){this.session=(this.session||0)+1;window.stubSessions.push({session:this.session,options});}
       setQueryParameters(p){this.params={...p};}
       async sendQuery(query){const body={queryInput:{text:{text:query}},queryParams:{...this.params}};
-        this.dispatchEvent(new CustomEvent('df-request-sent',{detail:{data:{requestBody:body}},cancelable:true,bubbles:true,composed:true}));
+        if(!this.dispatchEvent(new CustomEvent('df-request-sent',{detail:{data:{requestBody:body}},cancelable:true,bubbles:true,composed:true})))return;
         window.stubRequests.push({session:this.session,...structuredClone(body)});
+        if(window.stubDuplicate)this.dispatchEvent(new CustomEvent('df-request-sent',{detail:{data:{requestBody:body}},cancelable:true,bubbles:true,composed:true}));
         this.dispatchEvent(new CustomEvent('df-response-received',{detail:{data:{messages:[{type:'text',text:'local SDK stub answer'}]}},cancelable:true,bubbles:true,composed:true}));}
     });'''
     context.route('https://www.gstatic.com/**', lambda r: r.fulfill(status=200,content_type='text/javascript',body=stub))
@@ -252,6 +255,8 @@ with sync_playwright() as p:
     def business_events():
         return page.evaluate('Array.from(window.dataLayer || [], x => Array.from(x)).filter(x => x[0] === "event")')
     assert business_events() == []
+    assert page.locator('script[src*="googletagmanager"]').count() == 0
+    assert page.evaluate('typeof window.pendingAnalytics === "function"')
     page.locator('[data-example]').first.click()
     assert business_events() == []
     page.locator('#query').fill('')
@@ -268,12 +273,14 @@ with sync_playwright() as p:
     page.get_by_role('heading',name='暫時無法取得解答').wait_for()
     assert business_events() == []
     page.evaluate('() => {document.querySelector("df-messenger").sendQuery=window.originalSend;}')
-    for text in ['first SDK query', 'followup SDK query']:
+    for count, text in enumerate(['first SDK query', 'followup SDK query'], 1):
+        page.evaluate('stubDuplicate='+str(count == 2).lower())
         page.locator('#query').fill(text);page.locator('#submit').click()
         page.locator('#result:not([hidden])').wait_for()
         assert page.locator('[data-answer]').inner_text() == 'local SDK stub answer'
+        assert business_events() == [['event','ai_query_submit']]*count
     requests = page.evaluate('stubRequests')
-    assert business_events() == [['event','ai_question_start']]
+    assert business_events() == [['event','ai_query_submit']]*2
     assert 'currentPlaybook' in requests[0]['queryParams'] and 'currentPlaybook' not in requests[1]['queryParams']
     checks.append('live bootstrap/sendQuery/event wiring verified with intercepted local SDK stub; no Google request')
     page.get_by_role('button', name='清除前次問答，重新提問', exact=True).click()
@@ -284,25 +291,37 @@ with sync_playwright() as p:
     assert page.locator('#query').input_value() == ''
     assert page.locator('#query').evaluate('(e) => e === document.activeElement')
     assert page.locator('#status').is_hidden() and page.locator('#reset').is_hidden()
-    assert business_events() == [['event','ai_question_start']]
+    assert business_events() == [['event','ai_query_submit']]*2
     page.locator('#query').fill('after real SDK reset');page.locator('#submit').click()
     page.locator('#result:not([hidden])').wait_for()
     request = page.evaluate('stubRequests.at(-1)')
     assert request['session'] == 2 and request['queryParams']['currentPlaybook'].endswith('f0512949-95f2-40c6-95d0-0c139b84b542')
-    assert business_events() == [['event','ai_question_start']]
+    assert business_events() == [['event','ai_query_submit']]*3
     checks.append('citizen reset invokes SDK startNewSession(retainHistory:false) and rearms the next first-turn Playbook')
+    assert page.locator('script[src*="googletagmanager"]').count() == 0
+    page.evaluate('window.pendingAnalytics()')
+    page.locator('script[src*="googletagmanager"]').wait_for(state='attached')
+    assert business_events() == [['event','ai_query_submit']]*3
+    checks.append('Messenger ready and first/follow-up/post-reset events retained before deferred GA4 loader; eventual official loader')
     page.reload();page.locator('#submit:not([disabled])').wait_for()
     page.locator('#query').fill('after page refresh');page.locator('#submit').click()
     page.locator('#result:not([hidden])').wait_for()
-    assert business_events() == []
-    # A fresh tab context can count once, even when the GA4 script is blocked.
+    assert business_events() == [['event','ai_query_submit']]
+    # Queries continue when the GA4 script is blocked, with no storage gate.
     context.route('https://www.googletagmanager.com/gtag/js?*', lambda r:r.abort())
     page.evaluate('sessionStorage.clear()')
     page.reload();page.locator('#submit:not([disabled])').wait_for()
+    page.evaluate('window.pendingAnalytics()')
     page.locator('#query').fill('GA4 failure cannot block this private test question');page.locator('#submit').click()
     page.locator('#result:not([hidden])').wait_for()
     assert page.locator('[data-answer]').inner_text() == 'local SDK stub answer'
-    assert business_events() == [['event','ai_question_start']]
+    assert business_events() == [['event','ai_query_submit']]
+    # A cancelled pending text request counts zero, even though the form was valid.
+    page.evaluate('window.cancelTest=e=>e.preventDefault();window.addEventListener("df-request-sent",window.cancelTest,{capture:true})')
+    page.locator('#query').fill('cancelled before SDK sending');page.locator('#submit').click()
+    page.get_by_role('heading',name='尚未取得解答').wait_for()
+    assert business_events() == [['event','ai_query_submit']]
+    page.evaluate('window.removeEventListener("df-request-sent",window.cancelTest,{capture:true})')
     page.evaluate('sessionStorage.clear()')
     page.reload();page.locator('#submit:not([disabled])').wait_for()
     page.evaluate('() => {window.gtag=()=>{throw Error("blocked analytics send")};}')
@@ -310,8 +329,28 @@ with sync_playwright() as p:
     page.locator('#result:not([hidden])').wait_for()
     assert page.locator('[data-answer]').inner_text() == 'local SDK stub answer'
     assert business_events() == []
-    checks.append('GA4 once per tab across accepted first/followup/reset/reload; no event on boot/example/empty/unsolicited; blocked loader does not block answers; event contains no content')
+    checks.append('GA4 per accepted query including follow-up/post-reset/refresh; no duplicate SDK notification, boot/example/empty/unsolicited/cancelled events; blocked loader/send does not block answers; no content parameters')
     checks.append('index/demo brand is accessible same-tab official agency homepage; demo analytics stays disabled')
+    # Validate local module/deferred-loader compatibility without broad CSP rules.
+    page.add_init_script('window.cspViolations=[];document.addEventListener("securitypolicyviolation",e=>window.cspViolations.push(e.violatedDirective))')
+    policy = "default-src 'none'; script-src 'self' https://www.gstatic.com https://www.googletagmanager.com; style-src 'self'; img-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'"
+    context.route(BASE+'index.html', lambda r:r.fulfill(status=200,content_type='text/html',
+        headers={'Content-Security-Policy':policy},body=Path(__file__).resolve().parents[1].joinpath('index.html').read_text()))
+    page.goto(BASE+'index.html');page.locator('#submit:not([disabled])').wait_for()
+    page.evaluate('window.pendingAnalytics()')
+    page.locator('#query').fill('scoped local CSP fixture');page.locator('#submit').click()
+    page.locator('#result:not([hidden])').wait_for()
+    assert page.evaluate('cspViolations') == []
+    assert business_events() == [['event','ai_query_submit']]
+    checks.append('scoped local CSP permits same-origin modules and exact stub script origins; no new blocking JS/CSP errors; real Google CORS remains unverified')
+    context.route('https://www.gstatic.com/**', lambda r:r.abort())
+    page.goto(BASE+'index.html')
+    page.get_by_role('heading',name='服務準備中').wait_for()
+    assert page.evaluate('typeof window.pendingAnalytics === "function"')
+    page.evaluate('window.pendingAnalytics()')
+    assert page.locator('script[src*="googletagmanager"]').count() == 1
+    assert business_events() == []
+    checks.append('GA4 load is scheduled after failed core initialization too; page measurement queued, zero query event')
     # Loader failure generates a browser resource error, not an application pageerror.
     assert not external and not errors, (external, errors)
     browser.close()

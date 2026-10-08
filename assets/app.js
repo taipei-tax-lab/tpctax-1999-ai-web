@@ -70,15 +70,20 @@ async function initialize() {
       messenger = await loadMessenger(config);
     }
     transport = new MessengerTransport(messenger, config);transport.onSettled = controls;
+    const trackedRequests = new WeakSet();
     // Transport's earlier listener marks accepted user requests and cancels unsolicited ones.
     window.addEventListener('df-request-sent', event => {
       const path = event.composedPath?.() || [];
       if ((event.target === window || path.includes(messenger)) && !event.defaultPrevented
         && event.detail?.data?.requestBody?.queryInput?.text && transport.pending?.sent) {
-        analytics.questionAccepted();
+        // Duplicate notifications for the same pending query must not count twice.
+        if (trackedRequests.has(transport.pending)) return;
+        trackedRequests.add(transport.pending);
+        analytics.queryAccepted();
       }
     });
     ready = true;showState('idle');controls();
   } catch {showState('unavailable');controls();}
+  finally {analytics.loadAfterCore();}
 }
 initialize();

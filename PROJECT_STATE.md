@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 ## Status
 
-**UI FROZEN — PRODUCTION ARTIFACT DEPLOYED — LIVE E2E BLOCKED BY CLOUD BROWSER CA TRUST**
+**UI FROZEN — PAGES LIVE QUERY HUMAN-VERIFIED — RENDERER PARITY FIX NEXT**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -870,6 +870,36 @@ Important:
   `services.arpa.tpctax.dof.gov.taipei`.
 - Messenger remains bound to the verified Production Environment.
 - This decision authorizes a controlled Production Messenger browser test from GitHub Pages; it does not reopen CX Playbook/Tool configuration.
+
+## Human trusted-browser evidence and renderer defect — 2026-10-08
+
+The owner opened the deployed GitHub Pages URL in normal Chrome and successfully
+received a real Production 1999 FAQ answer. This supersedes the Codex Cloud
+browser's inability to trust its proxy CA as evidence about basic page/Messenger
+reachability.
+
+Human evidence establishes:
+- GitHub Pages production page loads;
+- live Messenger initializes sufficiently for a real query;
+- query submission works;
+- a real FAQ response returns non-empty content.
+
+Two presentation defects are confirmed in the custom frontend:
+1. Markdown `**bold**` is displayed literally because the renderer deliberately
+   uses text nodes and does not parse Markdown.
+2. Markdown `[label](URL)` is not rendered as a linked label; the raw URL is
+   exposed and the URL is subsequently duplicated in the ordinary source list.
+
+Required fix is frontend renderer parity, not a CX Playbook rewrite. Implement a
+safe minimal Markdown subset (bold + HTTP(S) links) using DOM nodes and suppress
+ordinary source entries already represented inline.
+
+Rental cross-surface rule:
+the shared FAQ answer may surface in the Rental experience, which uses official
+Dialogflow Messenger. Official Messenger text responses support Markdown bold
+and Markdown links. After the custom 1999 renderer is fixed, verify one Rental
+FAQ-route answer. Do not mutate the launch-ready backend unless direct Rental
+evidence shows native rendering is not correct.
 
 ## Backend contract
 

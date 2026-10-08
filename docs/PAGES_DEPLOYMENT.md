@@ -1,14 +1,74 @@
 # GitHub Pages production artifact deployment
 
-Historical deployment record (2026-10-08, Asia/Taipei): **artifact deployment PASS; real-browser
-Production E2E BLOCKED; Gate 3 CONDITIONAL PASS; IT release ready NO**.
+Current deployment record (2026-10-08, Asia/Taipei): **brand + minimal GA4 artifact
+deployment PASS; human renderer/Rental/session PASS; live GA4 PENDING;
+Gate 3 CONDITIONAL PASS; GA4-verified IT release ready NO**.
 Operational acceptance checklist: [NEXT_TASK.md](../NEXT_TASK.md).
-Latest renderer deployment: run
+Earlier renderer deployment: run
 [37722000091](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37722000091),
 deployed SHA `815178f0463be854b7a08ca7a95bf78bdae55d33`, ZIP SHA-256
 `4abde0ae04a749b1e8ca8a6a7136d7f3f1adb80d6ea6d8ece05be672ba018d2a`.
-Current scope/results and Rental blocker: [RENDERER_PARITY.md](RENDERER_PARITY.md).
+Renderer implementation history: [RENDERER_PARITY.md](RENDERER_PARITY.md).
+Later human acceptance in PROJECT_STATE/NEXT_TASK supersedes its live blockers.
 The earlier deployments below remain historical evidence.
+
+## Latest brand-link and minimal GA4 deployment
+
+Resumed latest main `9ca632ef53cd85b43116b157dab51f90ad30be82` under AGENTS.md.
+Preserved accepted renderer/Rental/session behavior and the frozen UI/CX binding.
+Both brand links now navigate to the official agency homepage; configured
+human-approved direct GA4 ID `G-S891SFSMBH`. Analytics contract and live blocker:
+[ANALYTICS.md](ANALYTICS.md). No backend or official-site entry mutation.
+
+| Evidence | Value |
+| --- | --- |
+| Actions run | [37730302359](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37730302359) |
+| Deployed SHA | `9cd6aabad0862b34127211e98550e9b987aefcc7` |
+| Source/configure/build/deploy | PASS / PASS / PASS / PASS |
+| Deployment success | 2026-10-08 13:01:49 Asia/Taipei (05:01:49 UTC) |
+| Pages URL | <https://taipei-tax-lab.github.io/tpctax-1999-ai-web/> |
+| github-pages artifact | `11529761004` |
+| Production ZIP size | 215,048 bytes |
+| Production ZIP SHA-256 | `526239f69199a5b94370a04a034dc9b477e4eeae58b4c3f4e62a80fc458ee086` |
+
+Existing source guard proves `build_type=workflow`; no Pages setting change is
+needed. Actions rechecks Node 14 existing + 5 analytics tests PASS, two independent
+builds, committed ZIP equality/checksum, exact 12-file allowlist, CRC/manifest,
+source-byte parity and credential scan. Upload/deploy use only freshly extracted
+production files. Local offline Chromium has 19 grouped PASS; its SDK and gtag
+were intercepted fixtures with no real Production/GA requests.
+
+Post-deployment HTTPS GET verification, TLS enabled, completed at 13:02:25
+Asia/Taipei: all 12 files HTTP 200 and byte-identical to committed hosting.zip.
+Correct HTML/module/CSS/PNG/GIF/JSON MIME; deployed brand href, analytics.js and
+exact ID in config verified. Six probes (demo.html, demo/mock-messenger.js,
+tests/analytics.test.mjs, tools/package_static.py, AGENTS.md, workflow) return 404.
+Captured Pages document response: ACAO `*`, HSTS `max-age=31556952`, cache
+`max-age=600`; no CSP/CSP-Report-Only, X-Frame-Options, Referrer-Policy,
+Permissions-Policy or COOP/COEP/CORP in this captured response. These are HTTP
+retrieval facts, not browser GA4/CORS/session evidence or agency-host headers.
+
+Real Chromium 151, 390×844, inherited Cloud proxy, no network mock/TLS bypass,
+at 13:02:19 Asia/Taipei stops before an origin response with
+`net::ERR_CERT_AUTHORITY_INVALID` at the document GET. Page JS never runs;
+**0 Production questions and 0 observed GA4 collection requests**. Separate
+official gtag URL probe at 12:54:12 receives Cloud CONNECT 403, before origin.
+Known required additional script origin is `https://www.googletagmanager.com`;
+actual loader subresources/collection hosts are unobserved. IT handoff records
+only this exact bootstrap fact and blocker, with no speculative connect-src or
+wildcard rule. This does not establish a Pages, GA4, SDK, CSP or CORS failure.
+
+GA4 live loader/page_view/one-question event delivery is PENDING; its checkbox
+stays unchecked. Earlier trusted human renderer/Rental/follow-up/reset/post-reset
+PASS is carried forward. 390px and blocking-error console/network remain deferred,
+not blockers for the current task. Formal GA4-verified IT-ready NO; agency final
+path still needs independent headers confirmation after mounting.
+
+Final reporting-only commit updates NEXT_TASK, PROJECT_STATE, ANALYTICS and
+this record. It changes no ZIP payload and does not trigger another deployment;
+branch HEAD must be distinguished from the deployed SHA above. Scratch reports
+remain outside Git under `/workspace/work/ga4-polish/`; durable results are here.
+Commit/push then STOP for Web ChatGPT review.
 
 ## Source and first deployment
 

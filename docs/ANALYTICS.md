@@ -73,6 +73,18 @@ custom event is authorized or implemented.
 
 Pages deployment and the post-deployment live verification result are recorded
 in [PAGES_DEPLOYMENT.md](PAGES_DEPLOYMENT.md) and [NEXT_TASK.md](../NEXT_TASK.md).
+
+Deployment PASS: [run 37730302359](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37730302359),
+deployed SHA `9cd6aabad0862b34127211e98550e9b987aefcc7`, 13:01:49 Asia/Taipei.
+All 12 hosted payloads match the production ZIP, including analytics module,
+approved config and brand href; six exclusion probes are 404.
+Real Chromium 151 at 13:02:19 Asia/Taipei, TLS verification enabled and no
+network mocks, stops at the Pages document with `ERR_CERT_AUTHORITY_INVALID`
+under the Cloud proxy. No browser origin response or page JS execution;
+0 Production queries and 0 observed analytics collection requests. The separate
+gtag CONNECT 403 above blocks official-loader retrieval too. Human acceptance
+of previous renderer/Rental/session work remains PASS; none is redone here.
+
 GA4 live script/collection verification remains PENDING until an ordinary
 trusted browser can observe the official loader and `page_view`, then one
 `ai_question_start` with no question/answer/source payload. Follow-up and

@@ -1120,3 +1120,16 @@ evidence and remaining live blocker are maintained in NEXT_TASK and
 docs/PAGES_DEPLOYMENT.md. GA4-verified IT-ready NO pending live network evidence;
 agency final path still needs its own headers confirmation. No official entry
 link is added. Commit/push and STOP for Web ChatGPT review.
+
+Brand/GA4 production artifact deployment PASS: [Actions run 37730302359](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37730302359),
+deployed SHA `9cd6aabad0862b34127211e98550e9b987aefcc7`, 13:01:49 Asia/Taipei.
+Pages URL `https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`.
+ZIP 215,048 bytes, SHA-256
+`526239f69199a5b94370a04a034dc9b477e4eeae58b4c3f4e62a80fc458ee086`;
+12/12 hosted files match and six exclusions return 404. Actions source guard,
+Node 19, deterministic rebuild/committed ZIP/manifest/source/credential checks
+and both jobs PASS. Post-deployment Chromium at 13:02:19 still stops before
+origin with proxy `ERR_CERT_AUTHORITY_INVALID`, no page JS and 0 Production
+queries/observed GA4 collection requests. GA4 live checkbox stays unchecked.
+Final docs-only commit is main HEAD, not a new deployed SHA or changed ZIP;
+commit/push and STOP for Web review.

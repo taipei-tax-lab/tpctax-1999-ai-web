@@ -156,7 +156,7 @@ Both archives and changed runtime/test text credential-pattern scan PASS.
 - [x] Regenerate production package after code changes.
 - [x] GA4 Measurement ID has been supplied by the human owner.
 - [x] Configure exactly `G-S891SFSMBH`.
-- [ ] Deploy to GitHub Pages and record run/deployed SHA/URL.
+- [x] Deploy to GitHub Pages and record run/deployed SHA/URL.
 - [ ] Verify actual GA4 script/collection network requests in a normal browser.
 - [x] Record the observed bootstrap probe and distinguish unobserved analytics
       collection/subresource hosts; do not guess wildcard CSP rules.
@@ -168,6 +168,27 @@ Known required bootstrap script origin: `https://www.googletagmanager.com`.
 No real gtag code/subresources/collection destinations observed. This Cloud
 restriction is not a demonstrated Pages/GA4/CSP/CORS failure. Live GA4 remains
 PENDING; no guessed collect host or broad CSP expansion is proposed.
+
+Deployment evidence: [Actions run 37730302359](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37730302359)
+completed successfully. Source guard confirms Pages `build_type=workflow`;
+configure-pages, Node 14+5 tests, deterministic rebuild/committed ZIP comparison,
+checksum/12-file verification and production-only build/deploy all PASS.
+Deployed SHA `9cd6aabad0862b34127211e98550e9b987aefcc7`; github-pages artifact
+`11529761004`; deployment success 2026-10-08 13:01:49 Asia/Taipei.
+URL: <https://taipei-tax-lab.github.io/tpctax-1999-ai-web/>.
+Post-deployment verified HTTPS GETs at 13:02:25 Asia/Taipei: all 12 files HTTP 200,
+byte-identical to hosting.zip, correct HTML/JS/CSS/image/JSON MIME. Online brand
+href and approved GA4 config/module match. Six demo/test/tool/repo-internal probes
+return 404; repository root is not published.
+
+Live blocker: real Chromium 151 at the deployed URL, 390×844, inherited Cloud
+proxy, TLS verification enabled, no mocked network, stops at document GET with
+`net::ERR_CERT_AUTHORITY_INVALID` at 13:02:19 Asia/Taipei. Zero origin browser
+responses, no page JS/SDK/gtag execution, **0 Production queries / 0 observed GA4
+collection requests**. Existing carried-forward human renderer/Rental/session
+PASS remains valid; this run does not revalidate it. Browser file retrieval
+failure plus separate gtag CONNECT 403 prevent actual GA4 network/receipt PASS.
+No TLS bypass, proxy bypass, CX mutation or broader CSP/domain change performed.
 
 ## F. GA4 reporting definition
 
@@ -189,7 +210,12 @@ No additional custom events are authorized in this task.
 - [x] Update `PROJECT_STATE.md`.
 - [x] Update `docs/IT_HANDOFF.md` if deployment/CSP facts change.
 - [x] Update this checklist with evidence.
-- [ ] Commit/push and STOP for Web ChatGPT review.
+- [x] Commit/push and STOP for Web ChatGPT review.
+
+Implementation/package commit `9cd6aabad0862b34127211e98550e9b987aefcc7` pushed
+to main and deployed. Final reporting-only commit updates this checklist,
+PROJECT_STATE, ANALYTICS and PAGES_DEPLOYMENT; it does not modify a ZIP payload
+or trigger another artifact deployment. STOP after push for Web ChatGPT review.
 
 ## Required human input
 
@@ -217,3 +243,20 @@ Record:
 6. Pages deployment status;
 7. GA4 live network verification PASS/PENDING;
 8. ready for Revenue Service IT: YES/NO.
+
+### Result — 2026-10-08 (Asia/Taipei)
+
+| Item | Result |
+| --- | --- |
+| Brand/logo link | PASS — both headers use same-tab official homepage; logo/layout/FAQ return unchanged |
+| Minimal GA4 implementation | PASS — direct official gtag, no GTM, only no-parameter `ai_question_start` |
+| Human-supplied Measurement ID configured | YES — `G-S891SFSMBH`, also verified in hosted config |
+| Once-per-tab-session tests | PASS — first accepted query only; follow-up/reset/post-reset/refresh guarded; failures isolated |
+| Tests/package | PASS — Node 19, offline Chromium 19 groups, deterministic builds/12-file integrity/manifest/source/credential scan |
+| Pages deployment | PASS — run `37730302359`, deployed `9cd6aabad0862b34127211e98550e9b987aefcc7`, hosted 12/12 byte parity, exclusions 404 |
+| GA4 live network/receipt | PENDING — unchecked; Cloud gtag CONNECT 403 and Chromium proxy CA trust failure, not demonstrated GA4/site failure |
+| Ready for Revenue Service IT | NO — formal GA4-verified release pending trusted-browser loader/collect evidence; authorized Pages deployment complete |
+
+The two deferred trusted-browser layout/console items remain unchecked and are
+not blockers for this task. Do not reopen completed human renderer/Rental/session
+acceptance or change the CX backend. Final docs/push then STOP for Web review.

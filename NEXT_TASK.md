@@ -138,12 +138,24 @@ parity/credential scan PASS. Candidate ZIP 212,951 bytes, SHA-256
 ## E. GitHub Pages deployment
 
 - [x] Regenerate live production `packages/hosting.zip` + checksum.
-- [ ] Commit/push to `main`.
-- [ ] GitHub Actions production-only Pages deployment PASS.
-- [ ] Record deployed commit/run/ZIP SHA-256.
-- [ ] Confirm hosted runtime files match the package.
+- [x] Commit/push to `main`.
+- [x] GitHub Actions production-only Pages deployment PASS.
+- [x] Record deployed commit/run/ZIP SHA-256.
+- [x] Confirm hosted runtime files match the package.
 
-Do not add the official 1999-site entry yet.
+Evidence: renderer implementation commit `815178f0463be854b7a08ca7a95bf78bdae55d33`
+was pushed to main. Actions run
+[37722000091](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37722000091)
+source guard/build/production-only deploy PASS; deployment success
+**2026-10-08 11:17:38 Asia/Taipei**. Artifact `11526102071`.
+Actual URL: `https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`.
+ZIP SHA-256:
+`4abde0ae04a749b1e8ca8a6a7136d7f3f1adb80d6ea6d8ece05be672ba018d2a`
+(212,951 bytes). All 11 hosted payload GETs are 200, byte-identical with correct
+MIME, including renderer/manifest/IT document. Six representative demo/test/tool/
+repo-internal probes return 404. No full repo upload.
+
+Do not add the official 1999-site entry yet. No entry was added.
 
 ## F. Rental cross-surface parity
 
@@ -184,7 +196,16 @@ main `2f8205c78d62c3e7196f2e818a0edce10dae820b` STATE/7F closeout record
 Conversational Messenger Production cutover, exact accepted v2 Playbooks,
 6/6 Production smoke and Rental→FAQ return. This is retained-integration
 evidence, not newly observed live rendering or a fresh Console readback.
-Sources and limitations: `docs/RENDERER_PARITY.md`. Live attempt follows deployment.
+Sources and limitations: `docs/RENDERER_PARITY.md`.
+
+Post-deployment Rental live attempt at 11:18:12 Asia/Taipei uses the actual
+released Rental Pages URL in normal Chromium 151, inherited Cloud proxy and
+TLS validation enabled. Document GET fails `net::ERR_CERT_AUTHORITY_INVALID`,
+zero origin responses and zero Production queries. No native rendered FAQ
+answer, trace, screenshot or response could be obtained. Rental live parity is
+**BLOCKED**, not FAIL; remaining F checks stay unchecked. Native integration
+read-only evidence and backend historical smoke are not live rendering PASS.
+No backend/Playbook mutation or speculative rendering workaround was made.
 
 ## G. Trusted-browser completion
 
@@ -204,18 +225,42 @@ Codex Cloud certificate/proxy limitations are not grounds to label the hosted
 site failed. Leave human-only checks unchecked when the environment cannot
 perform them.
 
+Evidence: the revised 1999 Pages URL at 390×844 was attempted after deployment
+in the same trusted-TLS browser configuration and failed document GET with
+`net::ERR_CERT_AUTHORITY_INVALID` before any origin response. Page JS/SDK never
+executed; no query/follow-up/reset/format/network/mobile acceptance observed.
+All G live requirements remain unchecked. Prior owner-confirmed basic reachability
+above is preserved; it does not prove revised rendering or pending sessions.
+
+The environment's restricted network policy is enforced and allows Pages,
+www.gstatic.com and dialogflow.cloud.google.com. Verified HTTPS hosted-byte
+readback succeeds. The remaining blocker is Chromium's trust of the Cloud
+proxy certificate, not demonstrated origin CSP/CORS or frontend failure.
+Legacy NSS store exists; isolated namespace setup for a workspace trust-store
+remapping cannot run (`bwrap: setting up uid map: Read-only file system`).
+No home-directory writes, global certificate-ignore option, proxy bypass or
+security policy widening. **0 Production queries** in this task.
+
 ## H. Documentation / completion
 
 - [x] Update `docs/RESULT_CONTRACT.md` to describe the safe Markdown subset and
       inline-source de-duplication rule.
 - [x] Update `PROJECT_STATE.md`.
-- [ ] Update `docs/DEPLOYMENT_GATES.md` only if deployment/live evidence changes
+- [x] Update `docs/DEPLOYMENT_GATES.md` only if deployment/live evidence changes
       a gate decision.
 - [x] Update `docs/IT_HANDOFF.md` if the new live package hash changes.
-- [ ] Update this checklist with evidence and completion summary.
-- [ ] Commit/push and STOP for Web ChatGPT review.
+- [x] Update this checklist with evidence and completion summary.
+- [x] Commit/push and STOP for Web ChatGPT review.
 
-## Completion summary
+Evidence: RESULT_CONTRACT describes exact supported/inert syntax and canonical
+inline-source suppression. IT_HANDOFF is updated in the new hashed package;
+PROJECT_STATE and renderer/deployment evidence are updated. Gate 2A remains PASS,
+Gate 3 CONDITIONAL PASS; no deployment/live evidence changes a gate decision,
+so DEPLOYMENT_GATES.md needs no edit (conditional H item evaluated, N/A).
+Final reporting commit changes docs only; the deployed SHA/hash above remain
+unchanged. Commit/push then STOP for Web ChatGPT review.
+
+## Completion summary template
 
 At task end record:
 
@@ -226,3 +271,29 @@ At task end record:
 5. remaining trusted-browser checks;
 6. Rental parity PASS/FAIL/BLOCKED;
 7. ready for Revenue Service IT: YES/NO.
+
+
+## Completion summary — 2026-10-08 (Asia/Taipei)
+
+1. Pages URL: `https://taipei-tax-lab.github.io/tpctax-1999-ai-web/`; run
+   [37722000091](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37722000091);
+   deployed SHA `815178f0463be854b7a08ca7a95bf78bdae55d33`.
+2. Production ZIP SHA-256:
+   `4abde0ae04a749b1e8ca8a6a7136d7f3f1adb80d6ea6d8ece05be672ba018d2a`;
+   212,951 bytes / 11 files; hosted-byte parity and exclusions PASS.
+3. Renderer tests: Node 14 PASS; offline Chromium 17 grouped PASS; integrity/
+   manifest/source-byte/credential checks and deterministic double builds PASS.
+4. Screenshot scenario: **PASS in offline synthetic reconstruction** at
+   desktop/390/320px; newly deployed live format is still UNVERIFIED.
+5. Remaining trusted-browser checks: all G (format, follow-up, reset/post-reset,
+   390px and JS/CSP/CORS) remain unchecked because Chromium fails pre-origin
+   document GET with `ERR_CERT_AUTHORITY_INVALID`. Owner's prior basic live
+   query evidence is retained. **0 Production queries this task**.
+6. Rental parity: **BLOCKED** by the same Cloud browser CA failure. Native
+   Messenger / Production integration confirmed read-only, but one new
+   Rental→1999 FAQ response/rendering still needed. No backend mutation.
+7. Revenue Service IT ready: **NO** pending trusted-browser and Rental parity.
+
+Actual code fix/deployment completed; runtime UI/session/routing unchanged.
+Necessary project/checklist/deployment/handoff docs committed/pushed on main.
+STOP for Web ChatGPT review. Do not automatically resume backend work.

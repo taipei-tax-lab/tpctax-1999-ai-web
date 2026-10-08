@@ -1,7 +1,7 @@
 # Safe renderer parity — 2026-10-08
 
-Implementation/offline acceptance: **PASS**. Revised production deployment and
-trusted-browser 1999/Rental acceptance are recorded below as they complete.
+Implementation/offline acceptance and revised production deployment: **PASS**.
+Trusted-browser 1999/Rental acceptance: **BLOCKED** by Cloud browser CA trust.
 Operational checklist: [NEXT_TASK.md](../NEXT_TASK.md).
 
 ## Change and verification
@@ -77,9 +77,57 @@ compensate for this frontend's former renderer.
 
 ## Deployment and remaining live acceptance
 
-Pending Actions result, deployed SHA and hosted-byte readback are appended after
-push. Normal trusted-browser 1999 format/session/mobile/console and Rental
+Normal trusted-browser 1999 format/session/mobile/console and Rental
 native bold/link/no-duplicate acceptance remain separate from offline PASS.
 Gate 3 CONDITIONAL PASS and formal Revenue Service IT-ready NO remain unchanged.
 Scratch screenshots/reports are outside tracked source in
 `/workspace/work/renderer-parity/`; source and durable decisions are in Git.
+
+
+## Revised production deployment — PASS
+
+| Evidence | Value |
+| --- | --- |
+| Actions run | [37722000091](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37722000091) |
+| Deployed SHA | `815178f0463be854b7a08ca7a95bf78bdae55d33` |
+| Source guard/build/deploy | PASS / PASS / PASS |
+| Success time | 2026-10-08 11:17:38 Asia/Taipei (03:17:38 UTC) |
+| Production artifact | `11526102071` |
+| Pages URL | <https://taipei-tax-lab.github.io/tpctax-1999-ai-web/> |
+| ZIP size | 212,951 bytes |
+| ZIP SHA-256 | `4abde0ae04a749b1e8ca8a6a7136d7f3f1adb80d6ea6d8ece05be672ba018d2a` |
+| Hosted-file parity | All 11 payload GETs 200, byte-identical, correct MIME |
+| Exclusions | Six demo/test/tool/repo-internal probes 404 |
+
+Hosted renderer SHA-256:
+`a534dc39e366bf8c791d046d8d485a48b4bbfdd67ab73eec132148555b620b12`.
+Normal Actions source guard, exact committed deterministic ZIP, manifest/source/
+allowlist/credential scan and production-only official deployment passed. No
+workflow/source/domain change, no official-site entry. A final reporting-only
+commit on main is later than the deployed artifact and does not alter ZIP bytes.
+
+## Post-deployment live attempts — BLOCKED
+
+At 11:18:12 Asia/Taipei, fresh Chromium contexts (151, 390×844) opened the actual
+1999 and Rental Pages URLs with inherited proxy and TLS verification enabled.
+Both document GETs fail `net::ERR_CERT_AUTHORITY_INVALID`; zero browser origin
+responses and **0 Production queries**. Thus there is no new response/route/
+rendering screenshot, SDK/connect inventory, session/reset or console/CSP/CORS
+acceptance. No acceptance check is marked PASS from an empty console log.
+
+Environment runtime revision 4 reports current/enforced restricted policy with
+Pages, www.gstatic.com and dialogflow.cloud.google.com allowed. System-trust
+HTTPS retrieval and artifact readback succeed. Chromium's legacy NSS directory
+exists; an isolated namespace setup for workspace CA-store remapping fails
+`bwrap: setting up uid map: Read-only file system`. No home-directory trust
+write, TLS-ignore switch, proxy bypass or production security relaxation used.
+This is an execution-profile CA trust blocker, not a demonstrated hosted-site,
+SDK, native Rental renderer, binding-domain or backend failure.
+
+Remaining review: use a normal trusted browser to check the new 1999 response
+format, same-session follow-up, reset/re-arm/post-reset answer, 390px and console;
+obtain one Rental FAQ-route answer and inspect native bold/labeled link without
+duplicated raw URL, with response/route evidence. If Rental is wrong, capture
+the precise response/screenshot/trace and STOP before any backend mutation.
+Existing owner-confirmed basic 1999 query remains valid prior evidence, not
+new renderer/session/Rental acceptance. Gate decisions unchanged; IT-ready NO.

@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 ## Status
 
-**UI FROZEN — SAFE RENDERER PARITY OFFLINE PASS — REDEPLOYMENT / TRUSTED LIVE VALIDATION NEXT**
+**UI FROZEN — SAFE RENDERER DEPLOYED / OFFLINE PASS — TRUSTED LIVE / RENTAL PARITY BLOCKED**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -1015,3 +1015,21 @@ Production requests. HTML/CSS/config/app/transport/demo and all CX resources
 remain unchanged. Current package/deployment/live evidence is maintained in
 NEXT_TASK and docs/RENDERER_PARITY.md. Formal IT release remains pending full
 trusted-browser and Rental parity evidence.
+
+
+Renderer production deployment confirmed: run
+[37722000091](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37722000091),
+deployed SHA `815178f0463be854b7a08ca7a95bf78bdae55d33`, 11:17:38 Asia/Taipei.
+ZIP `4abde0ae04a749b1e8ca8a6a7136d7f3f1adb80d6ea6d8ece05be672ba018d2a`
+(212,951 bytes), all 11 hosted bytes match; exclusions 404. Runtime change is
+renderer only. Rental native Conversational Messenger/Production integration
+confirmed through immutable frontend/backend source evidence and hosted HTML;
+new FAQ rendering parity is not yet established.
+
+Post-deployment real Chromium at both actual URLs stops before origin response
+with ERR_CERT_AUTHORITY_INVALID under Cloud proxy; zero Production queries.
+All newly requested trusted-browser format/session/mobile/network and Rental
+acceptance remains pending. Gate 2A PASS / Gate 3 CONDITIONAL PASS unchanged;
+IT-ready NO. Necessary result-contract/IT/checklist/deployment docs updated.
+Final reporting-only main commit does not change deployed SHA/ZIP. STOP for
+Web ChatGPT review; no backend/UI/session/integration mutation.

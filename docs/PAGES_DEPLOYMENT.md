@@ -1,8 +1,14 @@
 # GitHub Pages production artifact deployment
 
-Current decision (2026-10-08, Asia/Taipei): **artifact deployment PASS; real-browser
+Historical deployment record (2026-10-08, Asia/Taipei): **artifact deployment PASS; real-browser
 Production E2E BLOCKED; Gate 3 CONDITIONAL PASS; IT release ready NO**.
 Operational acceptance checklist: [NEXT_TASK.md](../NEXT_TASK.md).
+Latest renderer deployment: run
+[37722000091](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37722000091),
+deployed SHA `815178f0463be854b7a08ca7a95bf78bdae55d33`, ZIP SHA-256
+`4abde0ae04a749b1e8ca8a6a7136d7f3f1adb80d6ea6d8ece05be672ba018d2a`.
+Current scope/results and Rental blocker: [RENDERER_PARITY.md](RENDERER_PARITY.md).
+The earlier deployments below remain historical evidence.
 
 ## Source and first deployment
 

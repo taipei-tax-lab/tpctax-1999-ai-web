@@ -954,8 +954,9 @@ treated as current blockers.
      contact-information content to GA4;
    - analytics failure must never block the AI query path.
 
-The actual GA4 Measurement ID is not yet recorded in this project and must be
-supplied by the human owner before live analytics activation.
+The human owner has supplied the approved GA4 Web Data Stream Measurement ID:
+`G-S891SFSMBH`. This ID is non-secret and may be used in the frontend analytics
+configuration. GA4 live activation is therefore authorized for the current task.
 
 ## Backend contract
 

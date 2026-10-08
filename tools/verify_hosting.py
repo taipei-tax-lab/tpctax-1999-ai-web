@@ -9,7 +9,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED = {
     'index.html', 'docs/IT_HANDOFF.md', 'MANIFEST.json',
-    'assets/config.js', 'assets/styles.css', 'assets/app.js',
+    'assets/config.js', 'assets/styles.css', 'assets/app.js', 'assets/analytics.js',
     'assets/result-model.js', 'assets/messenger-transport.js',
     'assets/trs-logo.gif', 'assets/trs-header.png', 'assets/official-page-bg.png',
 }

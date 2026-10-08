@@ -625,3 +625,25 @@ live layout observed. Keep all unchecked F/G live requirements pending;
 Gate 3 cannot close, and formal IT-ready remains NO. No speculative policy
 expansion, CX/backend/settings change or official entry link. Agency final-path
 headers still require independent inspection after mounting.
+
+## Human acceptance and minimal GA4 resource update — 2026-10-08
+
+Later normal-Chrome human evidence supersedes the prior runtime/session/Rental
+blockers: live FAQ, safe renderer, native Rental parity, follow-up, real reset
+and post-reset query PASS. 390px and blocking-error console/network checks remain
+deferred and are not blockers for the current authorized frontend task.
+
+Brand links now point to the official agency homepage. Human-approved
+`G-S891SFSMBH` enables direct GA4 gtag in local `assets/analytics.js`, with one
+no-parameter `ai_question_start` event per tab storage session at accepted query.
+No CX/binding/domain/session/renderer mutation is required. Production allowlist
+now contains 12 files, including the new module.
+
+The exact required additional bootstrap script URL is
+`https://www.googletagmanager.com/gtag/js?id=G-S891SFSMBH`. Cloud HTTPS probe
+at 12:54:12 Asia/Taipei receives proxy CONNECT 403 before origin. No real
+analytics subresource or collection hosts are observed; no speculative
+connect-src/wildcard/inline permission is proposed. GA4 live network/receipt
+remains PENDING. This is not a blocker for the authorized Pages deployment;
+formal GA4-verified IT release is pending. Gate 2A PASS and Gate 3 CONDITIONAL
+PASS stay unchanged. See ANALYTICS.md, IT_HANDOFF.md and current NEXT_TASK.

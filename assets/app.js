@@ -1,6 +1,9 @@
 import {config} from './config.js';
 import {normalizeResult, renderResult} from './result-model.js';
 import {MessengerTransport, loadMessenger} from './messenger-transport.js';
+import {createAnalytics} from './analytics.js';
+
+const analytics = createAnalytics(config.ga4MeasurementId, window, document.body.dataset.demo !== 'true');
 
 const form = document.querySelector('#search-form'), input = document.querySelector('#query');
 const submit = document.querySelector('#submit'), reset = document.querySelector('#reset');
@@ -67,6 +70,14 @@ async function initialize() {
       messenger = await loadMessenger(config);
     }
     transport = new MessengerTransport(messenger, config);transport.onSettled = controls;
+    // Transport's earlier listener marks accepted user requests and cancels unsolicited ones.
+    window.addEventListener('df-request-sent', event => {
+      const path = event.composedPath?.() || [];
+      if ((event.target === window || path.includes(messenger)) && !event.defaultPrevented
+        && event.detail?.data?.requestBody?.queryInput?.text && transport.pending?.sent) {
+        analytics.questionAccepted();
+      }
+    });
     ready = true;showState('idle');controls();
   } catch {showState('unavailable');controls();}
 }

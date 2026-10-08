@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 ## Status
 
-**UI FROZEN — RENDERER/RENTAL/SESSION PASS — LOGO LINK + MINIMAL GA4 NEXT**
+**UI FROZEN — RENDERER/RENTAL/SESSION PASS — BRAND LINK + MINIMAL GA4 IMPLEMENTED; LIVE GA4 PENDING**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -22,6 +22,8 @@ Dialogflow CX backend source of truth:
 
 - Static search-style page.
 - Current official TRS header wordmark stored unchanged as `assets/trs-header.png` in both headers; local official city background in `assets/official-page-bg.png`.
+- Both header brand links navigate in the same tab to `https://tpctax.gov.taipei/`; canonical FAQ return link is unchanged.
+- Direct gtag GA4 uses human-approved `G-S891SFSMBH`; only custom event is `ai_question_start`, once per tab storage session at an accepted Messenger query. Demo is analytics-disabled. Contract/tests/blockers: `docs/ANALYTICS.md`.
 - Earlier `assets/trs-logo.gif` retained unchanged as the original standalone-mark source.
 - Shared CSS adds a slim official-red H1 marker and a smaller query-label marker; both text colors remain `#343434`.
 - Intro removed; common-tax examples are plain clickable quoted text between textarea and submit, with red `您可詢問` and a restrained red query top rule.
@@ -35,7 +37,7 @@ Dialogflow CX backend source of truth:
 - FAQ source card is optional progressive enhancement only.
 - Official-site same-tab/new-tab/window behavior remains deliberately unspecified.
 - No official-site deployment has occurred.
-- Human Chrome evidence confirms a non-empty Production FAQ answer; full session/reset/network and Rental cross-surface validation remain pending.
+- Human Chrome evidence confirms Production FAQ answers, renderer/Rental parity and follow-up/real reset/post-reset PASS. 390px and blocking-error console/network checks are deferred, not blockers for this task. New GA4 live script/collection verification remains pending.
 
 ## Standalone migration verification — 2026-10-07
 
@@ -1090,3 +1092,31 @@ acceptance remains pending. Gate 2A PASS / Gate 3 CONDITIONAL PASS unchanged;
 IT-ready NO. Necessary result-contract/IT/checklist/deployment docs updated.
 Final reporting-only main commit does not change deployed SHA/ZIP. STOP for
 Web ChatGPT review; no backend/UI/session/integration mutation.
+
+## Brand link and minimal GA4 implementation — 2026-10-08
+
+Resumed latest main `9ca632ef53cd85b43116b157dab51f90ad30be82` and read required
+project documents under AGENTS.md. Carried-forward human Chrome renderer,
+Rental native parity, follow-up, real reset and post-reset acceptance stay PASS;
+older pending statements above are historical. 390px and blocking-error
+console/network checks remain deferred, not blockers for this task.
+
+Both header links now use the official same-tab agency homepage with unchanged
+logo/layout/accessibility/FAQ return link. Config uses exactly the human-approved
+`G-S891SFSMBH`. A local external module boots direct official gtag, enables
+page_view and emits only the no-parameter `ai_question_start` event after the
+existing Messenger transport accepts the first valid user request. sessionStorage
+prevents follow-up/reset/refresh inflation; storage-denied fallback guards only
+the current document. Demo is analytics-disabled; GA failures never block queries.
+No renderer, CSS, transport/reset/routing, Messenger binding/domains or backend
+changes. Reporting/privacy/resource contract: `docs/ANALYTICS.md`.
+
+Node 19 PASS; offline Chromium 19 grouped PASS with intercepted SDK/gtag,
+0 forwarded external/Production requests. Official gtag probe at 12:54:12
+Asia/Taipei gets proxy CONNECT 403, no origin response. Live GA4 script/collect
+verification remains PENDING; collection hosts are unobserved and no wildcard
+CSP proposal is added. Production package now has 12 files. Deployment/package
+evidence and remaining live blocker are maintained in NEXT_TASK and
+docs/PAGES_DEPLOYMENT.md. GA4-verified IT-ready NO pending live network evidence;
+agency final path still needs its own headers confirmation. No official entry
+link is added. Commit/push and STOP for Web ChatGPT review.

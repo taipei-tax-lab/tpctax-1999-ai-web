@@ -21,6 +21,12 @@ with sync_playwright() as p:
         if request.request.url.startswith(BASE): request.continue_()
         else: external.append(request.request.url); request.abort()
     context.route('**/*', route)
+    # Offline only: inspect the real analytics queue without sending GA4 hits.
+    analytics_requests = []
+    def analytics_stub(r):
+        analytics_requests.append(r.request.url)
+        r.fulfill(status=200,content_type='text/javascript',body='/* offline gtag loader fixture */')
+    context.route('https://www.googletagmanager.com/gtag/js?*', analytics_stub)
     page = context.new_page()
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
@@ -43,6 +49,11 @@ with sync_playwright() as p:
     page.locator('#submit:not([disabled])').wait_for()
     assert page.locator('#status').is_hidden()
     assert page.locator('#reset').is_hidden()
+    assert page.locator('.brand').get_attribute('href') == 'https://tpctax.gov.taipei/'
+    assert page.locator('.brand').get_attribute('target') is None
+    assert page.locator('.brand img').get_attribute('src') == './assets/trs-header.png'
+    assert page.locator('.brand .agency-name').inner_text() == '臺北市稅捐稽徵處'
+    assert page.evaluate('typeof window.dataLayer === "undefined"')
     assert page.locator('.intro').count() == 0
     assert page.locator('.session-bar p').count() == 0
     assert page.locator('#query').get_attribute('placeholder') == '例如：房屋稅自住住家用稅率如何申請？'
@@ -236,11 +247,33 @@ with sync_playwright() as p:
     assert page.locator('df-messenger').get_attribute('environment') is None
     assert page.locator('.demo-tools').count() == 0
     assert page.locator('#status').is_hidden() and page.locator('#reset').is_hidden()
+    assert page.locator('.brand').get_attribute('href') == 'https://tpctax.gov.taipei/'
+    assert page.locator('.brand').get_attribute('target') is None
+    def business_events():
+        return page.evaluate('Array.from(window.dataLayer || [], x => Array.from(x)).filter(x => x[0] === "event")')
+    assert business_events() == []
+    page.locator('[data-example]').first.click()
+    assert business_events() == []
+    page.locator('#query').fill('')
+    page.locator('#search-form').evaluate('(form) => form.dispatchEvent(new Event("submit", {cancelable:true}))')
+    assert business_events() == []
+    page.locator('#query').evaluate('(input) => input.value="x".repeat(1001)')
+    page.locator('#search-form').evaluate('(form) => form.dispatchEvent(new Event("submit", {cancelable:true}))')
+    assert business_events() == []
+    # An unsolicited SDK request must be cancelled by the transport, not counted.
+    page.evaluate('document.querySelector("df-messenger").dispatchEvent(new CustomEvent("df-request-sent", {detail:{data:{requestBody:{queryInput:{text:{text:"unsolicited"}}}}},cancelable:true,bubbles:true,composed:true}))')
+    assert business_events() == []
+    page.evaluate('() => {window.originalSend=document.querySelector("df-messenger").sendQuery;document.querySelector("df-messenger").sendQuery=()=>{throw Error("not accepted")};}')
+    page.locator('#query').fill('SDK rejected before sending');page.locator('#submit').click()
+    page.get_by_role('heading',name='暫時無法取得解答').wait_for()
+    assert business_events() == []
+    page.evaluate('() => {document.querySelector("df-messenger").sendQuery=window.originalSend;}')
     for text in ['first SDK query', 'followup SDK query']:
         page.locator('#query').fill(text);page.locator('#submit').click()
         page.locator('#result:not([hidden])').wait_for()
         assert page.locator('[data-answer]').inner_text() == 'local SDK stub answer'
     requests = page.evaluate('stubRequests')
+    assert business_events() == [['event','ai_question_start']]
     assert 'currentPlaybook' in requests[0]['queryParams'] and 'currentPlaybook' not in requests[1]['queryParams']
     checks.append('live bootstrap/sendQuery/event wiring verified with intercepted local SDK stub; no Google request')
     page.get_by_role('button', name='清除前次問答，重新提問', exact=True).click()
@@ -251,12 +284,36 @@ with sync_playwright() as p:
     assert page.locator('#query').input_value() == ''
     assert page.locator('#query').evaluate('(e) => e === document.activeElement')
     assert page.locator('#status').is_hidden() and page.locator('#reset').is_hidden()
+    assert business_events() == [['event','ai_question_start']]
     page.locator('#query').fill('after real SDK reset');page.locator('#submit').click()
     page.locator('#result:not([hidden])').wait_for()
     request = page.evaluate('stubRequests.at(-1)')
     assert request['session'] == 2 and request['queryParams']['currentPlaybook'].endswith('f0512949-95f2-40c6-95d0-0c139b84b542')
+    assert business_events() == [['event','ai_question_start']]
     checks.append('citizen reset invokes SDK startNewSession(retainHistory:false) and rearms the next first-turn Playbook')
+    page.reload();page.locator('#submit:not([disabled])').wait_for()
+    page.locator('#query').fill('after page refresh');page.locator('#submit').click()
+    page.locator('#result:not([hidden])').wait_for()
+    assert business_events() == []
+    # A fresh tab context can count once, even when the GA4 script is blocked.
+    context.route('https://www.googletagmanager.com/gtag/js?*', lambda r:r.abort())
+    page.evaluate('sessionStorage.clear()')
+    page.reload();page.locator('#submit:not([disabled])').wait_for()
+    page.locator('#query').fill('GA4 failure cannot block this private test question');page.locator('#submit').click()
+    page.locator('#result:not([hidden])').wait_for()
+    assert page.locator('[data-answer]').inner_text() == 'local SDK stub answer'
+    assert business_events() == [['event','ai_question_start']]
+    page.evaluate('sessionStorage.clear()')
+    page.reload();page.locator('#submit:not([disabled])').wait_for()
+    page.evaluate('() => {window.gtag=()=>{throw Error("blocked analytics send")};}')
+    page.locator('#query').fill('followup despite GA4 failure');page.locator('#submit').click()
+    page.locator('#result:not([hidden])').wait_for()
+    assert page.locator('[data-answer]').inner_text() == 'local SDK stub answer'
+    assert business_events() == []
+    checks.append('GA4 once per tab across accepted first/followup/reset/reload; no event on boot/example/empty/unsolicited; blocked loader does not block answers; event contains no content')
+    checks.append('index/demo brand is accessible same-tab official agency homepage; demo analytics stays disabled')
+    # Loader failure generates a browser resource error, not an application pageerror.
     assert not external and not errors, (external, errors)
     browser.close()
-OUT.joinpath('browser_validation.json').write_text(json.dumps({'status':'PASS','checks':checks,'external_requests':external,'page_errors':errors,'production_requests':0},ensure_ascii=False,indent=2))
+OUT.joinpath('browser_validation.json').write_text(json.dumps({'status':'PASS','checks':checks,'external_requests':external,'intercepted_analytics_loader_requests':analytics_requests,'page_errors':errors,'production_requests':0},ensure_ascii=False,indent=2))
 print(json.dumps({'status':'PASS','checks':len(checks),'external_requests':0,'production_requests':0}))

@@ -1,6 +1,8 @@
 export const config = Object.freeze({
   // Package only. Enable only after separately approved hosting/domain review.
   liveEnabled: true,
+  // Human-approved public GA4 Web Data Stream ID; blank/invalid disables analytics.
+  ga4MeasurementId: 'G-S891SFSMBH',
   hostingUrl: 'https://REVENUE_SERVICE_HOST_PLACEHOLDER/1999-ai/',
   officialFaqUrl: 'https://tpctax.gov.taipei/News.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16',
   projectId: 'serviceagent-1150909',

@@ -1,3 +1,30 @@
+## CX backend Flow handoff received（2026-10-09）
+
+Backend status: **1999 FAQ FLOW BACKEND READY FOR WEB CUTOVER**
+
+Local handoff: `docs/CX_BACKEND_FLOW_HANDOFF_2026-10-09.md`
+
+Verified backend main: `39e176ed40a4ad81cb9b39b6a7b15687bbcea4bb`.
+
+Fixed FAQ currentPage:
+
+`projects/serviceagent-1150909/locations/asia-northeast1/agents/799426c1-ba69-49dc-85e4-5065985706e2/flows/676409b6-b02f-4a24-9d3a-81e14cb77d4f/pages/START_PAGE`
+
+Backend Production proof is complete. Web work no longer waits for backend:
+- immutable FAQ Flow v1 is mapped to Production;
+- Production direct-currentPage 18/18 + 4/4 PASS;
+- original five mappings and Agent startPlaybook unchanged;
+- Rental preservation PASS.
+
+Current web implementation is still the old transport:
+- `config.initialPlaybook` exists;
+- first accepted query sets `currentPlaybook`;
+- visible reset control still exists.
+
+Next work is frontend implementation/cutover only.
+
+---
+
 ## 1999 product interaction principle（2026-10-09）
 
 Authoritative backend architecture doc: `dialogflow-cx-qa-framework/docs/CX_SERVICE_BOUNDARY_AND_ROUTING_PRINCIPLES_2026-10-09.md`

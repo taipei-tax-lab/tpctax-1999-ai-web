@@ -1,3 +1,15 @@
+## 1999 product interaction principle（2026-10-09）
+
+Authoritative backend architecture doc: `dialogflow-cx-qa-framework/docs/CX_SERVICE_BOUNDARY_AND_ROUTING_PRINCIPLES_2026-10-09.md`
+
+- This page is itself the routing boundary: every query stays in the 1999 FAQ semantic-search service.
+- Rental-specialist questions should be redirected by explicit link to the Rental special zone; this page should not internally invoke Rental.
+- Every submitted query is an independent semantic search. Previous Messenger/page context is not part of the product contract.
+- Therefore a visible "reset conversation" concept is unnecessary.
+- Future homepage Router behavior is out of scope for this page.
+
+---
+
 ## 1999 FAQ surface-directed Flow integration（2026-10-09）
 
 Status: **AUTHORIZED — FRONTEND ROUTES DIRECTLY TO FAQ FLOW**

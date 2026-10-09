@@ -1,3 +1,21 @@
+## Post-live follow-up（2026-10-09）
+
+Status: **LIVE / USABLE**
+
+- [x] Backend Production FAQ Flow v1 ready and mapped.
+- [x] Web currentPage cutover deployed.
+- [x] Per-query independent semantic search implemented.
+- [x] currentPlaybook removed from 1999 runtime.
+- [x] Visible reset conversation UI removed.
+- [x] Multi-result complete text rendering and official links implemented.
+- [x] Pages deployment/package integrity/offline regression PASS.
+- [x] No Rental/Agent/backend regression requiring rollback.
+- [ ] Non-blocking: confirm real GA4 `ai_query_submit` receipt later in a normal trusted browser using Realtime/DebugView; do not send query/answer/source text.
+- [ ] Future quality work: improve official FAQ corpus from real search misses (for example citizen-facing entertainment-tax amendment wording) rather than adding runtime aliases by default.
+- [ ] Future cross-service work: Rental↔1999 stays guided-link-only when revised; no internal handoff orchestration.
+
+---
+
 # NEXT_TASK — 1999 FAQ direct Flow web cutover
 
 Date: 2026-10-09 (Asia/Taipei)

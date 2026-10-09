@@ -1,3 +1,23 @@
+## 1999 FAQ surface-directed Flow integration（2026-10-09）
+
+Status: **AUTHORIZED — FRONTEND ROUTES DIRECTLY TO FAQ FLOW**
+
+Backend source of truth: `taipei-tax-lab/dialogflow-cx-qa-framework`.
+Release plan: `docs/1999_FAQ_SURFACE_DIRECTED_FLOW_RELEASE_PLAN_2026-10-09.md` in the backend repo.
+
+Decision:
+- Stop using CX internal Router handoff for the 1999 AI web path.
+- This page already owns a custom Messenger transport and currently injects `currentPlaybook` on first turn.
+- Replace that with a `currentPage` pointing at the production 1999 FAQ Semantic Search Flow START_PAGE on every accepted query.
+- Each query is an independent semantic search by design; previous CX page/session state is intentionally not reused.
+- Same Agent ID, location, Messenger integration and GA4 Measurement ID remain.
+- Existing text-first renderer remains the release baseline; backend Flow must emit complete multi-result text.
+- Rental frontend/service is out of scope and unchanged.
+
+Target: `1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE`.
+
+---
+
 # PROJECT_STATE
 
 Last updated: 2026-10-08

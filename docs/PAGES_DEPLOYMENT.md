@@ -1,7 +1,7 @@
 # GitHub Pages production artifact deployment
 
-Current deployment record (2026-10-08, Asia/Taipei): **accepted-send input-clear artifact
-deployment PASS; human renderer/Rental/session PASS; new live UX/GA4 PENDING;
+Current deployment record (2026-10-09, Asia/Taipei): **direct FAQ Flow artifact
+deployment PASS; DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING;
 Gate 3 CONDITIONAL PASS; GA4-verified IT release ready NO**.
 Operational acceptance checklist: [NEXT_TASK.md](../NEXT_TASK.md).
 Earlier renderer deployment: run
@@ -12,7 +12,102 @@ Renderer implementation history: [RENDERER_PARITY.md](RENDERER_PARITY.md).
 Later human acceptance in PROJECT_STATE/NEXT_TASK supersedes its live blockers.
 The earlier deployments below remain historical evidence.
 
-## Latest accepted-send input-clear deployment
+## Latest direct FAQ Flow Web cutover — 2026-10-09
+
+Web baseline `410db6c1891c58d38197fa55d6b2b1d98be9a51a`; read-only backend main
+`39e176ed40a4ad81cb9b39b6a7b15687bbcea4bb`. Backend authoritative handoff confirms
+immutable Flow v1 in Production and direct-currentPage 18+4 PASS, original five
+mappings/Agent/Rental preserved. Backend READY is separate from Web live evidence.
+
+Every accepted text query and SDK defaults now set currentPage:
+
+`projects/serviceagent-1150909/locations/asia-northeast1/agents/799426c1-ba69-49dc-85e4-5065985706e2/flows/676409b6-b02f-4a24-9d3a-81e14cb77d4f/pages/START_PAGE`
+
+Timezone Asia/Taipei, fixed project/Agent/location/language/integration-side
+Production binding/GA4 ID unchanged. No runtime initialPlaybook or sent
+currentPlaybook; defaults set at init/before every send/recovery without first-turn
+disarm. No Router/Rental call/classifier/backend mutation. Stateless independent
+search, latest result only; reset HTML/JS/state/CSS/a11y removed. Internal recovery
+remains. Accepted-send clear, original heading and pre-acceptance text retention
+preserved. Complete raw text messages/array items preferred over partial parsed
+text; parsed-only fallback and safe renderer retained. Cards remain optional.
+
+| Evidence | Value |
+| --- | --- |
+| Source commit | `6b79ba571b5d0b2d66b1494d59f0ef157b813362` |
+| Deployed commit | `6b79ba571b5d0b2d66b1494d59f0ef157b813362` |
+| Actions run | [37875482165](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37875482165) |
+| Source/configure/build/deploy | PASS / PASS / PASS / PASS |
+| Deployment success | 2026-10-09 10:38:14 Asia/Taipei (02:38:14 UTC) |
+| Pages URL | <https://taipei-tax-lab.github.io/tpctax-1999-ai-web/> |
+| github-pages artifact | `11592311095` |
+| Production ZIP size | 214,669 bytes |
+| Production ZIP SHA-256 | `4f322561e9cff0e36f3ec4d44d5c7bef36088fed0902b16694e06a8de29b63e1` |
+| Rollback | AVAILABLE / NOT EXECUTED |
+
+Node **28 PASS** (21 transport/config/result + 7 analytics); offline Chromium
+**26 grouped PASS**, no page errors or forwarded external/Production requests.
+Synthetic 1–5 complete text results with interleaved optional cards, ordered text
+array/message composition, numbering/newlines/URL/Rental note and zero fallback
+PASS at 1280/390/320; latest result/metadata replacement, no reset, IME and safe
+renderer regression PASS. Controlled delayed acceptance/rejection/answer preserves
+correct input/counter/draft/heading/focus. Timeout locks until SDK settles, ignores
+late response/no retry; internal idle/in-flight expiry and manual new search PASS.
+
+**CurrentPage request evidence is local SDK fixture evidence, not Production:**
+
+| Search | SDK pre-event defaults | Accepted body queryParams | GA queue count |
+| --- | --- | --- | --- |
+| First | Exact START_PAGE + Asia/Taipei | Same; no currentPlaybook | 1 |
+| Second | Exact START_PAGE + Asia/Taipei | Same; no currentPlaybook | 2 |
+| Third | Exact START_PAGE + Asia/Taipei | Same; no currentPlaybook | 3 |
+
+All three use one technical session. The only custom GA call is parameter-free
+`['event','ai_query_submit']`; invalid/cancelled/rejected/duplicate/recovery adds
+none. Analytics module/ID/idle scheduling unchanged; blocked GA does not block
+queries. Backend observed result counts 0/2/5; frontend 1–5 tests are explicitly
+synthetic, not official answer or retrieval-quality claims.
+
+Two independent production/demo builds byte-identical. Exact 12-file allowlist,
+CRC/manifest/source parity/live config/no-demo/fresh extraction/checksum PASS.
+Credential scans of both archives (9/16 text entries) and 23 changed text files
+PASS. Analytics/images/workflow/packager/performance/dependencies preserved.
+Actions confirms Pages `build_type=workflow`, reruns Node 28/deterministic rebuild/
+committed archive/checksum/exact fresh production extraction, then upload/deploy.
+
+Verified HTTPS parity completed **10:39:26 Asia/Taipei**, TLS enabled: all **12/12**
+files 200, byte-identical to committed ZIP, correct runtime MIME; exact Flow config,
+unchanged GA4 ID and absence of reset HTML confirmed. Six demo/test/tool/internal
+probes 404. Captured document ACAO `*`, HSTS `max-age=31556952`, Cache-Control
+`max-age=600`; no CSP/CSP-Report-Only, X-Frame-Options, Referrer-Policy,
+Permissions-Policy or COOP/COEP/CORP in that response. Agency final path requires
+separate headers verification. HTTP parity cannot establish browser dispatch.
+
+**All seven browser-only acceptance checks remain PENDING/unchecked.** Real
+Chromium 151, 390×844, at **10:39:19**, inherited Cloud proxy, verified TLS/no
+mocked network, fails document GET with `net::ERR_CERT_AUTHORITY_INVALID`.
+Zero origin browser responses or page JS/SDK/GA execution; **0 Production queries
+and 0 observed GA4 collection requests**. Official gtag HEAD **10:39:17** is denied
+by Cloud CONNECT 403 (curl 56), before origin. This does not demonstrate frontend,
+SDK, integration, CSP or CORS failure. No trust/proxy bypass or policy expansion.
+GA Realtime/DebugView receipt remains unobserved. Trusted-browser request/response,
+independent second/third search, complete result/fallback/links/input clear/no
+reset/mobile/network/GA receipt still required; see NEXT_TASK for Q15/Q16/Q17.
+
+Final status: **DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING**, not yet
+`1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE`; formal IT-ready NO.
+Earlier human Playbook/Rental/session PASS is provenance, not new Flow acceptance.
+No demonstrated executable launch-critical issue, so no rollback triggered.
+Exact prior baseline and old Playbook resource/defaults restore/rebuild/redeploy
+are frozen in [FAQ_FLOW_ROLLBACK_2026-10-09.md](FAQ_FLOW_ROLLBACK_2026-10-09.md).
+No Rental/Agent/backend Production change is part of frontend rollback.
+
+Final reporting-only commit updates NEXT_TASK, PROJECT_STATE, local handoff and
+this record; no production payload/ZIP change or second deployment. Main HEAD
+differs from source/deployed implementation. Scratch evidence is outside Git under
+`/workspace/work/faq-flow/`. Push then STOP for Web ChatGPT review.
+
+## Earlier accepted-send input-clear deployment
 
 Resumed main `4f0fff232c31269b5d7661bf1ec5b79845db5e8f` under AGENTS.md and the
 current small UX task. Only two lines added in app.js after accepted pending-query

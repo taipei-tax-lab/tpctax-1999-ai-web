@@ -2,7 +2,7 @@
 
 Date: 2026-10-09
 
-Status: **BACKEND READY / WEB CUTOVER PENDING**
+Status: **BACKEND READY / WEB DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING**
 
 Backend source of truth:
 `taipei-tax-lab/dialogflow-cx-qa-framework`
@@ -143,13 +143,25 @@ parsed-only fallback retained; existing safe links include backend Rental note.
 Accepted-send clear/GA4 boundary and startup scheduling remain intact.
 
 Node 28 PASS; offline Chromium 26 grouped PASS. First/second/third request bodies
-and pre-event SDK defaults exact; GA1/2/3 without custom parameters. Synthetic
+and pre-event SDK defaults exact; GA 1/2/3 without custom parameters. Synthetic
 0–5 FAQ text coverage, 1280/390/320, input/draft/heading, service/timeout/late-answer
 and internal session recovery PASS. No real external/Production fixture requests.
-Backend observed0/2/5 proof remains separate from synthetic frontend counts.
+Backend observed 0/2/5 proof remains separate from synthetic frontend counts.
 
 Current source/deployed commit, Actions run, package hash, live blocker and
 rollback disposition are maintained in [NEXT_TASK](../NEXT_TASK.md) and
 [PAGES_DEPLOYMENT](PAGES_DEPLOYMENT.md). Full frozen frontend-only rollback:
 [FAQ_FLOW_ROLLBACK_2026-10-09.md](FAQ_FLOW_ROLLBACK_2026-10-09.md).
 No backend/Rental resources were changed.
+
+Web source/deployed `6b79ba571b5d0b2d66b1494d59f0ef157b813362`,
+[Actions 37875482165](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37875482165)
+PASS 2026-10-09 10:38:14 Asia/Taipei, artifact 11592311095. Production package
+SHA-256 `4f322561e9cff0e36f3ec4d44d5c7bef36088fed0902b16694e06a8de29b63e1`,
+214,669 bytes; hosted 12/12 exact at 10:39:26, six exclusions 404. Source and deployed
+commit are the same implementation; final reporting HEAD is separate.
+Actual browser 10:39:19 Cloud ERR_CERT_AUTHORITY_INVALID before origin/page JS,
+gtag 10:39:17 CONNECT403. No Production queries/GA receipt. Seven browser checks
+remain PENDING; status is DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING, not Web LIVE.
+Rollback AVAILABLE / NOT EXECUTED; no executable launch-critical failure, no
+Rental/Agent/backend change.

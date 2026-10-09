@@ -22,7 +22,7 @@ Web cutover implemented on 2026-10-09:
 - no visible reset or conversational context contract; latest complete text result replaces prior.
 Deployment/live evidence is recorded in the current NEXT_TASK and deployment record.
 
-Next work is frontend implementation/cutover only.
+Web implementation/cutover is complete. Remaining work is trusted-browser Web/GA4 acceptance only.
 
 ---
 
@@ -64,7 +64,7 @@ Last updated: 2026-10-09
 
 ## Status
 
-**FAQ FLOW CUTOVER IMPLEMENTED / OFFLINE PASS / DEPLOYMENT IN PROGRESS**
+**DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING — 1999 FAQ DIRECT FLOW SEARCH**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -1349,9 +1349,32 @@ no currentPlaybook; GA no-parameter counts1/2/3. Synthetic 1–5 complete text a
 fallback, latest replacement, URL/Rental link, 1280/390/320, accepted clear/draft/
 original heading, sync/async/cancelled before-accept failures, timeout/late-answer/
 locked transport and internal idle/in-flight recovery PASS. This is frontend
-fixture evidence, not Messenger live. Backend observed0/2/5 separately.
+fixture evidence, not Messenger live. Backend observed 0/2/5 separately.
 
-Package/deployment/trusted-browser result and rollback disposition will be recorded
+Package/deployment/trusted-browser result and rollback disposition are recorded
 in NEXT_TASK/PAGES_DEPLOYMENT. Prior runtime rollback baseline: 410db6c (same as
 f5719cb runtime), prior Playbook resource retained only in rollback/handoff docs.
 Do not change Rental/Agent/backend Production for frontend rollback.
+
+Direct FAQ Flow production artifact **DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING**.
+Source/deployed `6b79ba571b5d0b2d66b1494d59f0ef157b813362`,
+[Actions run 37875482165](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37875482165)
+PASS at 2026-10-09 10:38:14 Asia/Taipei; artifact 11592311095. Pages URL:
+<https://taipei-tax-lab.github.io/tpctax-1999-ai-web/>. Production ZIP 214,669 bytes,
+SHA-256 `4f322561e9cff0e36f3ec4d44d5c7bef36088fed0902b16694e06a8de29b63e1`.
+Local/Actions deterministic rebuild/checksum/exact 12 manifest/source/CRC/credential
+checks PASS; hosted 12/12 bytes/MIME exact and six exclusions 404 at 10:39:26.
+
+Actual unmapped Chromium151 at 10:39:19 stops before origin on document with
+Cloud ERR_CERT_AUTHORITY_INVALID; gtag HEAD10:39:17 CONNECT403/curl56 before origin.
+Zero Production queries/observed GA collections/page JS, seven browser-only
+checkboxes remain PENDING. No trust/proxy bypass; cannot claim Web LIVE/USABLE or
+GA4 receipt/Realtime/DebugView. Backend READY and historical human Playbook PASS
+are separate evidence. Formal IT-ready NO pending current trusted-browser smoke.
+
+Rollback available/not executed: executable checks show no launch-critical Web
+issue; Cloud limitation is not a rollback trigger. Exact prior baseline/resource/
+SDK defaults restore/repackage/redeploy procedure recorded in rollback doc.
+No Rental frontend/CX, Agent or backend Production changes. Final
+report-only commit changes no hosting payload/deployed SHA; push then STOP for
+Web ChatGPT review.

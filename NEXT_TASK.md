@@ -1,7 +1,7 @@
 # NEXT_TASK — 1999 FAQ direct Flow web cutover
 
 Date: 2026-10-09 (Asia/Taipei)
-Status: **IMPLEMENTED / OFFLINE PASS / DEPLOYMENT IN PROGRESS**
+Status: **DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING**
 
 Target after real acceptance: `1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE`.
 Until trusted-browser evidence exists: `DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING`.
@@ -63,9 +63,21 @@ Demo ZIP **232,535 bytes**, SHA-256
 ## C. Package and Pages deployment
 
 - [x] Regenerate committed packages/hosting.zip and hosting.sha256.
-- [ ] Push source/package commit to main; existing production-only Actions source/build/deploy PASS.
-- [ ] Record source/deployed SHA, run, artifact, package bytes/SHA and Pages URL.
-- [ ] Hosted 12-file byte parity/MIME and six demo/test/tool/internal exclusions.
+- [x] Push source/package commit to main; existing production-only Actions source/build/deploy PASS.
+- [x] Record source/deployed SHA, run, artifact, package bytes/SHA and Pages URL.
+- [x] Hosted 12-file byte parity/MIME and six demo/test/tool/internal exclusions.
+
+Source and deployed commit: `6b79ba571b5d0b2d66b1494d59f0ef157b813362`.
+[Actions run 37875482165](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37875482165)
+**PASS**, success 2026-10-09 **10:38:14 Asia/Taipei** (02:38:14 UTC),
+github-pages artifact `11592311095`. Pages:
+<https://taipei-tax-lab.github.io/tpctax-1999-ai-web/>.
+ZIP SHA-256 `4f322561e9cff0e36f3ec4d44d5c7bef36088fed0902b16694e06a8de29b63e1`.
+Actions source guard (`build_type=workflow`), configure/build/deploy, Node 28,
+deterministic rebuild/committed ZIP/checksum/manifest/source/credential/fresh
+production extraction PASS. HTTPS parity completed **10:39:26 Asia/Taipei**:
+12/12 files 200, exact package bytes and correct MIME; no reset HTML, exact Flow
+config/GA4 ID verified. Six excluded demo/test/tool/internal URLs return 404.
 
 ## D. Real browser acceptance — never substitute mocks or HTTPS parity
 
@@ -80,16 +92,58 @@ Demo ZIP **232,535 bytes**, SHA-256
 If Cloud TLS/proxy prevents browser JS, keep these PENDING/unchecked, never FAIL
 or LIVE. Do not bypass trust/proxy, guess policy hosts or mutate backend bindings.
 
+Fresh real deployed Chromium151 at **2026-10-09 10:39:19 Asia/Taipei**, 390×844,
+inherited Cloud proxy, TLS verification enabled and no mocked network, stops on
+Pages document GET with `net::ERR_CERT_AUTHORITY_INVALID`. No origin browser
+responses or page JS/SDK/GA4 execution: **0 Production queries / 0 observed GA4
+collection requests**. Official gtag HEAD at **10:39:17** gets Cloud CONNECT403
+(curl56) before origin. This is existing Cloud trust/access limitation, not
+frontend/SDK/binding/CSP/CORS failure. No certificate/proxy bypass or policy change.
+All seven browser-only checks stay PENDING/unchecked; GA Realtime/DebugView receipt
+unobserved. Backend Production proof and offline fixtures do not establish Web LIVE.
+
+Trusted browser can reuse backend Q15/Q16/Q17: `印花稅有哪些課徵範圍？` →
+`使用牌照稅什麼時候開徵？` → `我想詢問火星獨角獸光量子傳送門的維修密碼。`.
+Backend accepted suite observed 5/5/0 for these, not a Web receipt guarantee. Verify
+same exact currentPage/no currentPlaybook on all three, original complete queries,
+new text replacing previous, genuine fallback/Rental URL, accepted clear/no reset,
+mobile/console/network and real GA4 counts1/2/3 with no business payload.
+
 ## E. Handoff and rollback
 
 - [x] Update README/AGENTS/product/result/analytics/hosting/IT handoff for independent search and no reset UX; frozen visual assets/startup remain.
 - [x] Preserve authoritative handoff fixed parameters; add Web evidence without changing backend truth.
 - [x] Document exact prior initialPlaybook resource and frontend-only restore/redeploy procedure in FAQ_FLOW_ROLLBACK_2026-10-09.md.
-- [ ] Assess whether launch-critical frontend failure requires rollback; only restore Web, no Rental/Agent/Production changes.
-- [ ] Update PROJECT_STATE/checklist/deployment/handoff with final actual test/deploy/live/rollback evidence.
-- [ ] Commit/push final report, confirm remote main and clean working tree, STOP for Web ChatGPT review.
+- [x] Assess whether launch-critical frontend failure requires rollback; only restore Web, no Rental/Agent/Production changes.
+- [x] Update PROJECT_STATE/checklist/deployment/handoff with final actual test/deploy/live/rollback evidence.
+- [x] Commit/push final report, confirm remote main and clean working tree, STOP for Web ChatGPT review.
+
+Rollback assessment: **AVAILABLE / NOT EXECUTED**. No launch-critical frontend
+issue observed in executable checks; Cloud browser limitation alone is not a
+rollback trigger. Frozen prior Web baseline 410db6c / deployed edd5012 and exact old
+Playbook resource retained in rollback doc; no Rental/Agent/backend rollback.
 
 ## Completion summary
 
-Implementation/offline PASS. Deployment/live/rollback disposition to be recorded
-from actual evidence; no current claim of LIVE or formal IT-ready release.
+- Status: **DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING**; do not yet claim target
+  `1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE` or formal IT-ready.
+- Every accepted query + SDK defaults use exact FAQ START_PAGE/currentPage and
+  Asia/Taipei; no initialPlaybook runtime or sent currentPlaybook. Fixed binding
+  and GA4 untouched; no CX/Rental mutation.
+- Reset UI/handler/state/CSS/a11y/unused armed/clear removed; independent latest
+  search, complete ordered raw text, safe URLs/Rental link, accepted input clear.
+- Node **28 PASS**, Chromium **26 grouped PASS**, 1280/390/320, deterministic
+  two builds/exact 12 manifest/source/CRC/checksum/credential checks **PASS**.
+- Source/deployed **6b79ba571b5d0b2d66b1494d59f0ef157b813362**;
+  [run 37875482165](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37875482165),
+  package SHA **4f322561e9cff0e36f3ec4d44d5c7bef36088fed0902b16694e06a8de29b63e1**,
+  12/12 hosted bytes match, six exclusions 404.
+- GA4 local exactly-once/privacy **PASS**; actual Messenger/browser GA4 receipt
+  **PENDING** under exact TLS/proxy blockers above; seven unchecked items remain.
+- Rollback **AVAILABLE / NOT EXECUTED**; no demonstrated launch-critical trigger.
+- Final report-only commit updates NEXT_TASK/PROJECT_STATE/backend handoff/
+  PAGES_DEPLOYMENT and preserves production ZIP bytes/deployed SHA. Main HEAD
+  differs from deployed implementation; final push then **STOP for Web review**.
+
+Scratch reports/screenshots are outside Git under `/workspace/work/faq-flow/`;
+durable evidence is here and in [PAGES_DEPLOYMENT](docs/PAGES_DEPLOYMENT.md).

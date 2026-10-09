@@ -1,3 +1,32 @@
+## Active task — execute FAQ Flow web cutover
+
+Backend is READY. Do not wait for more CX work.
+
+Authoritative local handoff: `docs/CX_BACKEND_FLOW_HANDOFF_2026-10-09.md`.
+
+- [x] Backend immutable Production FAQ Flow/currentPage resource received and verified.
+- [ ] Replace `config.initialPlaybook` with `config.faqCurrentPage` using the exact START_PAGE resource in the handoff.
+- [ ] Set `queryParams.currentPage` on **every accepted text query**; remove 1999 `currentPlaybook`.
+- [ ] Keep Agent ID/location/Environment binding/timezone/GA4 unchanged.
+- [ ] Remove visible reset-conversation control and associated user-facing reset UX; keep technical recovery internal if needed.
+- [ ] Preserve accepted-send input clearing and latest-query result heading.
+- [ ] Ensure renderer combines all backend text ResponseMessages in order and linkifies all official URLs.
+- [ ] Do not depend on richContent parsing for release.
+- [ ] Treat every query as independent semantic search; no contextual follow-up contract.
+- [ ] Preserve static Rental specialist guidance/link from backend response; no frontend classifier.
+- [ ] Update demo/mock/tests for first + second independent currentPage queries, multi-result, fallback, errors, no reset UI, GA4 once/query.
+- [ ] Run Node/offline Chromium/mobile/package/secret regression.
+- [ ] Deploy Pages candidate through existing workflow.
+- [ ] Verify hosted files match package.
+- [ ] Perform live trusted-browser Messenger smoke if environment permits; otherwise leave only browser-only items clearly pending, but do not claim LIVE without real request/response verification.
+- [ ] Verify GA4 `ai_query_submit` one per accepted query and no question/answer text in analytics.
+- [ ] On launch-critical failure, restore old currentPlaybook frontend and redeploy; Rental/Agent remain untouched.
+- [ ] Update PROJECT_STATE/NEXT_TASK/README/handoff evidence.
+
+Target: `1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE`.
+
+---
+
 ## Active product-principle follow-up — stateless 1999 search
 
 - [ ] Remove the visible reset / "清除前次問答，重新提問" control from the 1999 page.

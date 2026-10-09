@@ -1,3 +1,16 @@
+## Active product-principle follow-up — stateless 1999 search
+
+- [ ] Remove the visible reset / "清除前次問答，重新提問" control from the 1999 page.
+- [ ] Keep each accepted query as an independent FAQ Flow search via per-query `currentPage`.
+- [ ] New query replaces the current displayed result; no conversational transcript/reset concept.
+- [ ] Preserve input-clear-on-accepted-send behavior.
+- [ ] Keep any technical session reset internal only if transport stability requires it.
+- [ ] Add/verify a guided link to the Rental special zone when backend output identifies a Rental-domain question.
+- [ ] Do not add internal Rental routing to this frontend.
+- [ ] Keep GA4 event semantics unchanged: one `ai_query_submit` per accepted query.
+
+---
+
 ## Active task — 1999 FAQ direct Flow entry release
 
 Backend release plan: `docs/1999_FAQ_SURFACE_DIRECTED_FLOW_RELEASE_PLAN_2026-10-09.md` in `taipei-tax-lab/dialogflow-cx-qa-framework`.

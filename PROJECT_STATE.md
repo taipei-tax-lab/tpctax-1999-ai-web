@@ -87,7 +87,9 @@ Last updated: 2026-10-09
 **1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE**
 
 Human Flow acceptance is carried forward. Current task is FAQ result presentation
-only; implementation/offline regression PASS, updated Pages deployment pending.
+only; implementation/offline regression and updated Pages deployment PASS.
+Deployed `87411897eb48ffc21516498f18542206cdd45908`; new renderer human visual
+confirmation PENDING under Cloud CA, GA4 receipt NON-BLOCKING PENDING.
 New renderer live visual confirmation and GA4 receipt are recorded separately in
 NEXT_TASK; neither reopens CX architecture work.
 
@@ -1427,3 +1429,31 @@ Production queries. Config,transport,analytics,SDK URL,binding,workflow,images,
 startup/performance/dependencies unchanged. New renderer live visual confirmation
 and GA4 receipt are separate; GA receipt non-blocking. Final package/deployment
 evidence tracked in NEXT_TASK/PAGES_DEPLOYMENT and FAQ_RESULT_PRESENTATION.
+
+Source / implementation / deployed SHA: `87411897eb48ffc21516498f18542206cdd45908`。
+[Actions run 37879115932](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37879115932)
+**PASS**；成功時間 **2026-10-09 11:24:38 Asia/Taipei**（03:24:38 UTC），
+Production Pages artifact `11593702193`。Pages URL：
+<https://taipei-tax-lab.github.io/tpctax-1999-ai-web/>。
+ZIP **216,416 bytes**，SHA-256 `8a2937cd4c43b2c8e99a17b0d13a381edec4cc467ca2976bc1a7b00da7baf1b4`。
+既有 source guard 證明 Pages build_type=workflow；configure/build/deploy、
+CI Node37、deterministic rebuild／committed checksum／manifest／source／
+credential scan／fresh extraction PASS。
+Hosted HTTPS parity 完成 **11:25:10 Asia/Taipei**：12/12 HTTP200、exact bytes／
+正確 MIME，6 個 demo/test/tool/internal exclusions HTTP404；無 reset HTML，
+fixed faqCurrentPage／GA4 ID 與封存 config/transport/analytics 相同。
+
+Fresh real Chromium probe：**2026-10-09 11:25:45 Asia/Taipei**，390×844，
+沿用 Cloud proxy、TLS verification enabled、無 network mock。Pages document
+GET 即遇 `net::ERR_CERT_AUTHORITY_INVALID`，無 origin response／page JS／SDK
+執行，**0 Production query／0 observed GA4 collection requests**。
+新 renderer browser-only confirmation 保持 **PENDING**，不是 FAIL／PASS；
+未繞過 CA／proxy／policy。既有人工作證的 FAQ Flow LIVE acceptance 保留。
+GA4 Realtime／DebugView receipt 為 **PENDING / NON-BLOCKING**，不是本輪 UI
+deployment gate；沒有新增 event 或改 currentPage／backend／Rental。
+
+UI-only rollback AVAILABLE / NOT EXECUTED, preserving the live FAQ currentPage.
+Optional Drive visual evidence archive upload rejected by automatic approval
+review (exact payload/destination not explicitly authorized); no upload/retry.
+Six screenshots remain local, hashes/reproduction in Git. Final report changes
+only docs, not deployed payload/ZIP; push then STOP for Web ChatGPT review.

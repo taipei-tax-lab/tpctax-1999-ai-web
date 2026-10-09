@@ -1,7 +1,7 @@
 # GitHub Pages production artifact deployment
 
-Current release: **FAQ result presentation implementation/offline PASS;
-updated Pages deployment pending**. Human-accepted 1999 FAQ Flow remains
+Current release: **FAQ result presentation DEPLOYED / OFFLINE PASS;
+new renderer human visual confirmation PENDING (Cloud CA)**. Human-accepted 1999 FAQ Flow remains
 **LIVE / USABLE**. GA4 receipt is a non-blocking operational follow-up.
 Earlier Cloud-only Flow pending records below are historical and superseded by
 human acceptance in main cc233ae/96e8475.
@@ -36,11 +36,33 @@ production ZIP216,416bytes,SHA `8a2937cd4c43b2c8e99a17b0d13a381edec4cc467ca2976b
 SHA `a64c8d77e22ce98fedadba27d5d2e6ce8346ab8b24a621702f818f71b3e1400b`.
 Both ZIPs9/16 text entries and14 changed text files credential scan PASS;
 15 protected files unchanged. Existing Actions workflow/source guard unchanged.
-Implementation/deployed SHA,run,artifact and hosted parity pending push/deploy.
-New renderer real-browser confirmation separate from prior human Flow LIVE
-acceptance; GA4 receipt non-blocking. UI-only rollback preserves Flow contract;
+Source / implementation / deployed SHA: `87411897eb48ffc21516498f18542206cdd45908`。
+[Actions run 37879115932](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37879115932)
+**PASS**；成功時間 **2026-10-09 11:24:38 Asia/Taipei**（03:24:38 UTC），
+Production Pages artifact `11593702193`。Pages URL：
+<https://taipei-tax-lab.github.io/tpctax-1999-ai-web/>。
+ZIP **216,416 bytes**，SHA-256 `8a2937cd4c43b2c8e99a17b0d13a381edec4cc467ca2976bc1a7b00da7baf1b4`。
+既有 source guard 證明 Pages build_type=workflow；configure/build/deploy、
+CI Node37、deterministic rebuild／committed checksum／manifest／source／
+credential scan／fresh extraction PASS。
+Hosted HTTPS parity 完成 **11:25:10 Asia/Taipei**：12/12 HTTP200、exact bytes／
+正確 MIME，6 個 demo/test/tool/internal exclusions HTTP404；無 reset HTML，
+fixed faqCurrentPage／GA4 ID 與封存 config/transport/analytics 相同。
+
+Fresh real Chromium probe：**2026-10-09 11:25:45 Asia/Taipei**，390×844，
+沿用 Cloud proxy、TLS verification enabled、無 network mock。Pages document
+GET 即遇 `net::ERR_CERT_AUTHORITY_INVALID`，無 origin response／page JS／SDK
+執行，**0 Production query／0 observed GA4 collection requests**。
+新 renderer browser-only confirmation 保持 **PENDING**，不是 FAIL／PASS；
+未繞過 CA／proxy／policy。既有人工作證的 FAQ Flow LIVE acceptance 保留。
+GA4 Realtime／DebugView receipt 為 **PENDING / NON-BLOCKING**，不是本輪 UI
+deployment gate；沒有新增 event 或改 currentPage／backend／Rental。
+ UI-only rollback preserves Flow contract;
 not triggered. Optional Drive evidence upload rejected by automatic review;
-no upload/retry,local screenshot hashes/reproducible tests retained.
+no upload/retry, local screenshot hashes/reproducible tests retained.
+Final report-only commit updates docs and leaves committed production ZIP/runtime
+identical to deployed8741189; main HEAD therefore differs from deployed SHA.
+Commit/push, verify remote main/clean tree, STOP for Web ChatGPT review.
 
 ## Previous direct FAQ Flow Web cutover — 2026-10-09
 

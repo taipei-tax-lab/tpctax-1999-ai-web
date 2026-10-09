@@ -104,7 +104,30 @@ screenshots/hash records/reproducible tests remain available; deployment unaffec
 
 Current release evidence: [PAGES_DEPLOYMENT](PAGES_DEPLOYMENT.md),
 operational [NEXT_TASK](../NEXT_TASK.md). Implementation/deployed SHA, Actions run,
-package hash and hosted12-file byte parity recorded after deployment.
+package hash and hosted12-file byte parity recorded.
+
+Source / implementation / deployed SHA: `87411897eb48ffc21516498f18542206cdd45908`。
+[Actions run 37879115932](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37879115932)
+**PASS**；成功時間 **2026-10-09 11:24:38 Asia/Taipei**（03:24:38 UTC），
+Production Pages artifact `11593702193`。Pages URL：
+<https://taipei-tax-lab.github.io/tpctax-1999-ai-web/>。
+ZIP **216,416 bytes**，SHA-256 `8a2937cd4c43b2c8e99a17b0d13a381edec4cc467ca2976bc1a7b00da7baf1b4`。
+既有 source guard 證明 Pages build_type=workflow；configure/build/deploy、
+CI Node37、deterministic rebuild／committed checksum／manifest／source／
+credential scan／fresh extraction PASS。
+Hosted HTTPS parity 完成 **11:25:10 Asia/Taipei**：12/12 HTTP200、exact bytes／
+正確 MIME，6 個 demo/test/tool/internal exclusions HTTP404；無 reset HTML，
+fixed faqCurrentPage／GA4 ID 與封存 config/transport/analytics 相同。
+
+Fresh real Chromium probe：**2026-10-09 11:25:45 Asia/Taipei**，390×844，
+沿用 Cloud proxy、TLS verification enabled、無 network mock。Pages document
+GET 即遇 `net::ERR_CERT_AUTHORITY_INVALID`，無 origin response／page JS／SDK
+執行，**0 Production query／0 observed GA4 collection requests**。
+新 renderer browser-only confirmation 保持 **PENDING**，不是 FAIL／PASS；
+未繞過 CA／proxy／policy。既有人工作證的 FAQ Flow LIVE acceptance 保留。
+GA4 Realtime／DebugView receipt 為 **PENDING / NON-BLOCKING**，不是本輪 UI
+deployment gate；沒有新增 event 或改 currentPage／backend／Rental。
+
 New actual Messenger visual confirmation remains separate from frozen replay and
 previous human Flow LIVE acceptance. GA4 Realtime/DebugView receipt is non-blocking.
 

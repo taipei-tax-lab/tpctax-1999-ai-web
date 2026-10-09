@@ -1,7 +1,7 @@
 # NEXT_TASK — FAQ 多候選結果呈現
 
 Date: 2026-10-09 (Asia/Taipei)
-Status: **IMPLEMENTED / OFFLINE PASS / UI DEPLOYMENT PENDING**
+Status: **UI DEPLOYED / HUMAN RENDERER VISUAL CONFIRMATION PENDING**
 
 承接最新 main `cc233ae1e02ec140f71389c298d0914c8822e99a`。
 1999 FAQ Flow cutover 已人工接受：
@@ -52,10 +52,10 @@ richElements。新 adapter 對全部 22 cases 完整欄位／筆數 PASS。
 
 - [x] Deterministic production/demo 雙 rebuild、byte cmp、manifest／CRC／source parity、fresh extraction。
 - [x] Credential／secret scan：兩 ZIP、所有 changed text，固定 transport/config/GA/workflow/images/performance unchanged。
-- [ ] 更新 committed hosting.zip／hosting.sha256，commit／push implementation。
-- [ ] 既有 Actions Pages source guard／test／build／deploy PASS，記 implementation／deployed SHA、run／artifact、package SHA。
-- [ ] Hosted 12-file exact byte parity／MIME；6 個 demo/test/tool/internal URL 404。
-- [ ] 真實無 mock、TLS verification enabled 的 Pages browser probe；如 Cloud 阻擋記 PENDING，不寫 FAIL／PASS。
+- [x] 更新 committed hosting.zip／hosting.sha256，commit／push implementation。
+- [x] 既有 Actions Pages source guard／test／build／deploy PASS，記 implementation／deployed SHA、run／artifact、package SHA。
+- [x] Hosted 12-file exact byte parity／MIME；6 個 demo/test/tool/internal URL 404。
+- [x] 已執行真實無 mock、TLS verification enabled Pages browser probe，記錄 Cloud CA blocker；實際 renderer live 確認仍在 D 未勾。
 
 Package evidence: production **216,416 bytes**, SHA `8a2937cd4c43b2c8e99a17b0d13a381edec4cc467ca2976bc1a7b00da7baf1b4`;
 demo **235,888 bytes**, SHA `a64c8d77e22ce98fedadba27d5d2e6ce8346ab8b24a621702f818f71b3e1400b`。
@@ -65,10 +65,32 @@ text entries 與14 changed text files secret scan PASS。15 protected files byte
 unchanged（config/transport/analytics/HTML/images/workflow/packager/performance/
 analytics/backend handoff）。
 
+Source / implementation / deployed SHA: `87411897eb48ffc21516498f18542206cdd45908`。
+[Actions run 37879115932](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37879115932)
+**PASS**；成功時間 **2026-10-09 11:24:38 Asia/Taipei**（03:24:38 UTC），
+Production Pages artifact `11593702193`。Pages URL：
+<https://taipei-tax-lab.github.io/tpctax-1999-ai-web/>。
+ZIP **216,416 bytes**，SHA-256 `8a2937cd4c43b2c8e99a17b0d13a381edec4cc467ca2976bc1a7b00da7baf1b4`。
+既有 source guard 證明 Pages build_type=workflow；configure/build/deploy、
+CI Node37、deterministic rebuild／committed checksum／manifest／source／
+credential scan／fresh extraction PASS。
+Hosted HTTPS parity 完成 **11:25:10 Asia/Taipei**：12/12 HTTP200、exact bytes／
+正確 MIME，6 個 demo/test/tool/internal exclusions HTTP404；無 reset HTML，
+fixed faqCurrentPage／GA4 ID 與封存 config/transport/analytics 相同。
+
 ## D. 新 renderer browser-only confirmation / operational follow-up
 
 - [ ] 在可信任瀏覽器用真正 Messenger 確認原題目連結、完整多筆答案、分隔、Rental link、mobile 與下一題替換。
 - [ ] Non-blocking：一般可信任瀏覽器 Realtime／DebugView 可觀察 ai_query_submit；不送 query/answer/source，無新 event。
+
+Fresh real Chromium probe：**2026-10-09 11:25:45 Asia/Taipei**，390×844，
+沿用 Cloud proxy、TLS verification enabled、無 network mock。Pages document
+GET 即遇 `net::ERR_CERT_AUTHORITY_INVALID`，無 origin response／page JS／SDK
+執行，**0 Production query／0 observed GA4 collection requests**。
+新 renderer browser-only confirmation 保持 **PENDING**，不是 FAIL／PASS；
+未繞過 CA／proxy／policy。既有人工作證的 FAQ Flow LIVE acceptance 保留。
+GA4 Realtime／DebugView receipt 為 **PENDING / NON-BLOCKING**，不是本輪 UI
+deployment gate；沒有新增 event 或改 currentPage／backend／Rental。
 
 以上不重開已人工通過的 Flow cutover。離線 replay 不證明新 live／GA4
 receipt；GA4 observation 不阻擋 UI deployment。
@@ -83,8 +105,8 @@ This optional archive is not a test/deployment blocker. Prepared ZIP has 11 file
 ## E. 文件、交付與 STOP
 
 - [x] 更新 README／RESULT_CONTRACT／IT_HANDOFF：可靠 items enhancement、完整 text fallback、linked original titles、non-blocking GA receipt。
-- [ ] 更新 PROJECT_STATE／PAGES_DEPLOYMENT／本 checklist，記錄最終 package／deploy／hosted／browser evidence 與 rollback assessment。
-- [ ] Commit／push final report、確認 remote main／clean tree，STOP 等待 Web ChatGPT review。
+- [x] 更新 PROJECT_STATE／PAGES_DEPLOYMENT／本 checklist，記錄最終 package／deploy／hosted／browser evidence 與 rollback assessment。
+- [x] Commit／push final report、確認 remote main／clean tree，STOP 等待 Web ChatGPT review。
 
 UI-only rollback：如本輪出現 launch-critical presentation 問題，恢復
 `cc233ae` 的 result-model/app/styles（runtime 等同既有 Flow 部署），重新
@@ -98,4 +120,9 @@ UI-only rollback：如本輪出現 launch-critical presentation 問題，恢復
 
 ## Completion summary
 
-實作／offline／視覺比較完成；C/E 部署與最終證據待本輪完成後更新。
+- 結果呈現實作、37 Node／30 offline Chromium、三種寬度前後比較、22 封存回應核對、deterministic package／integrity／secret scan **PASS**。
+- Implementation／deployed **87411897eb48ffc21516498f18542206cdd45908**；Actions **37879115932 PASS**、hosted **12/12 exact bytes**，6 exclusions404。
+- 人工已接受的 **1999 FAQ FLOW LIVE / USABLE** 延續；本輪 UI **DEPLOYED**，新真實 Messenger 視覺確認 **PENDING**（Cloud CA）；GA4 receipt **NON-BLOCKING PENDING**。
+- 截圖本機保留，hash／重現方式入 Git；optional Drive upload遭 automatic review 拒絕，未上傳／未重試。
+- Rollback **AVAILABLE / NOT EXECUTED**，無已觀察 launch-critical presentation issue；config/transport/analytics/backend/Rental不變。
+- Final report-only commit 不變更 runtime／hosting ZIP／deployed SHA；最終 main HEAD 與 deployed implementation 分開。Commit/push後 **STOP 等待 Web ChatGPT review**。

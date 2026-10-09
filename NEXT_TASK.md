@@ -1,3 +1,21 @@
+## Active task — 1999 FAQ direct Flow entry release
+
+Backend release plan: `docs/1999_FAQ_SURFACE_DIRECTED_FLOW_RELEASE_PLAN_2026-10-09.md` in `taipei-tax-lab/dialogflow-cx-qa-framework`.
+
+- [ ] Wait for backend to provide the immutable Production FAQ Flow/currentPage resource.
+- [ ] Replace `config.initialPlaybook` with `config.faqCurrentPage`.
+- [ ] MessengerTransport must set `queryParams.currentPage` for **every accepted user text query**.
+- [ ] Remove currentPlaybook override from this 1999 page.
+- [ ] Keep timezone/session/error/input-clear/analytics behavior unchanged.
+- [ ] Treat each submitted query as an independent search; contextual follow-up is not promised.
+- [ ] Keep text-first renderer; support backend multi-result text without depending on richContent parsing.
+- [ ] Add regression tests for currentPage request body, first/second query, fallback, multi-result text/links, reset, timeout, and one GA4 event per accepted query.
+- [ ] Deploy candidate after backend Production currentPage test PASS.
+- [ ] Browser smoke actual request/response + GA4.
+- [ ] Rollback by restoring prior currentPlaybook transport if needed.
+
+---
+
 # NEXT_TASK
 
 ## Active task

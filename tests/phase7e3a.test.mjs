@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
 import {normalizeResult, safeUrl, textUrls} from '../assets/result-model.js';
 import {config} from '../assets/config.js';
@@ -117,4 +118,64 @@ for(let count=0;count<=5;count++) test(`${count} FAQ text results preserve every
   assert.ok(result.answer.includes('出租房屋租稅優惠專責諮詢'));
   if(count)assert.ok(result.answer.includes(`${count}. 合成 FAQ 問題 ${count}`));
   else assert.ok(result.answer.startsWith('找不到可用的 FAQ 搜尋結果'));
+});
+
+for (const count of [1,2,5]) test(`${count} FAQ info cards become complete items before text fallback`,()=>{
+  const result=normalizeResult(raw(faqTextMessages(count,config)),[official]);
+  assert.equal(result.itemSource,'richContent');assert.equal(result.items.length,count);
+  for(let i=0;i<count;i++)assert.deepEqual(result.items[i],{title:`合成 FAQ 問題 ${i+1}`,answer:`完整合成答案 ${i+1}（非稅務建議）。\n1. 原有編號與換行\n2. 第二個條件`,url:config.officialFaqUrl});
+  assert.ok(result.leadingText.startsWith('以下是本府'));
+  assert.ok(result.trailingText.includes('出租房屋租稅優惠專責諮詢'));
+});
+test('frozen Production text/info payload fields are exact for every returned FAQ',()=>{
+  const fixture=JSON.parse(readFileSync(new URL('./fixtures/faq-production-messages.json',import.meta.url)));
+  const cards=fixture.responseMessages.flatMap(m=>m.payload?.richContent?.flat()||[]);
+  const result=normalizeResult(raw(fixture.responseMessages),[official]);
+  assert.equal(result.itemSource,'richContent');assert.equal(result.items.length,5);
+  assert.deepEqual(result.items,cards.map(c=>({title:c.title,answer:c.subtitle,url:c.actionLink})));
+});
+test('SDK parsed customCard.richElements works when raw is unavailable; card-only remains usable',()=>{
+  const messages=faqTextMessages(2,config);
+  const parsed=messages.flatMap(m=>m.text ? m.text.text.map(text=>({type:'text',text})) : [{type:'customCard',richElements:m.payload.richContent.flat()}]);
+  const result=normalizeResult({data:{messages:parsed}},[official]);
+  assert.equal(result.itemSource,'richContent');assert.equal(result.items.length,2);
+  const card=parsed.find(m=>m.type==='customCard');
+  const only=normalizeResult({data:{messages:[card]}},[official]);
+  assert.equal(only.answer,'');assert.equal(only.items.length,1);
+});
+test('text-only per-message fallback preserves internal newlines and numbering without guessing splits',()=>{
+  const messages=faqTextMessages(5,config).filter(m=>m.text);
+  const result=normalizeResult(raw(messages),[official]);
+  assert.equal(result.itemSource,'text');assert.equal(result.items.length,5);
+  assert.ok(result.items.every(item=>item.answer.includes('\n1. 原有編號與換行\n2. 第二個條件')));
+  const combined=messages.flatMap(m=>m.text.text).join('\n\n');
+  const unknown=normalizeResult(raw([{text:{text:[combined]}}]),[official]);
+  assert.equal(unknown.items,undefined);assert.equal(unknown.answer,combined);
+});
+test('partial/truncated cards cannot hide complete text; fallback uses all original blocks',()=>{
+  const messages=faqTextMessages(2,config);
+  messages[2].payload.richContent[0][0].subtitle='truncated';
+  const result=normalizeResult(raw(messages),[official]);
+  assert.equal(result.itemSource,'text');assert.equal(result.items.length,2);
+  assert.ok(result.items[0].answer.includes('2. 第二個條件'));
+});
+test('unsafe/unapproved/incomplete metadata is not accepted as an official FAQ item',()=>{
+  for(const url of ['javascript:alert(1)','data:text/html,x','https://user:pass@tpctax.gov.taipei/','https://example.com/']) {
+    const card={type:'info',title:'title',subtitle:'complete answer',actionLink:url};
+    assert.equal(normalizeResult(raw([{payload:{richContent:[[card]]}}]),[official]).items,undefined);
+  }
+  for(const card of [null,{}, {type:'info',title:'title',actionLink:official}, {type:'info',title:'title',subtitle:42,actionLink:official}])
+    assert.equal(normalizeResult(raw([{payload:{richContent:[[card]]}}]),[official]).items,undefined);
+});
+test('unknown text envelope, missing block and zero fallback keep faithful text-first behavior',()=>{
+  for(const mutate of [m=>{m[0].text.text[0]='unknown header';},m=>{m[1].text.text[0]='1. missing URL\ncomplete answer';}]) {
+    const messages=faqTextMessages(2,config);mutate(messages);
+    const result=normalizeResult(raw(messages),[official]);
+    assert.equal(result.items,undefined);assert.equal(result.answer,messages.flatMap(m=>m.text?.text||[]).join('\n\n'));
+  }
+  assert.equal(normalizeResult(raw(faqTextMessages(0,config)),[official]).items,undefined);
+  const messages=faqTextMessages(1,config).filter(m=>m.payload);
+  messages.push({payload:{universalAnswer:{schemaVersion:1,answer:'完整 extension 文字不能被無關 card 蓋掉'}}});
+  const extension=normalizeResult(raw(messages),[official]);
+  assert.equal(extension.items,undefined);assert.equal(extension.answer,'完整 extension 文字不能被無關 card 蓋掉');
 });

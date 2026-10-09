@@ -1,8 +1,10 @@
 # GitHub Pages production artifact deployment
 
-Current deployment record (2026-10-09, Asia/Taipei): **direct FAQ Flow artifact
-deployment PASS; DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING;
-Gate 3 CONDITIONAL PASS; GA4-verified IT release ready NO**.
+Current release: **FAQ result presentation implementation/offline PASS;
+updated Pages deployment pending**. Human-accepted 1999 FAQ Flow remains
+**LIVE / USABLE**. GA4 receipt is a non-blocking operational follow-up.
+Earlier Cloud-only Flow pending records below are historical and superseded by
+human acceptance in main cc233ae/96e8475.
 Operational acceptance checklist: [NEXT_TASK.md](../NEXT_TASK.md).
 Earlier renderer deployment: run
 [37722000091](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37722000091),
@@ -12,7 +14,35 @@ Renderer implementation history: [RENDERER_PARITY.md](RENDERER_PARITY.md).
 Later human acceptance in PROJECT_STATE/NEXT_TASK supersedes its live blockers.
 The earlier deployments below remain historical evidence.
 
-## Latest direct FAQ Flow Web cutover — 2026-10-09
+## FAQ multi-result presentation release — 2026-10-09
+
+Renderer-only implementation from main cc233ae. Observed existing info-card
+shape and SDK raw/parsed event verified; all22 frozen Production cases match
+count/order/title/full answer/URL,0 new Production queries. Separate1–5 FAQ
+blocks with original-title official links, full answers, neutral1px dividers and
+16px/20px padding; no trailing bare source URLs. Intro/outro/Rental link separate.
+Reliable whole-message text fallback and complete unknown-format fallback retained.
+Config/transport/analytics/binding/backend/Rental unchanged.
+
+Node37 PASS, offline Chromium30 grouped PASS,0 page errors/forwarded external
+requests. Public Q01 replay comparison at1280/390/320: containers0→5,titlelinks0→5,
+bare FAQ source URLs5→0,inter-FAQ dividers0→4,full original answers5/5 unchanged.
+[Response/visual evidence](FAQ_RESULT_PRESENTATION_2026-10-09.md),
+[contract](RESULT_CONTRACT.md).
+
+Two production/demo rebuilds byte-identical. Exact production12-file allowlist,
+manifest/CRC/source/integrity/fresh extraction/committed checksum PASS;
+production ZIP216,416bytes,SHA `8a2937cd4c43b2c8e99a17b0d13a381edec4cc467ca2976bc1a7b00da7baf1b4`. Demo235,888bytes,
+SHA `a64c8d77e22ce98fedadba27d5d2e6ce8346ab8b24a621702f818f71b3e1400b`.
+Both ZIPs9/16 text entries and14 changed text files credential scan PASS;
+15 protected files unchanged. Existing Actions workflow/source guard unchanged.
+Implementation/deployed SHA,run,artifact and hosted parity pending push/deploy.
+New renderer real-browser confirmation separate from prior human Flow LIVE
+acceptance; GA4 receipt non-blocking. UI-only rollback preserves Flow contract;
+not triggered. Optional Drive evidence upload rejected by automatic review;
+no upload/retry,local screenshot hashes/reproducible tests retained.
+
+## Previous direct FAQ Flow Web cutover — 2026-10-09
 
 Web baseline `410db6c1891c58d38197fa55d6b2b1d98be9a51a`; read-only backend main
 `39e176ed40a4ad81cb9b39b6a7b15687bbcea4bb`. Backend authoritative handoff confirms

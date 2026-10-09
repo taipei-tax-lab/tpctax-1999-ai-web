@@ -12,7 +12,7 @@
 → 每題 currentPage = 1999 FAQ Semantic Search Flow START_PAGE
 → canonical 623 FAQ semantic search
 → 1～5 筆官方問題、完整答案與 URL，或零結果 fallback
-→ text-first renderer，只顯示最新查詢結果
+→ 有可靠資料時逐筆 FAQ 區塊／官方原題目連結，否則完整 text fallback
 ```
 
 每題是獨立搜尋，請完整描述問題；不承諾依前一題補足上下文。
@@ -26,8 +26,14 @@
   `timeZone=Asia/Taipei`；正式 request 不送 `currentPlaybook`。
 - 固定 IDs／Production 來源：[backend handoff](docs/CX_BACKEND_FLOW_HANDOFF_2026-10-09.md)。
 - 所有 raw `responseMessages[].text.text[]` 按順序完整組合；raw 無文字時
-  使用 Messenger parsed text。安全 URL 可點擊，保留編號與換行。
-- richContent／FAQ metadata 為 optional enhancement，不是上線必要條件。
+  使用 Messenger parsed text，保留完整答案與內部換行。
+- 優先從既有 `richContent` info 的 `title/subtitle/actionLink` 建立 optional
+  `items[]`，與完整 text 逐筆核對後呈現原題目連結、答案、細分隔線。
+  不顯示答案末尾的 FAQ 來源裸網址；不截短答案，不以答案內數字切筆。
+- 沒有可靠 cards 時，僅辨識已確認的逐筆 text 訊息格式；未知／合併格式
+  保留完整 text-first fallback。Cards 不是上線必要條件。
+  契約與前後證據：[result contract](docs/RESULT_CONTRACT.md)、
+  [FAQ presentation](docs/FAQ_RESULT_PRESENTATION_2026-10-09.md)。
 - Rental 僅顯示 backend 固定官方專區連結；不分類、不內部切換或呼叫 Rental。
 - GA4 `G-S891SFSMBH`：每個 accepted query 一次 `ai_query_submit`，無業務文字
   參數。沿用 core 初始化後 idle 載入與失敗隔離，demo 不啟用 analytics。
@@ -47,8 +53,10 @@ demo ZIP。正式 hosting ZIP 只有 12 檔；使用既有 Actions workflow 部�
 [Hosting](docs/HOSTING.md)、[IT handoff](docs/IT_HANDOFF.md)、
 [部署證據](docs/PAGES_DEPLOYMENT.md)、[操作 checklist](NEXT_TASK.md)。
 
-若 Cloud TLS／proxy 無法執行真正 Messenger／GA4 smoke，只能記為
-`DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING`；離線 PASS 不代表 Production live。
+1999 FAQ Flow cutover 已經人工接受為 `LIVE / USABLE`。本輪結果呈現更新的
+真實 Messenger 視覺確認另記；Cloud TLS／proxy 阻擋時為 PENDING，離線
+replay 不代表新的 live 驗收。GA4 receipt 是 non-blocking operational follow-up，
+不因 Realtime／DebugView 暫不可觀察而阻擋此 UI deployment。
 Launch-critical 問題僅依 [frontend rollback](docs/FAQ_FLOW_ROLLBACK_2026-10-09.md)
 恢復舊 Playbook transport 並 redeploy，不修改 Rental／Agent／Production。
 

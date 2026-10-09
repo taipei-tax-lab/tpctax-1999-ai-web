@@ -4,10 +4,11 @@ export function faqTextMessages(count, config) {
   if (!count) return [{text:{text:['找不到可用的 FAQ 搜尋結果，請換個方式描述問題。', rental]}}];
   const messages = [{text:{text:['以下是本府 1999 常見問答中與您的問題較相關的內容：']}}];
   for (let i = 1; i <= count; i++) {
-    messages.push({text:{text:[`${i}. 合成 FAQ 問題 ${i}`, `完整合成答案 ${i}（非稅務建議）。\n1. 原有編號與換行\n2. 第二個條件`, config.officialFaqUrl]}});
-    messages.push({payload:{richContent:[[{type:'info',title:'合成 optional card'}]]}});
+    const title = `合成 FAQ 問題 ${i}`, answer = `完整合成答案 ${i}（非稅務建議）。\n1. 原有編號與換行\n2. 第二個條件`;
+    messages.push({text:{text:[`${i}. ${title}\n${answer}\n${config.officialFaqUrl}`]}});
+    messages.push({payload:{richContent:[[{type:'info',title,subtitle:answer,actionLink:config.officialFaqUrl}]]}});
   }
-  messages.push({text:{text:['若以上內容不是您要找的資訊，可以換個方式描述您的問題。', rental]}});
+  messages.push({text:{text:['若以上內容不是您要找的資訊，可以換個方式描述您的問題。']}},{text:{text:[rental]}});
   return messages;
 }
 

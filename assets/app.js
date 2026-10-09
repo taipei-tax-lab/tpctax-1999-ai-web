@@ -47,7 +47,7 @@ form.addEventListener('submit', async event => {
   try {
     const detail = await transport.send(query);
     const model = normalizeResult(detail, config.officialFaqOrigins);
-    if (!model.answer.trim()) {showState('empty');return;}
+    if (!model.answer.trim() && !model.items?.length) {showState('empty');return;}
     renderResult(model, result);document.querySelector('#result-query').textContent = query;
     status.hidden = true;result.hidden = false;document.querySelector('#result-title').focus({preventScroll:true});
   } catch (error) {showState(error.message === 'session' ? 'session' : error.message === 'empty' ? 'empty' : 'error');}

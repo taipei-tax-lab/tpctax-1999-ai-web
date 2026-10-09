@@ -41,7 +41,8 @@ Web cutover implemented on 2026-10-09:
 - no visible reset or conversational context contract; latest complete text result replaces prior.
 Deployment/live evidence is recorded in the current NEXT_TASK and deployment record.
 
-Web implementation/cutover is complete. Remaining work is trusted-browser Web/GA4 acceptance only.
+Web implementation/cutover is complete and human acceptance above supersedes the
+earlier Cloud-only pending record. GA4 receipt remains non-blocking follow-up.
 
 ---
 
@@ -83,7 +84,12 @@ Last updated: 2026-10-09
 
 ## Status
 
-**DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING — 1999 FAQ DIRECT FLOW SEARCH**
+**1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE**
+
+Human Flow acceptance is carried forward. Current task is FAQ result presentation
+only; implementation/offline regression PASS, updated Pages deployment pending.
+New renderer live visual confirmation and GA4 receipt are recorded separately in
+NEXT_TASK; neither reopens CX architecture work.
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -114,10 +120,17 @@ Dialogflow CX backend source of truth:
 - hostingUrl remains placeholder metadata, unused at runtime; final IT path does not require rebuilding.
 - Every query uses authoritative FAQ Flow START_PAGE currentPage, never currentPlaybook; SDK defaults match before send and after recovery. No Router/Rental invocation.
 - Generic answer rendering works without FAQ metadata.
-- FAQ source card is optional progressive enhancement only.
+- Optional `items[]` uses observed raw/parsed info-card title/full answer/official
+  URL, validated against complete text when available. Each FAQ is a separate
+  numbered block with original-title link, full answer and thin neutral separator;
+  no standalone FAQ source URL. Intro/outro/Rental guidance stay outside the list.
+- Missing/unreliable cards use conservative known per-message text fallback;
+  combined/unknown text remains complete text-first. No splitting on answer numbers.
 - Official-site same-tab/new-tab/window behavior remains deliberately unspecified.
 - No official-site deployment has occurred.
-- Historical human Playbook renderer/Rental/session evidence remains provenance, not this Flow cutover acceptance. New Messenger currentPage/complete text/independent searches/mobile/input clear/no reset and GA4 receipt require trusted-browser live evidence.
+- Human FAQ Flow LIVE acceptance is current; earlier Playbook and Cloud pending
+  records below are historical. New renderer live visual confirmation is separate,
+  and GA4 receipt is a non-blocking operational follow-up.
 
 ## Standalone migration verification — 2026-10-07
 
@@ -1397,3 +1410,20 @@ SDK defaults restore/repackage/redeploy procedure recorded in rollback doc.
 No Rental frontend/CX, Agent or backend Production changes. Final
 report-only commit changes no hosting payload/deployed SHA; push then STOP for
 Web ChatGPT review.
+
+## FAQ 多候選結果呈現 — 2026-10-09
+
+Synced main cc233ae; this is renderer-only work after human Flow LIVE acceptance.
+Observed existing raw info-card title/subtitle/actionLink and actual SDK raw/parsed
+shape verified read-only. Adapter normalizes optional items with full-text match;
+unknown/combined text fallback remains complete. Each FAQ is a numbered block,
+original-title official link and full answer; no trailing source URL. Neutral
+1px dividers,16px/20px padding, existing fonts/brand/red identity preserved.
+Rental guidance remains separate labeled link; no service/transport changes.
+
+Node37 and offline Chromium30 groups PASS;1280/390/320 before/after replay;
+all22 frozen Production response items/count/full-field checks PASS with0 new
+Production queries. Config,transport,analytics,SDK URL,binding,workflow,images,
+startup/performance/dependencies unchanged. New renderer live visual confirmation
+and GA4 receipt are separate; GA receipt non-blocking. Final package/deployment
+evidence tracked in NEXT_TASK/PAGES_DEPLOYMENT and FAQ_RESULT_PRESENTATION.

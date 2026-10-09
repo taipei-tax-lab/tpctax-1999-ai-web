@@ -1,0 +1,145 @@
+{
+  "provenance": "Public text/cards only from frozen backend Production Q01; not a new live Messenger request",
+  "raw_sha256": "6b594d7d803e5508e57e1833f3a284ccad011f343bdf4e9f6f0c7a445034d6a3",
+  "responseMessages": [
+    {
+      "text": {
+        "text": [
+          "以下是本府 1999 常見問答中與您的問題較相關的內容："
+        ]
+      },
+      "responseType": "HANDLER_PROMPT"
+    },
+    {
+      "text": {
+        "text": [
+          "1. 印花稅課徵範圍為何？\n銀錢收據、買賣動產契據、承攬契據、典賣、讓受及分割不動產契據。\nhttps://tpctax.gov.taipei/News_Content.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16&s=EC6F24658B76B0FD"
+        ]
+      },
+      "responseType": "HANDLER_PROMPT"
+    },
+    {
+      "payload": {
+        "richContent": [
+          [
+            {
+              "title": "印花稅課徵範圍為何？",
+              "actionLink": "https://tpctax.gov.taipei/News_Content.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16&s=EC6F24658B76B0FD",
+              "subtitle": "銀錢收據、買賣動產契據、承攬契據、典賣、讓受及分割不動產契據。",
+              "type": "info"
+            }
+          ]
+        ]
+      },
+      "responseType": "HANDLER_PROMPT"
+    },
+    {
+      "text": {
+        "text": [
+          "2. 印花稅的計算方式？\n1.銀錢收據：按收據金額 4‰/ 計算2.買賣動產契據：每件稅額新臺幣 12 元3.承攬契據：按契約金額 1‰ 計算4.買賣、交換、贈與、分割及設定典權之不動產契據：按契約金額 1‰ 計算＊印花稅計算至元為止，元以下免繳。\nhttps://tpctax.gov.taipei/News_Content.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16&s=639D28FD7B83AE8E"
+        ]
+      },
+      "responseType": "HANDLER_PROMPT"
+    },
+    {
+      "payload": {
+        "richContent": [
+          [
+            {
+              "actionLink": "https://tpctax.gov.taipei/News_Content.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16&s=639D28FD7B83AE8E",
+              "type": "info",
+              "title": "印花稅的計算方式？",
+              "subtitle": "1.銀錢收據：按收據金額 4‰/ 計算2.買賣動產契據：每件稅額新臺幣 12 元3.承攬契據：按契約金額 1‰ 計算4.買賣、交換、贈與、分割及設定典權之不動產契據：按契約金額 1‰ 計算＊印花稅計算至元為止，元以下免繳。"
+            }
+          ]
+        ]
+      },
+      "responseType": "HANDLER_PROMPT"
+    },
+    {
+      "text": {
+        "text": [
+          "3. 印花稅的繳納方式有幾種？\n印花稅的繳納方式有三種：1.彙總繳納報經稽徵機關核准後，得以每2個月為1期，按期彙總繳納及申報，亦可申請網路申報。2.開立繳款書申請人可自行至「地方稅網路申報作業」網站開立印花稅繳款書，並使用晶片金融卡、信用卡、活期（儲蓄）存款帳戶電子繳款方式繳納印花稅，或列印「印花稅應納稅額繳款書」，再持向代收稅款之金融機構繳納，稅額3萬元以下案件可至便利商店繳納；亦可到稽徵機關開立印花稅繳款書。3.購買印花稅票 到郵局購買印花稅票貼用並銷花，始完成繳納。\nhttps://tpctax.gov.taipei/News_Content.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16&s=5B1DF891C5DF143D"
+        ]
+      },
+      "responseType": "HANDLER_PROMPT"
+    },
+    {
+      "payload": {
+        "richContent": [
+          [
+            {
+              "title": "印花稅的繳納方式有幾種？",
+              "subtitle": "印花稅的繳納方式有三種：1.彙總繳納報經稽徵機關核准後，得以每2個月為1期，按期彙總繳納及申報，亦可申請網路申報。2.開立繳款書申請人可自行至「地方稅網路申報作業」網站開立印花稅繳款書，並使用晶片金融卡、信用卡、活期（儲蓄）存款帳戶電子繳款方式繳納印花稅，或列印「印花稅應納稅額繳款書」，再持向代收稅款之金融機構繳納，稅額3萬元以下案件可至便利商店繳納；亦可到稽徵機關開立印花稅繳款書。3.購買印花稅票 到郵局購買印花稅票貼用並銷花，始完成繳納。",
+              "actionLink": "https://tpctax.gov.taipei/News_Content.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16&s=5B1DF891C5DF143D",
+              "type": "info"
+            }
+          ]
+        ]
+      },
+      "responseType": "HANDLER_PROMPT"
+    },
+    {
+      "text": {
+        "text": [
+          "4. 承攬合約印花稅的稅率多少？\n每件按合約金額千分之一計算。\nhttps://tpctax.gov.taipei/News_Content.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16&s=A1B0F75262DCA4CD"
+        ]
+      },
+      "responseType": "HANDLER_PROMPT"
+    },
+    {
+      "payload": {
+        "richContent": [
+          [
+            {
+              "title": "承攬合約印花稅的稅率多少？",
+              "actionLink": "https://tpctax.gov.taipei/News_Content.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16&s=A1B0F75262DCA4CD",
+              "subtitle": "每件按合約金額千分之一計算。",
+              "type": "info"
+            }
+          ]
+        ]
+      },
+      "responseType": "HANDLER_PROMPT"
+    },
+    {
+      "text": {
+        "text": [
+          "5. 外國人要不要繳納印花稅？\n外國人或外國公司在中華民國領域內書立憑證者，皆應繳納印花稅。\nhttps://tpctax.gov.taipei/News_Content.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16&s=2AD0A73A7690B1F8"
+        ]
+      },
+      "responseType": "HANDLER_PROMPT"
+    },
+    {
+      "payload": {
+        "richContent": [
+          [
+            {
+              "subtitle": "外國人或外國公司在中華民國領域內書立憑證者，皆應繳納印花稅。",
+              "actionLink": "https://tpctax.gov.taipei/News_Content.aspx?n=BB8B93F0A49EAB80&sms=87415A8B9CE81B16&s=2AD0A73A7690B1F8",
+              "type": "info",
+              "title": "外國人要不要繳納印花稅？"
+            }
+          ]
+        ]
+      },
+      "responseType": "HANDLER_PROMPT"
+    },
+    {
+      "text": {
+        "text": [
+          "若以上內容不是您要找的資訊，可以換個方式描述您的問題。"
+        ]
+      },
+      "responseType": "HANDLER_PROMPT"
+    },
+    {
+      "text": {
+        "text": [
+          "出租房屋租稅優惠專責諮詢，請前往出租專區：https://tpctax.gov.taipei/cp.aspx?n=3A978B4E3ADD88F2"
+        ]
+      },
+      "responseType": "HANDLER_PROMPT"
+    }
+  ]
+}

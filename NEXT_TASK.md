@@ -1,167 +1,101 @@
-## Post-live follow-up（2026-10-09）
-
-Status: **LIVE / USABLE**
-
-- [x] Backend Production FAQ Flow v1 ready and mapped.
-- [x] Web currentPage cutover deployed.
-- [x] Per-query independent semantic search implemented.
-- [x] currentPlaybook removed from 1999 runtime.
-- [x] Visible reset conversation UI removed.
-- [x] Multi-result complete text rendering and official links implemented.
-- [x] Pages deployment/package integrity/offline regression PASS.
-- [x] No Rental/Agent/backend regression requiring rollback.
-- [ ] Non-blocking: confirm real GA4 `ai_query_submit` receipt later in a normal trusted browser using Realtime/DebugView; do not send query/answer/source text.
-- [ ] Future quality work: improve official FAQ corpus from real search misses (for example citizen-facing entertainment-tax amendment wording) rather than adding runtime aliases by default.
-- [ ] Future cross-service work: Rental↔1999 stays guided-link-only when revised; no internal handoff orchestration.
-
----
-
-# NEXT_TASK — 1999 FAQ direct Flow web cutover
+# NEXT_TASK — FAQ 多候選結果呈現
 
 Date: 2026-10-09 (Asia/Taipei)
-Status: **DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING**
+Status: **IMPLEMENTED / OFFLINE PASS / UI DEPLOYMENT PENDING**
 
-Target after real acceptance: `1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE`.
-Until trusted-browser evidence exists: `DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING`.
-Earlier one-shot Playbook/reset tasks are superseded by this checklist; their
-results remain historical in PROJECT_STATE/PAGES_DEPLOYMENT.
+承接最新 main `cc233ae1e02ec140f71389c298d0914c8822e99a`。
+1999 FAQ Flow cutover 已人工接受：
+**1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE**。
+本輪只改結果呈現；不重新執行完成的 cutover checklist，不改 CX backend、
+Flow、Data Store、Production、Agent、currentPage、Rental 或 GA4 contract。
+本輪部署、真實 Messenger 視覺確認與 GA4 receipt 分開記錄。
 
-## A. Authoritative contract and implementation
+## A. 來源核對與實作
 
-- [x] Sync Web main `410db6c1891c58d38197fa55d6b2b1d98be9a51a` and read AGENTS/state/task/README/local handoff/product/result docs.
-- [x] Read-only verify backend main `39e176ed40a4ad81cb9b39b6a7b15687bbcea4bb`, STATE/TASKS/boundary/release plan and authoritative `1999_FAQ_WEB_FLOW_HANDOFF_2026-10-09.md`; backend READY, no more architecture work.
-- [x] Replace initialPlaybook runtime config with exact faqCurrentPage START_PAGE.
-- [x] Every accepted text request sets currentPage and Asia/Taipei; deletes currentPlaybook.
-- [x] SDK defaults match per-query contract at initialization, before every sendQuery and after internal recovery; never disarm after first query.
-- [x] Agent/project/location/language/Production binding/Messenger integration/SDK URL/GA4 ID unchanged.
-- [x] Remove reset button, JS listener/state, CSS, accessibility control and unused clear/armed transport code from index/demo.
-- [x] Each complete question is an independent semantic search; new result replaces previous; no transcript or contextual follow-up promise.
-- [x] Preserve accepted-send input/counter clear, retained pre-acceptance failure text, original result heading and next draft.
-- [x] Combine all raw text ResponseMessages and text array items in order; parsed-only fallback, richContent optional.
-- [x] Safe text/numbering/newlines/official URL rendering; fixed backend Rental note/link shown normally, no classifier/internal Rental call.
-- [x] GA4 G-S891SFSMBH + ai_query_submit, exactly once/accepted query with no business parameters; idle loader/failure isolation unchanged.
+- [x] 同步 main；依 AGENTS 閱讀 state/task/README/handoff/product/result contract、result-model/app/CSS/demo/mock/tests。
+- [x] 唯讀核對既有 Production raw shape 與官方 SDK event shape；不猜欄位、不要求 backend 修改。
+- [x] 優先 info-card `title/subtitle/actionLink` → optional `items[{title,answer,url}]`；完整 text 對照避免截短／漏筆。
+- [x] 每筆獨立 `ol > li`，題號、原題目 anchor、完整答案；FAQ 之間細線與 16px/20px 上下 padding，無陰影。
+- [x] FAQ 原題目作連結文字／對應官方 href；答案末尾來源裸 URL 不另列。
+- [x] Intro/outro 保留；Rental guidance 是清單外的「出租專區」連結，不分類或呼叫 Rental。
+- [x] Cards 缺少時僅辨識已確認的逐筆 text 訊息邊界；未知／合併格式保留完整 text-first fallback，不按答案內數字拆筆。
+- [x] 維持 safe URL、official origin validation、text escaping／DOM nodes、最小 Markdown、安全 source 去重。
+- [x] currentPage／SDK defaults、無 currentPlaybook／reset UI、accepted-send input clear、latest replacement、timeout/service/session recovery、GA4 exactly once/query 均維持。
 
-Fixed currentPage:
-`projects/serviceagent-1150909/locations/asia-northeast1/agents/799426c1-ba69-49dc-85e4-5065985706e2/flows/676409b6-b02f-4a24-9d3a-81e14cb77d4f/pages/START_PAGE`.
-Raw text is authoritative when present, avoiding partial parsed-text truncation;
-parsed messages are used only when raw has no nonblank text. No card parser added.
-Technical session reset remains internal for expiry; timeout never retries and
-locks until SDK settles. Backend resources and Rental frontend/CX mutation: **0**.
+原始證據：backend 封存 ZIP SHA
+`6af3f8d25d99edb31dfb43283bbcfa37b709254a515f6286048dc06638838537`；
+22 個既有 Production cases 的 raw hash 核對 PASS，0/2/5 筆都與完整 info
+欄位一致。SDK 的 df-response-received 保留 raw，parsed 為 customCard /
+richElements。新 adapter 對全部 22 cases 完整欄位／筆數 PASS。
+本輪 **0 新 Production query／0 backend 或 Rental mutation**。
+詳細證據：[FAQ presentation](docs/FAQ_RESULT_PRESENTATION_2026-10-09.md)。
 
-## B. Offline verification
+## B. 測試與視覺比較
 
-- [x] Node tests: **28 PASS** (21 transport/result/config + 7 analytics).
-- [x] Offline Chromium: **26 grouped PASS**, no page errors, zero forwarded external/Production requests.
-- [x] First/second/third request body and pre-event SDK defaults use identical exact currentPage/timeZone; no currentPlaybook, same technical session.
-- [x] Demo/mock transport matches contract; 1/2/3/4/5 synthetic complete multi-message texts + interleaved optional cards + fallback.
-- [x] 1280/390/320 regression: complete text, numbering, pre-wrap, clickable official URLs/Rental link, no overflow/reset UI.
-- [x] New query/fallback replace prior text/metadata; empty response is empty state, service/timeout are errors, not fabricated zero fallback.
-- [x] Delayed submit/rejection retains input; acceptance clears before answer; duplicate notification preserves next draft; heading uses actual sent text.
-- [x] Internal idle/in-flight expiry and timeout recovery/no retry/ignored late response/locked transport/error alert behavior.
-- [x] GA4 counts 1/2/3, no custom parameters or duplicate/cancelled/invalid/recovery event; unavailable/blocked GA does not block query.
-- [x] Deterministic hosting/demo rebuild; exact manifest/CRC/source/checksum/integrity and fresh extraction.
-- [x] Credential/secret scan of packages and changed text files.
+- [x] Node **37 PASS**：30 model/config/transport + 7 analytics，0 FAIL。
+- [x] Offline Chromium **30 grouped PASS**，0 page errors、0 forwarded external／Production requests。
+- [x] 1／2／5（另含 3／4）FAQ：獨立 DOM、原題目 anchor／exact href、無來源裸 URL、完整答案、原換行／內部編號不誤切。
+- [x] Raw info／SDK parsed customCard／card-only、部分／截短 card、text-only fallback、未知／合併 text、zero-result、unsafe URL／inert HTML。
+- [x] Rental link 在清單外，最新 query／1-item／zero/generic result 清除前次 5-item，無 stale metadata 或 CSS state。
+- [x] 1280／390／320：16px 字體、pre-wrap、清楚細分隔線、足夠上下空間、無陰影／橫向溢出；保留品牌與紅色視覺。
+- [x] 三種寬度的同一公開 Q01 完整回應前後截圖；明確標示 frozen replay，不假稱新 live Messenger。
+- [x] currentPage 第一／二／三題 request 與 SDK defaults 完全一致；GA queue 1／2／3、無 business parameters／重複 event。
+- [x] 接受前失敗留輸入、接受後才清空／原 query heading／新草稿保留；timeout／session recovery／無 reset regression。
 
-CurrentPage evidence from Chromium's local SDK fixture (not Production):
-ordinal 1 / 2 / 3 each has queryParams and pre-event sdkDefaults equal to:
-`{currentPage: <full START_PAGE above>, timeZone: 'Asia/Taipei'}`; no Playbook key.
-GA queue is only `['event','ai_query_submit']`, lengths 1/2/3. Fixtures do not prove
-real SDK dispatch, backend response or GA receipt. Backend's own accepted suite
-observed 0/2/5 results; frontend 1–5 coverage here is explicitly synthetic.
+量化前後：同一公開 5-FAQ response，獨立 FAQ container **0→5**、
+原題目 anchor **0→5**、末尾裸 FAQ source URL **5→0**、FAQ 間分隔線
+**0→4**；每筆原完整 answer／官方 URL **5/5 一致**。
+截圖／hash／重現命令見 presentation 文件；本機在
+`/workspace/work/faq-items/browser/production-replay-{before,after}-{1280,390,320}.png`。
 
-Two independent hosting/demo builds byte-identical. Exact12-file production
-allowlist/CRC/manifest/source parity/live config/no demo/fresh extraction PASS.
-Both archives scanned (9/16 text entries), 23 changed text files scanned, no
-credential pattern. Nine protected analytics/image/workflow/packager/performance
-files unchanged. Committed checksum PASS. Production ZIP **214,669 bytes**,
-SHA-256 `4f322561e9cff0e36f3ec4d44d5c7bef36088fed0902b16694e06a8de29b63e1`.
-Demo ZIP **232,535 bytes**, SHA-256
-`5e454c7d3b50d7591bf2cebd6327f51716a744f2cbf3d7eba1e816b084130ab8`.
+## C. 打包與部署
 
-## C. Package and Pages deployment
+- [x] Deterministic production/demo 雙 rebuild、byte cmp、manifest／CRC／source parity、fresh extraction。
+- [x] Credential／secret scan：兩 ZIP、所有 changed text，固定 transport/config/GA/workflow/images/performance unchanged。
+- [ ] 更新 committed hosting.zip／hosting.sha256，commit／push implementation。
+- [ ] 既有 Actions Pages source guard／test／build／deploy PASS，記 implementation／deployed SHA、run／artifact、package SHA。
+- [ ] Hosted 12-file exact byte parity／MIME；6 個 demo/test/tool/internal URL 404。
+- [ ] 真實無 mock、TLS verification enabled 的 Pages browser probe；如 Cloud 阻擋記 PENDING，不寫 FAIL／PASS。
 
-- [x] Regenerate committed packages/hosting.zip and hosting.sha256.
-- [x] Push source/package commit to main; existing production-only Actions source/build/deploy PASS.
-- [x] Record source/deployed SHA, run, artifact, package bytes/SHA and Pages URL.
-- [x] Hosted 12-file byte parity/MIME and six demo/test/tool/internal exclusions.
+Package evidence: production **216,416 bytes**, SHA `8a2937cd4c43b2c8e99a17b0d13a381edec4cc467ca2976bc1a7b00da7baf1b4`;
+demo **235,888 bytes**, SHA `a64c8d77e22ce98fedadba27d5d2e6ce8346ab8b24a621702f818f71b3e1400b`。
+兩次獨立 rebuild 的兩 ZIP 均 byte-identical；production12／demo19 entries，
+manifest／source／CRC／fresh extraction／committed checksum PASS；ZIP9／16
+text entries 與14 changed text files secret scan PASS。15 protected files byte
+unchanged（config/transport/analytics/HTML/images/workflow/packager/performance/
+analytics/backend handoff）。
 
-Source and deployed commit: `6b79ba571b5d0b2d66b1494d59f0ef157b813362`.
-[Actions run 37875482165](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37875482165)
-**PASS**, success 2026-10-09 **10:38:14 Asia/Taipei** (02:38:14 UTC),
-github-pages artifact `11592311095`. Pages:
-<https://taipei-tax-lab.github.io/tpctax-1999-ai-web/>.
-ZIP SHA-256 `4f322561e9cff0e36f3ec4d44d5c7bef36088fed0902b16694e06a8de29b63e1`.
-Actions source guard (`build_type=workflow`), configure/build/deploy, Node 28,
-deterministic rebuild/committed ZIP/checksum/manifest/source/credential/fresh
-production extraction PASS. HTTPS parity completed **10:39:26 Asia/Taipei**:
-12/12 files 200, exact package bytes and correct MIME; no reset HTML, exact Flow
-config/GA4 ID verified. Six excluded demo/test/tool/internal URLs return 404.
+## D. 新 renderer browser-only confirmation / operational follow-up
 
-## D. Real browser acceptance — never substitute mocks or HTTPS parity
+- [ ] 在可信任瀏覽器用真正 Messenger 確認原題目連結、完整多筆答案、分隔、Rental link、mobile 與下一題替換。
+- [ ] Non-blocking：一般可信任瀏覽器 Realtime／DebugView 可觀察 ai_query_submit；不送 query/answer/source，無新 event。
 
-- [ ] Real Messenger first request has exact currentPage and no currentPlaybook.
-- [ ] Real Flow text returns complete multi-candidate FAQ answers and clickable official/Rental URLs.
-- [ ] Second/third query independently use same currentPage and replace old results.
-- [ ] Genuine-zero fallback displays with Rental link and no stale result.
-- [ ] Accepted send clears input/counter; answer heading preserves original question.
-- [ ] No reset UI; mobile basic display and no new blocking JS/CSP/CORS errors.
-- [ ] Real GA4 ai_query_submit exactly once/query with no business text; Realtime/DebugView receipt observed.
+以上不重開已人工通過的 Flow cutover。離線 replay 不證明新 live／GA4
+receipt；GA4 observation 不阻擋 UI deployment。
 
-If Cloud TLS/proxy prevents browser JS, keep these PENDING/unchecked, never FAIL
-or LIVE. Do not bypass trust/proxy, guess policy hosts or mutate backend bindings.
+Optional evidence storage: Drive ZIP upload was rejected by automatic approval
+review because this exact payload/destination lacked explicit authorization and
+included currentPage/GA4 identifiers. **Not uploaded / no retry**. Screenshot files
+remain local; Git retains hashes, reproduction instructions and durable findings.
+This optional archive is not a test/deployment blocker. Prepared ZIP has 11 files,
+1,312,910 bytes, SHA `be05834e575963956b3b1145f58d0944dcd7b8699b93c01510a6d1400fbeb7c2`.
 
-Fresh real deployed Chromium151 at **2026-10-09 10:39:19 Asia/Taipei**, 390×844,
-inherited Cloud proxy, TLS verification enabled and no mocked network, stops on
-Pages document GET with `net::ERR_CERT_AUTHORITY_INVALID`. No origin browser
-responses or page JS/SDK/GA4 execution: **0 Production queries / 0 observed GA4
-collection requests**. Official gtag HEAD at **10:39:17** gets Cloud CONNECT403
-(curl56) before origin. This is existing Cloud trust/access limitation, not
-frontend/SDK/binding/CSP/CORS failure. No certificate/proxy bypass or policy change.
-All seven browser-only checks stay PENDING/unchecked; GA Realtime/DebugView receipt
-unobserved. Backend Production proof and offline fixtures do not establish Web LIVE.
+## E. 文件、交付與 STOP
 
-Trusted browser can reuse backend Q15/Q16/Q17: `印花稅有哪些課徵範圍？` →
-`使用牌照稅什麼時候開徵？` → `我想詢問火星獨角獸光量子傳送門的維修密碼。`.
-Backend accepted suite observed 5/5/0 for these, not a Web receipt guarantee. Verify
-same exact currentPage/no currentPlaybook on all three, original complete queries,
-new text replacing previous, genuine fallback/Rental URL, accepted clear/no reset,
-mobile/console/network and real GA4 counts1/2/3 with no business payload.
+- [x] 更新 README／RESULT_CONTRACT／IT_HANDOFF：可靠 items enhancement、完整 text fallback、linked original titles、non-blocking GA receipt。
+- [ ] 更新 PROJECT_STATE／PAGES_DEPLOYMENT／本 checklist，記錄最終 package／deploy／hosted／browser evidence 與 rollback assessment。
+- [ ] Commit／push final report、確認 remote main／clean tree，STOP 等待 Web ChatGPT review。
 
-## E. Handoff and rollback
+UI-only rollback：如本輪出現 launch-critical presentation 問題，恢復
+`cc233ae` 的 result-model/app/styles（runtime 等同既有 Flow 部署），重新
+打包並 Pages redeploy。**保留 faqCurrentPage 與既有 Flow/GA contract**；
+不使用舊 Playbook rollback、不碰 Rental/Agent/backend。本輪未觸發 rollback。
 
-- [x] Update README/AGENTS/product/result/analytics/hosting/IT handoff for independent search and no reset UX; frozen visual assets/startup remain.
-- [x] Preserve authoritative handoff fixed parameters; add Web evidence without changing backend truth.
-- [x] Document exact prior initialPlaybook resource and frontend-only restore/redeploy procedure in FAQ_FLOW_ROLLBACK_2026-10-09.md.
-- [x] Assess whether launch-critical frontend failure requires rollback; only restore Web, no Rental/Agent/Production changes.
-- [x] Update PROJECT_STATE/checklist/deployment/handoff with final actual test/deploy/live/rollback evidence.
-- [x] Commit/push final report, confirm remote main and clean working tree, STOP for Web ChatGPT review.
+## Out-of-scope backlog（承接人工 review）
 
-Rollback assessment: **AVAILABLE / NOT EXECUTED**. No launch-critical frontend
-issue observed in executable checks; Cloud browser limitation alone is not a
-rollback trigger. Frozen prior Web baseline 410db6c / deployed edd5012 and exact old
-Playbook resource retained in rollback doc; no Rental/Agent/backend rollback.
+- [ ] 日後從真實 search misses 改善 FAQ corpus，不在本輪新增 aliases／改 Data Store。
+- [ ] 日後 Rental↔1999 保持 guided-link-only，不建立內部 handoff orchestration。
 
 ## Completion summary
 
-- Status: **DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING**; do not yet claim target
-  `1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE` or formal IT-ready.
-- Every accepted query + SDK defaults use exact FAQ START_PAGE/currentPage and
-  Asia/Taipei; no initialPlaybook runtime or sent currentPlaybook. Fixed binding
-  and GA4 untouched; no CX/Rental mutation.
-- Reset UI/handler/state/CSS/a11y/unused armed/clear removed; independent latest
-  search, complete ordered raw text, safe URLs/Rental link, accepted input clear.
-- Node **28 PASS**, Chromium **26 grouped PASS**, 1280/390/320, deterministic
-  two builds/exact 12 manifest/source/CRC/checksum/credential checks **PASS**.
-- Source/deployed **6b79ba571b5d0b2d66b1494d59f0ef157b813362**;
-  [run 37875482165](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37875482165),
-  package SHA **4f322561e9cff0e36f3ec4d44d5c7bef36088fed0902b16694e06a8de29b63e1**,
-  12/12 hosted bytes match, six exclusions 404.
-- GA4 local exactly-once/privacy **PASS**; actual Messenger/browser GA4 receipt
-  **PENDING** under exact TLS/proxy blockers above; seven unchecked items remain.
-- Rollback **AVAILABLE / NOT EXECUTED**; no demonstrated launch-critical trigger.
-- Final report-only commit updates NEXT_TASK/PROJECT_STATE/backend handoff/
-  PAGES_DEPLOYMENT and preserves production ZIP bytes/deployed SHA. Main HEAD
-  differs from deployed implementation; final push then **STOP for Web review**.
-
-Scratch reports/screenshots are outside Git under `/workspace/work/faq-flow/`;
-durable evidence is here and in [PAGES_DEPLOYMENT](docs/PAGES_DEPLOYMENT.md).
+實作／offline／視覺比較完成；C/E 部署與最終證據待本輪完成後更新。

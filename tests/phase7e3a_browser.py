@@ -129,20 +129,40 @@ with sync_playwright() as p:
     assert page.evaluate('demoHarness.requests.at(-1).queryParams') == expected_params
     assert page.locator('#reset, .session-bar').count() == 0
     checks.append('session expiry recovers internally with same FAQ defaults; no citizen reset control')
-    for count in range(1, 6):
-        query(f'faq{count}', f'完整新搜尋 {count}')
-        expected = page.evaluate("async count => {const {faqTextMessages}=await import('./demo/mock-messenger.js');const {config}=await import('./assets/config.js');return faqTextMessages(count,config).flatMap(m=>m.text?.text||[]).join('\\n\\n')}", count)
-        assert page.locator('[data-answer]').text_content() == expected
-        assert page.locator('[data-answer] a').count() == count + 1
-        assert page.locator('[data-answer] a').last.get_attribute('href') == 'https://tpctax.gov.taipei/cp.aspx?n=3A978B4E3ADD88F2'
-        assert page.locator('[data-faq]').is_hidden()
-        assert page.locator('#result-query').text_content() == f'完整新搜尋 {count}'
-        for width in [1280,390,320]:
+    def assert_faq_items(model, widths=(1280,390,320), screenshot_prefix=None):
+        items = model['items']
+        assert page.locator('.faq-results > .faq-result').count() == len(items)
+        assert page.locator('.faq-result h3 a').count() == len(items)
+        for i,item in enumerate(items):
+            block=page.locator('.faq-result').nth(i)
+            assert block.locator('h3 a').text_content() == item['title']
+            assert block.locator('h3 a').get_attribute('href') == item['url']
+            assert block.locator('.faq-result-answer').text_content() == item['answer']
+            assert item['url'] not in block.text_content()
+        assert page.locator('.faq-footer a').get_attribute('href') == 'https://tpctax.gov.taipei/cp.aspx?n=3A978B4E3ADD88F2'
+        assert page.locator('.faq-footer a').text_content() == '出租專區'
+        assert page.locator('.faq-result .faq-footer').count() == 0
+        for width in widths:
             page.set_viewport_size({'width':width,'height':844})
             assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
             assert page.locator('#reset, .session-bar').count() == 0
-            assert page.locator('[data-answer]').evaluate('(e)=>getComputedStyle(e).whiteSpace') == 'pre-wrap'
-            if count == 5: page.screenshot(path=str(OUT/f'faq-five-{width}.png'),full_page=True)
+            for i in range(len(items)):
+                block=page.locator('.faq-result').nth(i)
+                styles=block.evaluate('(e)=>{const s=getComputedStyle(e);return {top:s.paddingTop,bottom:s.paddingBottom,border:s.borderTopWidth,shadow:s.boxShadow}}')
+                assert float(styles['top'].removesuffix('px')) >= 16
+                assert float(styles['bottom'].removesuffix('px')) >= 16
+                assert styles['shadow'] == 'none'
+                if i: assert styles['border'] == '1px'
+                assert block.locator('.faq-result-answer').evaluate('(e)=>getComputedStyle(e).whiteSpace') == 'pre-wrap'
+            if screenshot_prefix:page.screenshot(path=str(OUT/f'{screenshot_prefix}-{width}.png'),full_page=True)
+    for count in range(1, 6):
+        query(f'faq{count}', f'完整新搜尋 {count}')
+        model = page.evaluate("async count => {const {faqTextMessages}=await import('./demo/mock-messenger.js');const {config}=await import('./assets/config.js');const {normalizeResult}=await import('./assets/result-model.js');return normalizeResult({raw:{queryResult:{responseMessages:faqTextMessages(count,config)}}},config.officialFaqOrigins)}", count)
+        assert model['itemSource'] == 'richContent'
+        assert_faq_items(model,screenshot_prefix='faq-five' if count == 5 else None)
+        assert page.locator('#result-query').text_content() == f'完整新搜尋 {count}'
+        assert 'https://' not in page.locator('[data-answer]').text_content()
+    checks.append('1–5 separate FAQ list containers, original-title anchors/exact href, full multiline/numbered answers, no naked source URLs, clear 16px+ spacing/thin dividers/no shadow at1280/390/320; Rental footer separate')
     query('fallback', '零結果完整問題')
     assert page.locator('[data-answer]').inner_text().startswith('找不到可用的 FAQ 搜尋結果，請換個方式描述問題。')
     assert '合成 FAQ 問題' not in page.locator('[data-answer]').inner_text()
@@ -267,7 +287,7 @@ with sync_playwright() as p:
         window.lastStubBody=body;
         if(window.stubDuplicate)this.dispatchEvent(new CustomEvent('df-request-sent',{detail:{data:{requestBody:body}},cancelable:true,bubbles:true,composed:true}));
         if(window.stubHold)await new Promise(resolve=>window.answerStub=resolve);
-        this.dispatchEvent(new CustomEvent('df-response-received',{detail:{data:{messages:[{type:'text',text:'local SDK stub answer'}]}},cancelable:true,bubbles:true,composed:true}));}
+        this.dispatchEvent(new CustomEvent('df-response-received',{detail:window.stubResponse||{data:{messages:[{type:'text',text:'local SDK stub answer'}]}},cancelable:true,bubbles:true,composed:true}));}
     });'''
     context.route('https://www.gstatic.com/**', lambda r: r.fulfill(status=200,content_type='text/javascript',body=stub))
     page.goto(BASE+'index.html')
@@ -444,6 +464,48 @@ with sync_playwright() as p:
     assert page.locator('#query').input_value() == ''
     checks.append('GA4 per accepted query including first/second/third/refresh; no duplicate SDK notification, boot/example/empty/unsolicited/cancelled events; blocked loader/send does not block answers; no content parameters')
     checks.append('index/demo brand is accessible same-tab official agency homepage; demo analytics stays disabled')
+    # Replay public text/info cards from frozen backend Production Q01 through the SDK fixture.
+    fixture=json.loads(Path(__file__).resolve().parent.joinpath('fixtures/faq-production-messages.json').read_text())
+    messages=fixture['responseMessages']
+    page.evaluate('messages=>window.stubResponse={raw:{queryResult:{responseMessages:messages}}}',messages)
+    page.locator('#query').fill('印花稅有哪些課徵範圍？');page.locator('#submit').click()
+    page.locator('#result:not([hidden])').wait_for()
+    model=page.evaluate('async messages=>{const {normalizeResult}=await import("./assets/result-model.js");return normalizeResult({raw:{queryResult:{responseMessages:messages}}},["https://tpctax.gov.taipei"])}',messages)
+    assert model['itemSource'] == 'richContent'
+    assert_faq_items(model,screenshot_prefix='production-replay-after')
+    assert page.locator('#query').input_value() == ''
+    assert page.locator('#result-query').text_content() == '印花稅有哪些課徵範圍？'
+    checks.append('frozen actual Production Q01 full text/info cards replay through local SDK produces five exact linked-title/full-answer items; screenshots at1280/390/320; no new Production request')
+    card=next(m for m in messages if 'payload' in m)
+    page.evaluate('card=>window.stubResponse={raw:{queryResult:{responseMessages:[card]}}}',card)
+    page.locator('#query').fill('card-only isolated fixture');page.locator('#submit').click()
+    page.locator('#result:not([hidden])').wait_for()
+    assert page.locator('.faq-result').count() == 1
+    assert page.locator('.faq-result h3 a').text_content() == card['payload']['richContent'][0][0]['title']
+    assert page.locator('#query').input_value() == ''
+    checks.append('complete card-only response remains renderable rather than empty state; latest one-item result replaces five with unchanged accepted clear')
+    def render_messages(value):
+        return page.evaluate("""async messages=>{
+          const {normalizeResult,renderResult}=await import('./assets/result-model.js');
+          const model=normalizeResult({raw:{queryResult:{responseMessages:messages}}},['https://tpctax.gov.taipei']);
+          const root=document.querySelector('#result');renderResult(model,root);root.hidden=false;return model;
+        }""",value)
+    text_only=[m for m in messages if 'text' in m]
+    model=render_messages(text_only)
+    assert model['itemSource'] == 'text'
+    assert_faq_items(model)
+    combined='\n\n'.join(t for m in text_only for t in m['text']['text'])
+    model=render_messages([{'text':{'text':[combined]}}])
+    assert 'items' not in model
+    assert page.locator('.faq-result').count() == 0
+    assert page.locator('[data-answer]').text_content().startswith('以下是本府')
+    assert page.locator('[data-answer]').text_content().count('印花稅') >= 5
+    # Bypass normalizer as a defensive renderer test: unsafe title/answer/URL stay inert.
+    page.evaluate("async()=>{const {renderResult}=await import('./assets/result-model.js');renderResult({answer:'',items:[{title:'<img src=x onerror=alert(1)>',answer:'<script>window.itemAttack=true</script>\\n1. literal',url:'javascript:alert(1)'}]},document.querySelector('#result'))}")
+    assert page.locator('.faq-result h3 a, .faq-result script, .faq-result img').count() == 0
+    assert page.locator('.faq-result h3').text_content() == '<img src=x onerror=alert(1)>'
+    assert page.evaluate('window.itemAttack === undefined')
+    checks.append('known per-message text-only FAQ fallback preserves complete items; combined/unknown text stays faithful generic fallback; unsafe direct item URL/title/answer creates no executable anchor/HTML')
     # Validate local module/deferred-loader compatibility without broad CSP rules.
     page.add_init_script('window.cspViolations=[];document.addEventListener("securitypolicyviolation",e=>window.cspViolations.push(e.violatedDirective))')
     policy = "default-src 'none'; script-src 'self' https://www.gstatic.com https://www.googletagmanager.com; style-src 'self'; img-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'"

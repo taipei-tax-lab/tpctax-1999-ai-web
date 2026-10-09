@@ -3,12 +3,53 @@
 ```json
 {
   "answer": "CX 回傳的主要文字（必要）",
+  "items": [{"title": "官方原問題", "answer": "完整官方答案", "url": "https://tpctax.gov.taipei/..."}],
+  "itemSource": "richContent 或 text；只供前端證據，不送 GA4",
+  "leadingText": "原始開頭說明（optional）",
+  "trailingText": "原始結尾及出租專區導引（optional）",
   "sources": [{"url": "https://example.org/", "title": "可省略"}],
   "faqMetadata": {"kind": "official1999Faq", "title": "明確 FAQ 標題", "url": "https://tpctax.gov.taipei/..."}
 }
 ```
 
-`answer` 為 required string；空白值進入 empty state，不合成稅務回答。FAQ Flow 可只靠完整 text 顯示結果。沒有 FAQ metadata 仍是有效回答；有來源則顯示一般「參考資料」。
+`answer` 保留完整原始 text string，不因逐筆呈現而改寫；沒有非空 answer
+也沒有有效 items 才進入 empty state，不合成稅務回答。`items` 是 optional
+1～5 筆 enhancement；存在時逐筆呈現，否則沿用完整 text renderer。
+完整 card-only response 可呈現。沒有 FAQ metadata 仍是有效回答；有額外
+來源才顯示一般「參考資料」。
+
+## FAQ presentation adapter — 2026-10-09
+
+既有 Production raw evidence 已確認 `responseMessages[].payload.richContent`
+為巢狀陣列，每筆 `type=info` 的 `title` 是官方原問題、`subtitle` 是完整
+答案、`actionLink` 是官方 URL。實際 SDK 的 `df-response-received` 保留
+`detail.raw`；parsed shape 為 `type=customCard`、`richElements=[info,...]`。
+依原順序優先取 raw cards，必要時取 parsed cards；不要求 backend 修改。
+證據來源、SDK SHA 和 22 個封存 Production cases 的核對結果見
+[FAQ presentation](FAQ_RESULT_PRESENTATION_2026-10-09.md)。
+
+每筆同時需非空原題目、完整答案及 `safeUrl()` 通過且位於明確
+`officialFaqOrigins` 的 absolute HTTP(S) URL。不從 diagnosticInfo、任意
+metadata、官方 hostname 或網址 pattern 猜 FAQ。
+
+存在 text 時先核對既有 envelope：固定 intro、1～5 個獨立 text 訊息／
+array item、固定 outro、固定 Rental note。每個完整 FAQ block 必須逐字等於
+`N. title\nsubtitle\nactionLink`，且 card 筆數一致；才採用 cards，避免 card
+截短答案或隱藏額外文字。完整 cards 且沒有 text 時可直接建立 items。
+
+cards 不可靠／缺少時，僅在相同已確認 envelope 和訊息邊界下，讀每個
+block 的第一行連續題號及原問題、最後一行 safe official URL，全部中間
+行保留為答案。**不在合併文字的數字或換行處猜分界**，因此答案自帶
+`1.`／`2.` 或換行不會誤切。任何一筆不合格、未知 envelope、合併文字
+或 0-result 都保留完整 text-first fallback，不丟內容、不造 FAQ。
+
+逐筆 DOM 為 `ol.faq-results > li.faq-result`；每筆 `h3 > a` 使用原問題
+作 link label、官方 URL 作 href，完整答案在 `.faq-result-answer`。
+FAQ 來源末尾的裸 URL 不再另列；答案自身內容仍完整保留。原 intro、
+outro 和 Rental guidance 放在清單外，Rental link label 為「出租專區」。
+來源去重、安全 text node／最小 Markdown parser 仍適用；不用 `innerHTML`。
+未知 text fallback 仍保留原字句與安全 linkify，不強制剝除無法辨識的網址。
+新結果會清除舊 items／fallback／metadata；純 text 結果也移除 items CSS state。
 
 ## Extractor
 
@@ -19,7 +60,12 @@
 
 可選未來 extension：`responseMessages[].payload.universalAnswer`，`schemaVersion=1`，含 optional `answer`、`sources[]`、`faqMetadata`。只有主要 text 缺少時才採用 extension answer。這不是已觀察的 Production 契約，也不要求更改任何 CX resource。
 
-FAQ card 必須同時具備 versioned extension、明確 `kind=official1999Faq`、非空 title、absolute safe URL 且 origin 在明確 `officialFaqOrigins` allowlist；缺一即省略。URL 必須 HTTP(S)，不能含 username/password；拒絕 javascript/data／相對 URL。若日後 response 使用其他可靠結構，應另案根據實際 evidence 加 adapter；不得猜欄位。
+舊單筆 `faqMetadata` card 仍需 versioned extension、明確
+`kind=official1999Faq`、非空 title、absolute safe URL 且 origin 在明確
+`officialFaqOrigins` allowlist；缺一即省略。逐筆 items 使用上面已驗證的
+info adapter；items 存在時不重複顯示舊單筆 card。URL 必須 HTTP(S)，
+不能含 username/password；拒絕 javascript/data／相對 URL。新增其他
+response shape 必須先有實際 evidence，不猜欄位。
 
 ## Grounding 與呈現
 

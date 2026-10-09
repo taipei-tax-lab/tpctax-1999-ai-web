@@ -1,4 +1,4 @@
-/** Text-first normalization. No Playbook/URL/title heuristic identifies a FAQ. */
+/** Complete text fallback with optional, validated FAQ presentation items. */
 export function safeUrl(value) {
   if (typeof value !== 'string' || !/^https?:\/\//i.test(value)) return null;
   try {
@@ -78,6 +78,53 @@ export function textUrls(text) {
   collect(answerParts(text));return urls;
 }
 
+const FAQ_INTRO = '以下是本府 1999 常見問答中與您的問題較相關的內容：';
+const FAQ_OUTRO = '若以上內容不是您要找的資訊，可以換個方式描述您的問題。';
+const RENTAL_URL = 'https://tpctax.gov.taipei/cp.aspx?n=3A978B4E3ADD88F2';
+const RENTAL_NOTE = `出租房屋租稅優惠專責諮詢，請前往出租專區：${RENTAL_URL}`;
+
+function officialItem(title, answer, url, origins) {
+  url = safeUrl(url);
+  if (typeof title !== 'string' || !title.trim() || typeof answer !== 'string' || !answer.trim()
+    || !url || !origins.includes(new URL(url).origin)) return null;
+  return {title, answer, url};
+}
+
+function faqLayout(segments) {
+  const text = segments.filter(x => x.trim());
+  // Recognize only the frozen backend envelope and individual message boundaries.
+  if (text[0]?.trim() !== FAQ_INTRO || text.at(-2)?.trim() !== FAQ_OUTRO
+    || text.at(-1)?.trim() !== RENTAL_NOTE || text.length < 4 || text.length > 8) return null;
+  return {blocks: text.slice(1, -2), leadingText: text[0], trailingText: text.slice(-2).join('\n\n')};
+}
+
+function presentationItems(segments, rawMessages, parsed, origins) {
+  const rawCards = rawMessages.flatMap(m => Array.isArray(m?.payload?.richContent)
+    ? m.payload.richContent.flatMap(group => Array.isArray(group) ? group : []) : []);
+  const parsedCards = parsed.flatMap(m => m?.type === 'customCard' && Array.isArray(m.richElements) ? m.richElements : []);
+  const cards = (rawCards.length ? rawCards : parsedCards).filter(c => c?.type === 'info');
+  const layout = faqLayout(segments);
+  if (cards.length && cards.length <= 5) {
+    const items = cards.map(c => officialItem(c.title, c.subtitle, c.actionLink, origins));
+    if (items.every(Boolean)) {
+      if (!segments.some(x => x.trim())) return {items, itemSource: 'richContent'};
+      // Exact full-field matching prevents truncated/partial cards from hiding text.
+      if (layout && layout.blocks.length === items.length && layout.blocks.every((block, i) =>
+        block === `${i + 1}. ${cards[i].title}\n${cards[i].subtitle}\n${cards[i].actionLink}`)) {
+        return {items, itemSource: 'richContent', leadingText: layout.leadingText, trailingText: layout.trailingText};
+      }
+    }
+  }
+  if (!layout) return {};
+  // Conservative text-only fallback: never split a combined answer at numbered lines.
+  const items = layout.blocks.map((block, i) => {
+    const lines = block.split('\n'), prefix = `${i + 1}. `;
+    if (lines.length < 3 || !lines[0].startsWith(prefix)) return null;
+    return officialItem(lines[0].slice(prefix.length), lines.slice(1, -1).join('\n'), lines.at(-1), origins);
+  });
+  return items.every(Boolean) ? {items, itemSource: 'text', leadingText: layout.leadingText, trailingText: layout.trailingText} : {};
+}
+
 export function normalizeResult(detail = {}, officialOrigins = []) {
   const raw = detail.raw || (detail.queryResult ? detail : {});
   const rawMessages = Array.isArray(raw?.queryResult?.responseMessages) ? raw.queryResult.responseMessages : [];
@@ -85,7 +132,8 @@ export function normalizeResult(detail = {}, officialOrigins = []) {
   const text = parsed.filter(m => m?.type === 'text' && typeof m.text === 'string').map(m => m.text);
   const rawText = rawMessages.flatMap(m => Array.isArray(m?.text?.text) ? m.text.text.filter(x => typeof x === 'string') : []);
   // The backend's complete text messages are authoritative; parsed text is a fallback.
-  let answer = (rawText.some(x => x.trim()) ? rawText : text).join('\n\n');
+  const segments = rawText.some(x => x.trim()) ? rawText : text;
+  let answer = segments.join('\n\n');
   const sources = [];
   const addSource = (url, title) => {
     url = safeUrl(url);
@@ -115,8 +163,10 @@ export function normalizeResult(detail = {}, officialOrigins = []) {
   // Inline links already provide navigation; keep only genuinely additional citations.
   const inline = new Set(textUrls(answer));
   const additional = sources.filter(source => !inline.has(source.url));
-  // Missing required answer is an empty-result state, never a synthesized answer.
-  return {answer, ...(additional.length ? {sources: additional} : {}), ...(faqMetadata ? {faqMetadata} : {})};
+  // Extension text also must not be hidden by an unrelated card-only payload.
+  const presentationText = !segments.some(x => x.trim()) && answer.trim() ? [answer] : segments;
+  return {answer, ...presentationItems(presentationText, rawMessages, parsed, officialOrigins),
+    ...(additional.length ? {sources: additional} : {}), ...(faqMetadata ? {faqMetadata} : {})};
 }
 
 export function appendAnswer(container, answer) {
@@ -132,11 +182,43 @@ export function appendAnswer(container, answer) {
   append(container, answerParts(answer));return inline;
 }
 
+function appendText(container, text) {
+  if (!text.endsWith(RENTAL_NOTE)) return appendAnswer(container, text);
+  const inline = appendAnswer(container, text.slice(0, -RENTAL_NOTE.length));
+  container.append(document.createTextNode('出租房屋租稅優惠專責諮詢，請前往'));
+  const link = document.createElement('a');link.href = RENTAL_URL;link.textContent = '出租專區';
+  container.append(link);inline.add(RENTAL_URL);return inline;
+}
+
 export function renderResult(result, root) {
-  const answer = root.querySelector('[data-answer]');answer.replaceChildren();const inline = appendAnswer(answer, result.answer);
+  const answer = root.querySelector('[data-answer]');answer.replaceChildren();
+  const hasItems = Array.isArray(result.items) && result.items.length > 0;
+  answer.classList.toggle('has-faq-items', hasItems);
+  const inline = new Set();
+  const textBlock = (className, text) => {
+    if (!text) return;
+    const block = document.createElement('div');block.className = className;
+    for (const url of appendText(block, text)) inline.add(url);
+    answer.append(block);
+  };
+  if (hasItems) {
+    textBlock('faq-intro', result.leadingText);
+    const list = document.createElement('ol');list.className = 'faq-results';
+    for (const item of result.items) {
+      const block = document.createElement('li');block.className = 'faq-result';
+      const heading = document.createElement('h3'), url = safeUrl(item.url);
+      const title = document.createElement(url ? 'a' : 'span');title.textContent = item.title;
+      if (url) {title.href = url;inline.add(url);}
+      heading.append(title);block.append(heading);
+      const body = document.createElement('div');body.className = 'faq-result-answer';
+      for (const link of appendAnswer(body, item.answer)) inline.add(link);
+      block.append(body);list.append(block);
+    }
+    answer.append(list);textBlock('faq-footer', result.trailingText);
+  } else for (const url of appendText(answer, result.answer)) inline.add(url);
   const sources = root.querySelector('[data-sources]');sources.replaceChildren();
-  const faq = root.querySelector('[data-faq]');faq.replaceChildren();faq.hidden = !result.faqMetadata;
-  if (result.faqMetadata) {
+  const faq = root.querySelector('[data-faq]');faq.replaceChildren();faq.hidden = hasItems || !result.faqMetadata;
+  if (!hasItems && result.faqMetadata) {
     const heading = document.createElement('h3');heading.textContent = '官方1999常見問答';
     const title = document.createElement('p');title.textContent = result.faqMetadata.title;
     const link = document.createElement('a');link.href = result.faqMetadata.url;link.textContent = '查看官方完整內容 →';

@@ -17,16 +17,21 @@ location `asia-northeast1` 與 integration-side Production Environment
 正式 request 不送 currentPlaybook。後端 Flow v1 已部署，權威 handoff 位於
 `dialogflow-cx-qa-framework/docs/1999_FAQ_WEB_FLOW_HANDOFF_2026-10-09.md`。
 
-畫面只顯示最新完整 text 結果；所有 text ResponseMessages／array items
-按順序合併，1～5 筆編號、完整答案、URL 與 fallback 可讀可點擊。Cards
-非必要。出租專區導引網址由 backend 文字提供，前端不分類或呼叫 Rental。
+畫面只顯示最新結果；所有 text ResponseMessages／array items 按順序保留。
+既有 info cards 的原題目／完整答案／官方 URL 與 text 完整核對後，1～5 筆
+以編號、原題目超連結、完整答案與細分隔線呈現；來源裸 URL 不另列。
+Cards 非必要：已確認的逐筆 text 可保守轉換，未知格式仍呈現完整 text，
+不以答案內的編號拆筆。出租專區導引保留為獨立「出租專區」連結，前端
+不分類或呼叫 Rental。
 沒有使用者 reset／對話概念；接受送出才清空輸入框，接受前失敗保留文字。
 Technical session recovery 內部使用，timeout 不自動 retry，晚到答案不顯示。
 
-新版實際 Messenger／GA4 驗收需可信任瀏覽器；歷史人工作證不證明本次
-Flow cutover。若 Cloud proxy／CA 限制，browser-only 驗收保持 PENDING，
-不可宣稱正式已驗證交付。放行以 repo `NEXT_TASK.md`／`PAGES_DEPLOYMENT.md`
-最新證據為準；`DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING` 與 LIVE 分開記錄。
+Flow cutover 已由人工接受為 LIVE / USABLE。本輪僅更新 FAQ 結果呈現，
+新的真實 Messenger 視覺確認仍需可信任瀏覽器；Cloud proxy／CA 阻擋時
+該項保持 PENDING。GA4 receipt 為 non-blocking operational follow-up；
+不因目前 Realtime／DebugView 無法觀察而阻擋 UI deployment。
+資訊室實際 host 的驗證仍獨立，放行以 repo `NEXT_TASK.md`／
+`PAGES_DEPLOYMENT.md` 最新證據為準。
 
 ## 掛載
 

@@ -16,7 +16,6 @@
     <section class="search-card" aria-label="稅務問題搜尋">
       <form id="search-form"><label for="query">您想了解什麼？</label><div class="input-wrap"><textarea id="query" name="query" rows="2" maxlength="1000" placeholder="例如：房屋稅自住住家用稅率如何申請？" required></textarea><p class="suggestions"><span>您可詢問</span> <button type="button" data-example="房屋稅自住住家用稅率怎麼申請？">「房屋稅自住住家用稅率怎麼申請？」</button> <button type="button" data-example="地價稅自用住宅用地優惠稅率怎麼申請？">「地價稅自用住宅用地優惠稅率怎麼申請？」</button></p><button id="submit" type="submit" disabled>查詢解答</button></div><p class="input-note">Enter 查詢 · Shift + Enter 換行<span id="counter">0 / 1000</span></p></form>
     </section>
-    <div class="session-bar" hidden><button id="reset" type="button" disabled>清除前次問答，重新提問</button></div>
     <section id="status" class="status-panel" aria-live="polite" aria-atomic="true"><span class="status-icon" aria-hidden="true"></span><h2 id="status-title">準備查詢服務</h2><p id="status-description">請稍候。</p></section>
     <section id="result" class="result-card" hidden aria-labelledby="result-title"><div class="result-heading"><p class="eyebrow">您的查詢結果</p><h2 id="result-title" tabindex="-1">查詢結果</h2><p id="result-query"></p></div><div data-answer class="answer"></div><aside data-faq class="faq-card" hidden></aside><section data-source-section class="sources" hidden><h3>參考資料</h3><ul data-sources></ul></section></section>
     <p class="service-note">AI 回答供參考；申辦條件與適用規定，請以官方公告及主管機關說明為準。</p>

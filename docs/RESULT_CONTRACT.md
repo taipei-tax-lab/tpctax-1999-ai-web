@@ -8,12 +8,12 @@
 }
 ```
 
-`answer` 為 required string；空白值進入 empty state，不合成稅務回答。所有 Playbook 都能只靠 answer 顯示結果。沒有 FAQ metadata 仍是有效回答；有來源則顯示一般「參考資料」。
+`answer` 為 required string；空白值進入 empty state，不合成稅務回答。FAQ Flow 可只靠完整 text 顯示結果。沒有 FAQ metadata 仍是有效回答；有來源則顯示一般「參考資料」。
 
 ## Extractor
 
-1. 優先 Messenger `event.detail.data.messages` 中 `type=text`、string `text`；多段以空行連接，保留原字句。
-2. 若 parsed text 不存在，讀取 `event.detail.raw.queryResult.responseMessages[].text.text[]`。
+1. 優先完整 raw `event.detail.raw.queryResult.responseMessages[].text.text[]`，所有 message／array item 按 response 順序以空行連接，保留原字句、編號與內部換行。直接 queryResult shape 同樣支援。
+2. raw 無非空文字時才讀 Messenger `event.detail.data.messages` 的所有 `type=text`、string `text`。避免 SDK 只 parsed 第一段時漏掉後續 FAQ；不把 parsed/raw 重複合併。
 3. 僅採用明確 citation message／citation list 或以下 versioned extension 的 sources。答案原文中的安全 HTTP(S) URL／Markdown link 可在答案內點擊；若該 URL 已在答案內呈現，不再重複列入下方一般「參考資料」。只有額外且未在答案內呈現的 structured source 才另列。沒有猜測來源 title；僅有額外 URL 時用實際 hostname 作 link label。
 4. 不讀 diagnosticInfo 作 FAQ metadata，不從 active Playbook、question、官方 domain 或 URL pattern 推定 FAQ。
 
@@ -29,9 +29,23 @@ Renderer 仍禁止插入或執行 response HTML，但允許以 DOM node 安全�
 
 ## Messenger 與 session
 
-Custom form → `df-messenger.sendQuery(query)` → `df-request-sent` mutates requestBody.queryParams → `df-response-received` → normalized result。首次 request 設定完整 FAQ Playbook name；同 request event 後 `setQueryParameters({timeZone:'Asia/Taipei'})` 解除 defaults；後續 request 明確刪除 `currentPlaybook`。首次 override 是 Playbook resource name，不是 version name。
+Custom form → `df-messenger.sendQuery(query)` → `df-request-sent` mutates
+requestBody.queryParams → `df-response-received` → normalized result。
+每個 accepted text query 固定 `currentPage=config.faqCurrentPage` 與
+`timeZone=Asia/Taipei`，明確刪除舊 currentPlaybook；SDK defaults 初始化／
+每次 sendQuery 前／內部 recovery 後都設定相同參數，不在第一題後解除。
+固定 resource 與 Production binding 見 `CX_BACKEND_FLOW_HANDOFF_2026-10-09.md`。
 
-`startNewSession({retainHistory:false})` + re-arm 用於 reset／expiry；adapter clear() 先 clearStorage 再 reset。任一時間只接受一個 request；timeout 不 retry，SDK 未 settle 前保持 locked，晚到 response 不顯示。Session expiry 中斷 query、等 operation settle 後 reset，不重送原問題。沒有 `entry_context`。
+每題獨立 semantic search，最新 query/result 取代前次畫面，無聊天 transcript
+或使用者 reset。Accepted boundary 清空輸入／counter，保留 submit handler
+captured query 作標題；接受前失敗保留文字，新打的草稿不被晚到回答抹除。
+GA4 與清空共用 accepted boundary；同 pending duplicate notification 只計一次。
+
+任一時間只接受一個 request；timeout 不 retry，SDK 未 settle 前保持 locked，
+晚到 response 不顯示。Session expiry 中斷 query，等 operation settle 後以
+`startNewSession({retainHistory:false})` 技術恢復並重新設定 FAQ defaults，不重送
+原問題。Recovery 無公開 UI／analytics event。沒有 entry_context 或 Rental
+內部切換。零結果 fallback 是有效 backend text；service/timeout 不偽裝成零結果。
 
 官方 API/event 參考（2026-10-07 閱讀）：
 
@@ -59,5 +73,5 @@ sources 以同一正規化 URL 與 inline 清單比對，在 normalizer 和 rend
 Node 與真實 Chromium DOM tests 覆蓋粗體／label／換行、裸 URL、去重、額外
 structured source、惡意／未閉合目的 URL、raw HTML/script 不執行，以及後續
 一般回答清除前次格式。Screenshot scenario 使用明確合成格式 fixture，
-不代表 live 回答或稅務品質證據；session/reset/currentPlaybook regression
-維持獨立測試。結果見 `NEXT_TASK.md` 與 `RENDERER_PARITY.md`。
+不代表 live 回答或稅務品質證據；歷史 session/reset/currentPlaybook regression
+已由 2026-10-09 per-query currentPage／內部 recovery tests 取代。結果見 `NEXT_TASK.md` 與 `RENDERER_PARITY.md`。

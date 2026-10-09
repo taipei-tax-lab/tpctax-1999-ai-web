@@ -1,8 +1,9 @@
 # 1999 AI 靜態 hosting package
 
-目前 live candidate 使用 `liveEnabled=true`；人工作證已確認 Pages 問答、
-renderer／Rental parity 與 session/reset PASS。本版最小 GA4 實際網路收送
-仍 PENDING；交付放行狀態、阻擋與證據以 [NEXT_TASK.md](../NEXT_TASK.md) 為準。
+本版使用 `liveEnabled=true` 的 direct FAQ Flow candidate：每題固定
+START_PAGE currentPage，獨立 semantic search，無 reset UI。後端 Production
+proof 已完成；本次 Web live／GA4 驗收不由歷史 Playbook 人工作證代替。
+最新部署／browser-only PENDING 狀態以 [NEXT_TASK.md](../NEXT_TASK.md) 為準。
 
 ## 本機預覽
 
@@ -28,8 +29,8 @@ GitHub Pages 已驗證為 Actions source，使用 `.github/workflows/pages.yml`�
 見 [PAGES_DEPLOYMENT.md](PAGES_DEPLOYMENT.md)。
 
 Production binding 與兩個允許 hostname 已 PASS；不需更改 Console/CX。
-session/reset 已有人工作證 PASS；SDK/subresources/connect/CSP/CORS 與新增
-GA4 hosts 仍須實際 browser network 證據，精確已知 bootstrap URL 見 IT handoff。
+本次 currentPage／完整多筆文字／獨立第二題／input clear／無 reset 與
+SDK/subresources/connect/CSP/CORS／GA4 仍須實際 browser network 證據，精確已知 bootstrap URL 見 IT handoff。
 不要加入猜測 wildcard／iframe／全面 inline 允許。Agency-host headers 需另查
 final URL，不能由 root 或 Pages 推定。
 

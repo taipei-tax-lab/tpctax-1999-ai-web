@@ -9,7 +9,7 @@ export const config = Object.freeze({
   agentId: '799426c1-ba69-49dc-85e4-5065985706e2',
   location: 'asia-northeast1',
   languageCode: 'zh-tw',
-  initialPlaybook: 'projects/serviceagent-1150909/locations/asia-northeast1/agents/799426c1-ba69-49dc-85e4-5065985706e2/playbooks/f0512949-95f2-40c6-95d0-0c139b84b542',
+  faqCurrentPage: 'projects/serviceagent-1150909/locations/asia-northeast1/agents/799426c1-ba69-49dc-85e4-5065985706e2/flows/676409b6-b02f-4a24-9d3a-81e14cb77d4f/pages/START_PAGE',
   // Messenger Environment binding is integration-side; not a guessed HTML attribute.
   expectedEnvironment: 'a0c712e8-ab0c-4520-b100-d2abcfc85868',
   messengerScript: 'https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js',

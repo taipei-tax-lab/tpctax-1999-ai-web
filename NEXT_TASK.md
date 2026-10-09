@@ -1,280 +1,95 @@
-## Active task — execute FAQ Flow web cutover
+# NEXT_TASK — 1999 FAQ direct Flow web cutover
 
-Backend is READY. Do not wait for more CX work.
+Date: 2026-10-09 (Asia/Taipei)
+Status: **IMPLEMENTED / OFFLINE PASS / DEPLOYMENT IN PROGRESS**
 
-Authoritative local handoff: `docs/CX_BACKEND_FLOW_HANDOFF_2026-10-09.md`.
+Target after real acceptance: `1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE`.
+Until trusted-browser evidence exists: `DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING`.
+Earlier one-shot Playbook/reset tasks are superseded by this checklist; their
+results remain historical in PROJECT_STATE/PAGES_DEPLOYMENT.
 
-- [x] Backend immutable Production FAQ Flow/currentPage resource received and verified.
-- [ ] Replace `config.initialPlaybook` with `config.faqCurrentPage` using the exact START_PAGE resource in the handoff.
-- [ ] Set `queryParams.currentPage` on **every accepted text query**; remove 1999 `currentPlaybook`.
-- [ ] Keep Agent ID/location/Environment binding/timezone/GA4 unchanged.
-- [ ] Remove visible reset-conversation control and associated user-facing reset UX; keep technical recovery internal if needed.
-- [ ] Preserve accepted-send input clearing and latest-query result heading.
-- [ ] Ensure renderer combines all backend text ResponseMessages in order and linkifies all official URLs.
-- [ ] Do not depend on richContent parsing for release.
-- [ ] Treat every query as independent semantic search; no contextual follow-up contract.
-- [ ] Preserve static Rental specialist guidance/link from backend response; no frontend classifier.
-- [ ] Update demo/mock/tests for first + second independent currentPage queries, multi-result, fallback, errors, no reset UI, GA4 once/query.
-- [ ] Run Node/offline Chromium/mobile/package/secret regression.
-- [ ] Deploy Pages candidate through existing workflow.
-- [ ] Verify hosted files match package.
-- [ ] Perform live trusted-browser Messenger smoke if environment permits; otherwise leave only browser-only items clearly pending, but do not claim LIVE without real request/response verification.
-- [ ] Verify GA4 `ai_query_submit` one per accepted query and no question/answer text in analytics.
-- [ ] On launch-critical failure, restore old currentPlaybook frontend and redeploy; Rental/Agent remain untouched.
-- [ ] Update PROJECT_STATE/NEXT_TASK/README/handoff evidence.
+## A. Authoritative contract and implementation
 
-Target: `1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE`.
+- [x] Sync Web main `410db6c1891c58d38197fa55d6b2b1d98be9a51a` and read AGENTS/state/task/README/local handoff/product/result docs.
+- [x] Read-only verify backend main `39e176ed40a4ad81cb9b39b6a7b15687bbcea4bb`, STATE/TASKS/boundary/release plan and authoritative `1999_FAQ_WEB_FLOW_HANDOFF_2026-10-09.md`; backend READY, no more architecture work.
+- [x] Replace initialPlaybook runtime config with exact faqCurrentPage START_PAGE.
+- [x] Every accepted text request sets currentPage and Asia/Taipei; deletes currentPlaybook.
+- [x] SDK defaults match per-query contract at initialization, before every sendQuery and after internal recovery; never disarm after first query.
+- [x] Agent/project/location/language/Production binding/Messenger integration/SDK URL/GA4 ID unchanged.
+- [x] Remove reset button, JS listener/state, CSS, accessibility control and unused clear/armed transport code from index/demo.
+- [x] Each complete question is an independent semantic search; new result replaces previous; no transcript or contextual follow-up promise.
+- [x] Preserve accepted-send input/counter clear, retained pre-acceptance failure text, original result heading and next draft.
+- [x] Combine all raw text ResponseMessages and text array items in order; parsed-only fallback, richContent optional.
+- [x] Safe text/numbering/newlines/official URL rendering; fixed backend Rental note/link shown normally, no classifier/internal Rental call.
+- [x] GA4 G-S891SFSMBH + ai_query_submit, exactly once/accepted query with no business parameters; idle loader/failure isolation unchanged.
 
----
+Fixed currentPage:
+`projects/serviceagent-1150909/locations/asia-northeast1/agents/799426c1-ba69-49dc-85e4-5065985706e2/flows/676409b6-b02f-4a24-9d3a-81e14cb77d4f/pages/START_PAGE`.
+Raw text is authoritative when present, avoiding partial parsed-text truncation;
+parsed messages are used only when raw has no nonblank text. No card parser added.
+Technical session reset remains internal for expiry; timeout never retries and
+locks until SDK settles. Backend resources and Rental frontend/CX mutation: **0**.
 
-## Active product-principle follow-up — stateless 1999 search
+## B. Offline verification
 
-- [ ] Remove the visible reset / "清除前次問答，重新提問" control from the 1999 page.
-- [ ] Keep each accepted query as an independent FAQ Flow search via per-query `currentPage`.
-- [ ] New query replaces the current displayed result; no conversational transcript/reset concept.
-- [ ] Preserve input-clear-on-accepted-send behavior.
-- [ ] Keep any technical session reset internal only if transport stability requires it.
-- [ ] Add/verify a guided link to the Rental special zone when backend output identifies a Rental-domain question.
-- [ ] Do not add internal Rental routing to this frontend.
-- [ ] Keep GA4 event semantics unchanged: one `ai_query_submit` per accepted query.
+- [x] Node tests: **28 PASS** (21 transport/result/config + 7 analytics).
+- [x] Offline Chromium: **26 grouped PASS**, no page errors, zero forwarded external/Production requests.
+- [x] First/second/third request body and pre-event SDK defaults use identical exact currentPage/timeZone; no currentPlaybook, same technical session.
+- [x] Demo/mock transport matches contract; 1/2/3/4/5 synthetic complete multi-message texts + interleaved optional cards + fallback.
+- [x] 1280/390/320 regression: complete text, numbering, pre-wrap, clickable official URLs/Rental link, no overflow/reset UI.
+- [x] New query/fallback replace prior text/metadata; empty response is empty state, service/timeout are errors, not fabricated zero fallback.
+- [x] Delayed submit/rejection retains input; acceptance clears before answer; duplicate notification preserves next draft; heading uses actual sent text.
+- [x] Internal idle/in-flight expiry and timeout recovery/no retry/ignored late response/locked transport/error alert behavior.
+- [x] GA4 counts 1/2/3, no custom parameters or duplicate/cancelled/invalid/recovery event; unavailable/blocked GA does not block query.
+- [x] Deterministic hosting/demo rebuild; exact manifest/CRC/source/checksum/integrity and fresh extraction.
+- [x] Credential/secret scan of packages and changed text files.
 
----
+CurrentPage evidence from Chromium's local SDK fixture (not Production):
+ordinal 1 / 2 / 3 each has queryParams and pre-event sdkDefaults equal to:
+`{currentPage: <full START_PAGE above>, timeZone: 'Asia/Taipei'}`; no Playbook key.
+GA queue is only `['event','ai_query_submit']`, lengths 1/2/3. Fixtures do not prove
+real SDK dispatch, backend response or GA receipt. Backend's own accepted suite
+observed 0/2/5 results; frontend 1–5 coverage here is explicitly synthetic.
 
-## Active task — 1999 FAQ direct Flow entry release
+Two independent hosting/demo builds byte-identical. Exact12-file production
+allowlist/CRC/manifest/source parity/live config/no demo/fresh extraction PASS.
+Both archives scanned (9/16 text entries), 23 changed text files scanned, no
+credential pattern. Nine protected analytics/image/workflow/packager/performance
+files unchanged. Committed checksum PASS. Production ZIP **214,669 bytes**,
+SHA-256 `4f322561e9cff0e36f3ec4d44d5c7bef36088fed0902b16694e06a8de29b63e1`.
+Demo ZIP **232,535 bytes**, SHA-256
+`5e454c7d3b50d7591bf2cebd6327f51716a744f2cbf3d7eba1e816b084130ab8`.
 
-Backend release plan: `docs/1999_FAQ_SURFACE_DIRECTED_FLOW_RELEASE_PLAN_2026-10-09.md` in `taipei-tax-lab/dialogflow-cx-qa-framework`.
+## C. Package and Pages deployment
 
-- [ ] Wait for backend to provide the immutable Production FAQ Flow/currentPage resource.
-- [ ] Replace `config.initialPlaybook` with `config.faqCurrentPage`.
-- [ ] MessengerTransport must set `queryParams.currentPage` for **every accepted user text query**.
-- [ ] Remove currentPlaybook override from this 1999 page.
-- [ ] Keep timezone/session/error/input-clear/analytics behavior unchanged.
-- [ ] Treat each submitted query as an independent search; contextual follow-up is not promised.
-- [ ] Keep text-first renderer; support backend multi-result text without depending on richContent parsing.
-- [ ] Add regression tests for currentPage request body, first/second query, fallback, multi-result text/links, reset, timeout, and one GA4 event per accepted query.
-- [ ] Deploy candidate after backend Production currentPage test PASS.
-- [ ] Browser smoke actual request/response + GA4.
-- [ ] Rollback by restoring prior currentPlaybook transport if needed.
+- [x] Regenerate committed packages/hosting.zip and hosting.sha256.
+- [ ] Push source/package commit to main; existing production-only Actions source/build/deploy PASS.
+- [ ] Record source/deployed SHA, run, artifact, package bytes/SHA and Pages URL.
+- [ ] Hosted 12-file byte parity/MIME and six demo/test/tool/internal exclusions.
 
----
+## D. Real browser acceptance — never substitute mocks or HTTPS parity
 
-# NEXT_TASK
+- [ ] Real Messenger first request has exact currentPage and no currentPlaybook.
+- [ ] Real Flow text returns complete multi-candidate FAQ answers and clickable official/Rental URLs.
+- [ ] Second/third query independently use same currentPage and replace old results.
+- [ ] Genuine-zero fallback displays with Rental link and no stale result.
+- [ ] Accepted send clears input/counter; answer heading preserves original question.
+- [ ] No reset UI; mobile basic display and no new blocking JS/CSP/CORS errors.
+- [ ] Real GA4 ai_query_submit exactly once/query with no business text; Realtime/DebugView receipt observed.
 
-## Active task
+If Cloud TLS/proxy prevents browser JS, keep these PENDING/unchecked, never FAIL
+or LIVE. Do not bypass trust/proxy, guess policy hosts or mutate backend bindings.
 
-**Clear query input after accepted Messenger send**
+## E. Handoff and rollback
 
-This is a small frontend UX revision only.
-
-Do not modify CX backend resources, Messenger binding/domains, Playbooks, Tools,
-Data Stores, Router, Production mappings, renderer behavior, session/reset
-semantics, GA4 event meaning, or the recently accepted load-performance changes.
-
-## Confirmed baseline
-
-- [x] UI / renderer / Rental parity / follow-up / reset / post-reset behavior PASS.
-- [x] GA4 custom event is `ai_query_submit`, one event per accepted query.
-- [x] GA4 sends no user-entered question/answer/source content.
-- [x] Messenger startup remains ahead of deferred GA4 loader.
-- [x] Latest Pages production deployment PASS.
-
-## Goal
-
-After a valid user query has been accepted by Messenger for sending, clear the
-textarea so the user can type the next follow-up immediately.
-
-The previous question must still remain visible in the rendered result area once
-the answer returns.
-
-## A. Exact interaction contract
-
-Implement:
-
-- [x] User types a valid query and submits it.
-- [x] Do **not** clear the textarea merely on form submit.
-- [x] Clear the textarea only after the existing accepted
-      `df-request-sent` boundary confirms Messenger accepted that pending query.
-- [x] Reset the character counter to `0 / 1000` at the same time.
-- [x] Preserve the submitted query in local state so the result heading
-      (`#result-query`) can still display the exact submitted question when
-      the answer returns.
-- [x] Follow-up queries behave the same way: each accepted send clears the input.
-- [x] Post-reset queries behave the same way.
-- [x] Clicking an example still only fills/focuses the textarea; it does not clear
-      or submit by itself.
-- [x] Invalid/empty/rejected-before-acceptance submissions keep the user's text.
-- [x] If Messenger/send fails before acceptance, keep the user's text so they can
-      retry.
-- [x] If a request is accepted but the later answer fails/returns empty, the input
-      may remain cleared because the query was already successfully sent.
-- [x] Do not auto-focus the textarea while a request is in-flight if doing so
-      changes current UX unexpectedly; preserve current focus/result behavior
-      unless a focused test shows a simple safe improvement.
-- [x] Reset button behavior remains unchanged: it still clears query/session state
-      as a separate explicit action.
-
-Evidence: synced main `4f0fff232c31269b5d7661bf1ec5b79845db5e8f`; AGENTS/read-order
-documents and app/transport/analytics/package/workflow contracts read.
-Only two lines added to app.js: clear value and dispatch the existing input event
-after accepted pending-request validation and duplicate-notification guard,
-before the unchanged analytics call. Counter uses its existing listener.
-Existing submit-handler `const query = input.value.trim()` already captures the
-actual sent question independently of textarea state and supplies `#result-query`.
-No new global state, focus action, transport/session/renderer/analytics change.
-
-## B. Keep GA4 behavior aligned
-
-The input-clear action should use the same accepted-query boundary already used
-by analytics.
-
-Verify:
-
-- [x] Every accepted query still emits exactly one `ai_query_submit`.
-- [x] Clearing the textarea does not emit any extra GA4 event.
-- [x] First/follow-up/post-reset query counts remain 1/2/3.
-- [x] Reset itself emits none.
-- [x] No query text is added to analytics.
-
-Evidence: real Chromium with local SDK/gtag fixtures verifies exact no-parameter
-event arrays after first/follow-up/post-reset sends (1/2/3), no reset/invalid/
-cancelled/unsolicited events, retained early queue and duplicate guard. Analytics
-module and accepted-query definition are byte-identical to baseline.
-
-## C. Implementation constraints
-
-Prefer the smallest change in `assets/app.js`.
-
-- [x] Do not move the existing accepted-query definition to a weaker
-      click/form-submit boundary.
-- [x] Do not change MessengerTransport/session logic unless strictly necessary.
-- [x] Do not change result renderer or Markdown behavior.
-- [x] Do not change the frozen visual design/CSS unless required for a bug fix.
-- [x] Do not undo GA4 idle deferral or other accepted performance behavior.
-- [x] Do not introduce a new dependency.
-
-## D. Tests
-
-Add/update focused tests for:
-
-- [x] accepted first query clears textarea and resets counter;
-- [x] submitted question still appears in result header after answer;
-- [x] same-session follow-up clears textarea again;
-- [x] post-reset accepted query clears textarea;
-- [x] empty/invalid submit keeps current behavior and does not falsely clear;
-- [x] send failure before accepted boundary preserves typed query;
-- [x] accepted query followed by answer error/empty state does not restore the
-      cleared query automatically;
-- [x] example click fills but does not clear/submit;
-- [x] GA4 per-query counts remain correct;
-- [x] reset/session/currentPlaybook semantics unchanged.
-
-Run:
-
-- [x] Node tests PASS.
-- [x] Offline Chromium PASS.
-- [x] desktop/390/320 regression checks PASS.
-- [x] package integrity/manifest/repeat-build PASS.
-- [x] credential/secret scan PASS.
-
-Evidence: Node **21 PASS**; offline Chromium **24 grouped PASS**, no page errors,
-0 forwarded external/Production requests. Controlled delayed SDK proves text
-retained after submit and async rejection; acceptance clears before answer,
-counter zero and focus unchanged. A newly typed draft survives duplicate SDK
-notification and later answer; result displays original sent text (including
-internal newline), not that draft. Sync pre-acceptance throw/cancel and whitespace/
-overlength input retain text. Accepted empty/error demo responses stay cleared.
-Existing desktop/390/320, IME, renderer, first-turn/follow-up/reset/expiry/GA4/idle
-and scoped local CSP regression PASS. These fixtures do not prove live SDK/GA.
-
-Two independent production/demo builds are byte-identical. Production verifier
-PASS: exact 12-file allowlist, CRC, manifest hashes/byte counts, source parity,
-live config, no demo payload and fresh extraction. Committed checksum PASS.
-Credential-pattern scan PASS on both archives (9/16 text entries) and all five
-changed text files; 16 protected runtime/config/resource/workflow/docs files
-remain byte-identical. Production ZIP 215,245 bytes, SHA-256
-`86e3fe7256f5464e599c2e8ec488338b98d1fa8de97dc5ab7273e9239c0373bd`.
-
-## E. Deployment
-
-- [x] Regenerate `packages/hosting.zip` + checksum.
-- [x] Deploy via existing GitHub Actions production-only Pages workflow.
-- [x] Record deployed SHA/run/ZIP SHA-256.
-- [x] Confirm hosted runtime files match production package.
-
-Deployment PASS: [Actions run 37748612115](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37748612115),
-deployed SHA `edd501268216e57c1f5b0eaa1f295f9c19f78ca0`, success 2026-10-08
-16:15:40 Asia/Taipei (08:15:40 UTC), github-pages artifact `11535839849`.
-Pages URL: <https://taipei-tax-lab.github.io/tpctax-1999-ai-web/>.
-Production ZIP SHA-256:
-`86e3fe7256f5464e599c2e8ec488338b98d1fa8de97dc5ab7273e9239c0373bd`.
-Actions source guard (`build_type=workflow`), configure/build/deploy PASS; Node
-21, deterministic rebuild, committed ZIP/checksum and exact production extraction
-checks PASS. Verified HTTPS GETs completed 16:16:04 Asia/Taipei: all **12/12**
-files return 200 with correct MIME and match committed ZIP bytes, including
-app.js, analytics.js, config and manifest. Six demo/test/tool/internal paths 404.
-HTTP file parity does not establish live browser execution.
-
-## F. Human/browser acceptance
-
-Where possible verify in a normal trusted browser:
-
-- [ ] Submit first query → textarea clears immediately after accepted send.
-- [ ] Answer still shows the submitted question in the result area.
-- [ ] Submit a follow-up → textarea clears again.
-- [ ] Reset → new query → textarea clears again after accepted send.
-- [ ] No new blocking JS/CSP/CORS issue.
-- [ ] GA4 `ai_query_submit` still increments once per accepted query.
-
-If Codex Cloud cannot perform the live checks due its existing proxy/CA
-limitations, leave them PENDING rather than FAIL.
-
-All six live checks remain **PENDING / unchecked**. Fresh real deployed Chromium
-151, 390×844, at 2026-10-08 16:16:00 Asia/Taipei, inherited Cloud proxy and TLS
-verification enabled, no mocked network, fails at the document GET with
-`net::ERR_CERT_AUTHORITY_INVALID`. Zero origin browser responses; page JavaScript,
-Messenger and GA4 never execute. **0 Production queries and 0 observed GA4
-collection requests**. This is the existing Cloud browser trust blocker, not an
-observed frontend/SDK/CSP/CORS failure. No TLS/proxy bypass or policy expansion.
-Trusted browser must still verify first/follow-up/post-reset clear + original
-question, console/network and real GA4 per-query delivery. Earlier human renderer/
-Rental/session PASS remains accepted; it does not prove this new live UX behavior.
-
-## G. Documentation / handoff
-
-- [x] Update `PROJECT_STATE.md`.
-- [x] Update this checklist with evidence.
-- [x] Audit `docs/ANALYTICS.md`: accepted-query analytics contract unchanged;
-      leave file byte-identical as required.
-- [x] Audit performance/handoff docs: no resource/loading change; leave unchanged.
-- [x] Commit/push and STOP for Web ChatGPT review.
-
-Implementation/package/checklist commit `edd501268216e57c1f5b0eaa1f295f9c19f78ca0`
-pushed to main and deployed. Final reporting-only commit updates this checklist,
-PROJECT_STATE and PAGES_DEPLOYMENT; no ZIP payload changes or second deployment.
-Main HEAD is distinct from the deployed SHA. STOP after its push for Web review.
+- [x] Update README/AGENTS/product/result/analytics/hosting/IT handoff for independent search and no reset UX; frozen visual assets/startup remain.
+- [x] Preserve authoritative handoff fixed parameters; add Web evidence without changing backend truth.
+- [x] Document exact prior initialPlaybook resource and frontend-only restore/redeploy procedure in FAQ_FLOW_ROLLBACK_2026-10-09.md.
+- [ ] Assess whether launch-critical frontend failure requires rollback; only restore Web, no Rental/Agent/Production changes.
+- [ ] Update PROJECT_STATE/checklist/deployment/handoff with final actual test/deploy/live/rollback evidence.
+- [ ] Commit/push final report, confirm remote main and clean working tree, STOP for Web ChatGPT review.
 
 ## Completion summary
 
-1. Clear point: existing accepted `df-request-sent` listener in app.js, after
-   transport pending/sent, cancellation and duplicate guards; dispatch existing
-   input event for the counter. Captured actual sent query still supplies heading.
-2. First/follow-up/post-reset clear + `0 / 1000`: offline **PASS**.
-3. Form submit alone, invalid/cancelled/sync/async pre-acceptance failure retain
-   text: **PASS**. Accepted later empty/error stays cleared; next draft retained.
-4. GA4 regression: **PASS**, one parameter-free `ai_query_submit` per accepted
-   query, counts 1/2/3, none for reset/clearing/invalid/duplicate notification.
-5. Node **21 PASS**, offline Chromium **24 grouped PASS**, desktop/390/320,
-   deterministic production/demo build, exact package/manifest/credential scan
-   **PASS**. No transport/renderer/session/backend/loading-resource change.
-6. Pages **PASS**: SHA `edd501268216e57c1f5b0eaa1f295f9c19f78ca0`,
-   [run 37748612115](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/37748612115),
-   ZIP SHA-256 `86e3fe7256f5464e599c2e8ec488338b98d1fa8de97dc5ab7273e9239c0373bd`;
-   hosted 12/12 bytes match, six exclusions 404.
-7. New live UX/GA4 browser verification **PENDING** under Cloud certificate trust
-   blocker; all six acceptance boxes unchecked, no Production query sent.
-8. Ready for formal Revenue Service IT release: **NO**, pending trusted-browser
-   new UX/GA4 acceptance. Existing human renderer/Rental/session PASS carried.
-
-Scratch evidence remains outside Git under `/workspace/work/clear-input/`;
-durable deployment details are in [PAGES_DEPLOYMENT.md](docs/PAGES_DEPLOYMENT.md).
-No official entry integration or CX backend changes. STOP for Web ChatGPT review.
+Implementation/offline PASS. Deployment/live/rollback disposition to be recorded
+from actual evidence; no current claim of LIVE or formal IT-ready release.

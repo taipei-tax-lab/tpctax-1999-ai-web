@@ -1,3 +1,21 @@
+# Current product decision — 2026-10-09
+
+[CX_BACKEND_FLOW_HANDOFF_2026-10-09.md](CX_BACKEND_FLOW_HANDOFF_2026-10-09.md)
+supersedes the earlier V1 routing/session/reset plan below.
+1999 Web is the service entry: every query supplies FAQ Flow START_PAGE currentPage,
+independent canonical623 semantic search, complete text-first 1–5 official results
+or genuine-zero fallback. No first-turn Playbook/Router/Rental switching,
+contextual conversation promise or visible reset. Latest result replaces prior
+result. Backend static Rental link is normal clickable navigation, no classifier.
+Renderer stays safe and generic; richContent is optional. Technical recovery,
+accepted-send clearing, no-parameter per-query GA4 and deferred startup remain.
+Fixed parameters and frontend-only rollback are in the handoff/rollback docs.
+
+The material below is **historical V1 design**, retained for provenance only.
+Do not resume its unchecked implementation/deployment steps or old routing rules.
+
+---
+
 # Phase 7E3A Final V1 Plan — Universal AI Answer Renderer
 
 Decision date: 2026-10-07

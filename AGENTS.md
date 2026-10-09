@@ -21,9 +21,9 @@ At the start of every task, read:
 - Static HTML/CSS/JavaScript only unless a later human decision explicitly changes this.
 - No new Cloud Run/API server/webhook/proxy/middleware.
 - Use Dialogflow Messenger JavaScript API as the browser transport.
-- New session first query may set `currentPlaybook` to the 1999 FAQ Playbook; remove the browser-side override after the first request.
+- Every user query sets `currentPage` to the authoritative FAQ Flow START_PAGE; SDK defaults use the same per-query contract. Do not send the old `currentPlaybook`.
 - Frontend result contract is answer-first. Sources and FAQ metadata are optional progressive enhancement.
-- Do not assume every later turn stays in the 1999 Playbook; the same Agent may route to another Playbook.
+- Each 1999 query is independent semantic search; no CX Router/Rental switching. Render backend Rental guidance as a link; no frontend classifier.
 - Never fabricate source metadata.
 - Never put service-account credentials, ADC, access tokens, API secrets, or private keys in browser code or repo files.
 - Do not modify live Messenger settings, CX resources, GCP IAM, Production Environment, or the official Taipei City website from this repo unless separately authorized.
@@ -136,11 +136,10 @@ Citizen-facing copy and behavior:
 - use more common local-tax examples rather than niche wording;
 - use a common local-tax question as the textarea placeholder;
 - do not show an idle/status panel during normal ready state;
-- show status UI only for loading, unavailable, empty/error, or session-reset feedback as needed;
-- do not show the reset/session control before the first successful answer;
-- after a successful answer, show a secondary control labeled exactly:
-  `清除前次問答，重新提問`
-- that control must perform the existing real session reset/re-arm behavior; do not fake reset by only clearing visible text;
+- show status UI only for loading, unavailable, empty/error, or interrupted-query recovery as needed;
+- do not expose a reset/session control; every new query is already an independent search;
+- keep technical session recovery internal and show only the latest query/result;
+- clear textarea/counter only after Messenger accepted send, preserving the submitted result heading;
 - remove the explanatory sentence `可接著詢問；開始新查詢會重設查詢脈絡。`.
 
 Red identity may be slightly stronger than the previous restrained pass, but must remain tied to official values and function:
@@ -210,7 +209,7 @@ Gate order:
 
 6. **Authorized live runtime validation**
    - execute a small defined test set;
-   - verify SDK load, first-turn 1999 Playbook routing, follow-up behavior, reset/re-arm, generic answer rendering and errors;
+   - verify SDK load, per-query FAQ currentPage, independent searches, internal recovery, complete text rendering and errors;
    - record evidence and stop if Production routing differs from expectation.
 
 7. **Official-page entry integration**

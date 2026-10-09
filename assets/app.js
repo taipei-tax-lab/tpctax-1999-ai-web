@@ -6,14 +6,14 @@ import {createAnalytics} from './analytics.js';
 const analytics = createAnalytics(config.ga4MeasurementId, window, document.body.dataset.demo !== 'true');
 
 const form = document.querySelector('#search-form'), input = document.querySelector('#query');
-const submit = document.querySelector('#submit'), reset = document.querySelector('#reset');
+const submit = document.querySelector('#submit');
 const status = document.querySelector('#status'), result = document.querySelector('#result');
-let transport, ready = false, busy = false, composing = false, hasAnswer = false;
+let transport, ready = false, busy = false, composing = false;
 const states = {
   loading: ['正在查詢解答', '正在整理本次回答，請稍候。'],
-  empty: ['尚未取得解答', '您可以補充問題的條件，再手動送出查詢。'],
+  empty: ['尚未取得解答', '請完整描述您的問題，再手動送出查詢。'],
   error: ['暫時無法取得解答', '請稍後再手動查詢；若查詢尚未結束，按鈕將暫時停用。'],
-  session: ['本次查詢已結束', '查詢脈絡已重設，請重新送出問題。'],
+  session: ['本次查詢已結束', '請重新送出完整問題，進行新的搜尋。'],
   unavailable: ['服務準備中', '查詢服務尚未開放。您可以先查看本府1999常見問答。'],
 };
 function showState(name) {
@@ -25,9 +25,7 @@ function showState(name) {
   status.setAttribute('role', ['error','session'].includes(name) ? 'alert' : 'status');
 }
 function controls() {
-  reset.parentElement.hidden = !hasAnswer;
   submit.disabled = !ready || busy || !!transport?.locked;
-  reset.disabled = !ready || busy || !!transport?.locked;
   form.setAttribute('aria-busy', String(busy));
 }
 input.addEventListener('input', () => {document.querySelector('#counter').textContent = `${input.value.length} / ${config.maxQueryLength}`;});
@@ -51,14 +49,9 @@ form.addEventListener('submit', async event => {
     const model = normalizeResult(detail, config.officialFaqOrigins);
     if (!model.answer.trim()) {showState('empty');return;}
     renderResult(model, result);document.querySelector('#result-query').textContent = query;
-    hasAnswer = true;status.hidden = true;result.hidden = false;document.querySelector('#result-title').focus({preventScroll:true});
+    status.hidden = true;result.hidden = false;document.querySelector('#result-title').focus({preventScroll:true});
   } catch (error) {showState(error.message === 'session' ? 'session' : error.message === 'empty' ? 'empty' : 'error');}
   finally {busy = false;controls();}
-});
-reset.addEventListener('click', () => {
-  try {transport.reset();hasAnswer = false;input.value = '';input.dispatchEvent(new Event('input'));showState('idle');input.focus();}
-  catch {showState('error');}
-  controls();
 });
 async function initialize() {
   try {

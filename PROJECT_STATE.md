@@ -16,10 +16,11 @@ Backend Production proof is complete. Web work no longer waits for backend:
 - original five mappings and Agent startPlaybook unchanged;
 - Rental preservation PASS.
 
-Current web implementation is still the old transport:
-- `config.initialPlaybook` exists;
-- first accepted query sets `currentPlaybook`;
-- visible reset control still exists.
+Web cutover implemented on 2026-10-09:
+- runtime `config.faqCurrentPage` replaces initialPlaybook;
+- every accepted text query + SDK defaults set exact currentPage/timeZone;
+- no visible reset or conversational context contract; latest complete text result replaces prior.
+Deployment/live evidence is recorded in the current NEXT_TASK and deployment record.
 
 Next work is frontend implementation/cutover only.
 
@@ -59,11 +60,11 @@ Target: `1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE`.
 
 # PROJECT_STATE
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 ## Status
 
-**UI FROZEN — CLEAR INPUT ON ACCEPTED SEND IMPLEMENTED; LIVE UX/GA4 PENDING**
+**FAQ FLOW CUTOVER IMPLEMENTED / OFFLINE PASS / DEPLOYMENT IN PROGRESS**
 
 This repository owns the 1999 AI frontend, UI, static hosting package, demo, and frontend tests.
 
@@ -82,22 +83,22 @@ Dialogflow CX backend source of truth:
 - Static search-style page.
 - Current official TRS header wordmark stored unchanged as `assets/trs-header.png` in both headers; local official city background in `assets/official-page-bg.png`.
 - Both header brand links navigate in the same tab to `https://tpctax.gov.taipei/`; canonical FAQ return link is unchanged.
-- Direct gtag GA4 uses human-approved `G-S891SFSMBH`; only custom event is now `ai_query_submit`, one per accepted Messenger query including follow-up/post-reset. No analytics sessionStorage/tab guard. Immediate queue; gtag loader after core initialization at idle. Demo is analytics-disabled. Contract/tests/blockers: `docs/ANALYTICS.md`; controlled startup evidence: `docs/PERFORMANCE.md`.
+- Direct gtag GA4 uses human-approved `G-S891SFSMBH`; only custom event is now `ai_query_submit`, one per accepted Messenger query including every independent first/second/third search. No analytics sessionStorage/tab guard. Immediate queue; gtag loader after core initialization at idle. Demo is analytics-disabled. Contract/tests/blockers: `docs/ANALYTICS.md`; controlled startup evidence: `docs/PERFORMANCE.md`.
 - Earlier `assets/trs-logo.gif` retained unchanged as the original standalone-mark source.
 - Shared CSS adds a slim official-red H1 marker and a smaller query-label marker; both text colors remain `#343434`.
 - Intro removed; common-tax examples are plain clickable quoted text between textarea and submit, with red `您可詢問` and a restrained red query top rule.
-- Ready state hides the idle panel. Reset appears only after a successful answer, labeled `清除前次問答，重新提問`; it uses the existing real session reset, clears/focuses input and hides again until another successful answer.
+- Ready state hides the idle panel; no citizen reset/session control, only latest search/result. Internal technical expiry recovery remains.
 - Accepted Messenger sends now clear textarea/counter at the existing accepted pending-query boundary; submit/pre-acceptance failure preserves text. The immutable submitted query still supplies the answer heading. No new focus or session action.
 - No custom backend.
 - Dialogflow Messenger is the intended browser transport.
 - `live-pages-candidate` fast-forwarded to `main`; `liveEnabled=true` production artifact deployed via Actions. Source guard confirms Pages `build_type=workflow`.
 - hostingUrl remains placeholder metadata, unused at runtime; final IT path does not require rebuilding.
-- First-turn initial Playbook is the 1999 FAQ Playbook.
+- Every query uses authoritative FAQ Flow START_PAGE currentPage, never currentPlaybook; SDK defaults match before send and after recovery. No Router/Rental invocation.
 - Generic answer rendering works without FAQ metadata.
 - FAQ source card is optional progressive enhancement only.
 - Official-site same-tab/new-tab/window behavior remains deliberately unspecified.
 - No official-site deployment has occurred.
-- Human Chrome evidence confirms Production FAQ answers, renderer/Rental parity and follow-up/real reset/post-reset PASS. 390px and blocking-error console/network checks are deferred, not blockers for this task. New GA4 live script/collection verification remains pending.
+- Historical human Playbook renderer/Rental/session evidence remains provenance, not this Flow cutover acceptance. New Messenger currentPage/complete text/independent searches/mobile/input clear/no reset and GA4 receipt require trusted-browser live evidence.
 
 ## Standalone migration verification — 2026-10-07
 
@@ -1327,3 +1328,30 @@ proxy bypass or policy change. Earlier human renderer/Rental/session PASS carrie
 Formal IT-ready NO pending trusted-browser validation of new behavior and GA4.
 Final reporting-only commit changes no runtime/ZIP/deployed SHA; main HEAD differs
 from deployed implementation. Push then STOP for Web ChatGPT review.
+
+## 1999 FAQ direct Flow Web cutover — 2026-10-09
+
+Synced Web main 410db6c and read-only backend main 39e176e. Backend authoritative
+handoff confirms Flow v1 Production direct-currentPage 18+4 PASS, original five
+mappings/Agent/Rental preserved; no backend architecture work or mutation.
+Web config/transport now route every query to exact FAQ START_PAGE, SDK defaults
+match at init/before send/recovery; removed one-shot armed/clear dead code.
+No visible reset HTML/JS/CSS/a11y, latest independent search replaces old result.
+Accepted-send clear/captured heading/pre-acceptance text retained. Complete raw
+text messages/array items preferred over partial parsed text, parsed-only fallback
+retained; safe renderer/linkify unchanged, richContent optional. Static backend
+Rental note rendered normally, no classifier/service call. Fixed IDs/binding/GA4
+and startup loader/official images/design preserved.
+
+Node 28 PASS; Chromium 26 grouped PASS, 0 real external/Production requests/page
+errors. First/second/third bodies + pre-event defaults exact currentPage/timeZone,
+no currentPlaybook; GA no-parameter counts1/2/3. Synthetic 1–5 complete text and
+fallback, latest replacement, URL/Rental link, 1280/390/320, accepted clear/draft/
+original heading, sync/async/cancelled before-accept failures, timeout/late-answer/
+locked transport and internal idle/in-flight recovery PASS. This is frontend
+fixture evidence, not Messenger live. Backend observed0/2/5 separately.
+
+Package/deployment/trusted-browser result and rollback disposition will be recorded
+in NEXT_TASK/PAGES_DEPLOYMENT. Prior runtime rollback baseline: 410db6c (same as
+f5719cb runtime), prior Playbook resource retained only in rollback/handoff docs.
+Do not change Rental/Agent/backend Production for frontend rollback.

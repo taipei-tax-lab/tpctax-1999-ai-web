@@ -84,8 +84,8 @@ export function normalizeResult(detail = {}, officialOrigins = []) {
   const parsed = Array.isArray(detail.data?.messages) ? detail.data.messages : [];
   const text = parsed.filter(m => m?.type === 'text' && typeof m.text === 'string').map(m => m.text);
   const rawText = rawMessages.flatMap(m => Array.isArray(m?.text?.text) ? m.text.text.filter(x => typeof x === 'string') : []);
-  // Prefer Messenger's parsed primary answer; use raw ResponseMessage text when absent.
-  let answer = (text.some(x => x.trim()) ? text : rawText).join('\n\n');
+  // The backend's complete text messages are authoritative; parsed text is a fallback.
+  let answer = (rawText.some(x => x.trim()) ? rawText : text).join('\n\n');
   const sources = [];
   const addSource = (url, title) => {
     url = safeUrl(url);

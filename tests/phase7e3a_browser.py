@@ -15,7 +15,7 @@ checks = []
 with sync_playwright() as p:
     browser = p.chromium.launch(executable_path='/usr/bin/chromium', headless=True,
                                args=['--no-sandbox', '--disable-crash-reporter'])
-    context = browser.new_context(viewport={'width': 1440, 'height': 1100}, reduced_motion='reduce')
+    context = browser.new_context(viewport={'width': 1280, 'height': 1100}, reduced_motion='reduce')
     external = []
     def route(request):
         if request.request.url.startswith(BASE): request.continue_()
@@ -40,7 +40,7 @@ with sync_playwright() as p:
     page.get_by_role('heading', name='服務準備中').wait_for()
     assert page.locator('#submit').is_disabled()
     assert page.locator('#status').is_visible()
-    assert page.locator('#reset').is_hidden()
+    assert page.locator('#reset').count() == 0
     assert page.locator('df-messenger').count() == 0
     assert not external
     checks.append('isolated disabled-config fixture; no SDK or external traffic')
@@ -48,14 +48,14 @@ with sync_playwright() as p:
     page.goto(BASE + 'demo.html')
     page.locator('#submit:not([disabled])').wait_for()
     assert page.locator('#status').is_hidden()
-    assert page.locator('#reset').is_hidden()
+    assert page.locator('#reset').count() == 0
     assert page.locator('.brand').get_attribute('href') == 'https://tpctax.gov.taipei/'
     assert page.locator('.brand').get_attribute('target') is None
     assert page.locator('.brand img').get_attribute('src') == './assets/trs-header.png'
     assert page.locator('.brand .agency-name').inner_text() == '臺北市稅捐稽徵處'
     assert page.evaluate('typeof window.dataLayer === "undefined"')
     assert page.locator('.intro').count() == 0
-    assert page.locator('.session-bar p').count() == 0
+    assert page.locator('.session-bar').count() == 0
     assert page.locator('#query').get_attribute('placeholder') == '例如：房屋稅自住住家用稅率如何申請？'
     assert page.locator('.suggestions > span').inner_text() == '您可詢問'
     def assert_example_order():
@@ -85,7 +85,7 @@ with sync_playwright() as p:
     for fixture, title in [('empty', '尚未取得解答'), ('error', '暫時無法取得解答')]:
         query(fixture, '尚未成功回答')
         assert page.get_by_role('heading', name=title).is_visible()
-        assert page.locator('#reset').is_hidden()
+        assert page.locator('#reset').count() == 0
         assert page.locator('#submit').is_enabled()
     checks.append('empty/error before first successful answer preserve status handling and do not reveal reset')
     page.reload()
@@ -94,7 +94,7 @@ with sync_playwright() as p:
     page.locator('#query').press('Enter')
     page.get_by_role('heading', name='正在查詢解答').wait_for()
     assert page.locator('#submit').is_disabled()
-    assert page.locator('#reset').is_hidden()
+    assert page.locator('#reset').count() == 0
     assert page.locator('#search-form').get_attribute('aria-busy') == 'true'
     assert page.locator('#query').input_value() == ''
     assert page.locator('#counter').inner_text() == '0 / 1000'
@@ -103,7 +103,7 @@ with sync_playwright() as p:
     assert page.locator('[data-answer]').inner_text() == '銀錢收據之印花稅稅率為每件按金額千分之四計算。'
     assert page.locator('[data-faq]').is_hidden()
     assert page.locator('[data-source-section]').is_hidden()
-    assert page.get_by_role('button', name='清除前次問答，重新提問', exact=True).is_visible()
+    assert page.get_by_role('button', name='清除前次問答，重新提問', exact=True).count() == 0
     assert page.locator('#status').is_hidden()
     checks.append('loading → answer-only result, no guessed FAQ')
     query('faq', '第二題')
@@ -114,26 +114,43 @@ with sync_playwright() as p:
     assert page.locator('[data-faq]').is_hidden()
     assert page.locator('[data-sources] li').count() == 2
     requests = page.evaluate('demoHarness.requests')
-    assert requests[0]['queryParams']['currentPlaybook'].endswith('f0512949-95f2-40c6-95d0-0c139b84b542')
-    assert all('currentPlaybook' not in item['queryParams'] for item in requests[1:])
+    current_page = 'projects/serviceagent-1150909/locations/asia-northeast1/agents/799426c1-ba69-49dc-85e4-5065985706e2/flows/676409b6-b02f-4a24-9d3a-81e14cb77d4f/pages/START_PAGE'
+    expected_params = {'currentPage': current_page, 'timeZone': 'Asia/Taipei'}
+    assert all(item['queryParams'] == expected_params for item in requests)
     assert len({item['session'] for item in requests}) == 1
-    checks.append('FAQ enhancement replaced by generic multi-source answer; followup same session without override')
+    assert page.locator('#result-query').text_content() == '接著詢問租賃住宅'
+    assert page.locator('#result').count() == 1
+    checks.append('first/second/third searches all use same FAQ currentPage; latest result replaces prior metadata with no reset/transcript')
     page.screenshot(path=str(OUT/'desktop-generic.png'), full_page=True)
     old_session = page.evaluate('demoHarness.session')
-    page.locator('#reset').click()
-    assert page.evaluate('demoHarness.session') == old_session + 1
-    assert page.locator('#query').input_value() == ''
-    assert page.locator('#counter').inner_text() == '0 / 1000'
-    assert page.locator('#query').evaluate('(e) => e === document.activeElement')
-    assert page.locator('#result').is_hidden() and page.locator('#status').is_hidden()
-    assert page.locator('#reset').is_hidden()
-    query('text', 'reset後')
-    assert page.evaluate('demoHarness.requests.at(-1).session') != old_session
-    assert 'currentPlaybook' in page.evaluate('demoHarness.requests.at(-1).queryParams')
     page.locator('#expire').click()
-    query('text', 'expiry後')
-    assert 'currentPlaybook' in page.evaluate('demoHarness.requests.at(-1).queryParams')
-    checks.append('exact reset action starts a new session, clears/focuses input, hides reset and rearms first-query override; expiry rearms')
+    query('text', 'expiry後完整新問題')
+    assert page.evaluate('demoHarness.session') == old_session + 1
+    assert page.evaluate('demoHarness.requests.at(-1).queryParams') == expected_params
+    assert page.locator('#reset, .session-bar').count() == 0
+    checks.append('session expiry recovers internally with same FAQ defaults; no citizen reset control')
+    for count in range(1, 6):
+        query(f'faq{count}', f'完整新搜尋 {count}')
+        expected = page.evaluate("async count => {const {faqTextMessages}=await import('./demo/mock-messenger.js');const {config}=await import('./assets/config.js');return faqTextMessages(count,config).flatMap(m=>m.text?.text||[]).join('\\n\\n')}", count)
+        assert page.locator('[data-answer]').text_content() == expected
+        assert page.locator('[data-answer] a').count() == count + 1
+        assert page.locator('[data-answer] a').last.get_attribute('href') == 'https://tpctax.gov.taipei/cp.aspx?n=3A978B4E3ADD88F2'
+        assert page.locator('[data-faq]').is_hidden()
+        assert page.locator('#result-query').text_content() == f'完整新搜尋 {count}'
+        for width in [1280,390,320]:
+            page.set_viewport_size({'width':width,'height':844})
+            assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+            assert page.locator('#reset, .session-bar').count() == 0
+            assert page.locator('[data-answer]').evaluate('(e)=>getComputedStyle(e).whiteSpace') == 'pre-wrap'
+            if count == 5: page.screenshot(path=str(OUT/f'faq-five-{width}.png'),full_page=True)
+    query('fallback', '零結果完整問題')
+    assert page.locator('[data-answer]').inner_text().startswith('找不到可用的 FAQ 搜尋結果，請換個方式描述問題。')
+    assert '合成 FAQ 問題' not in page.locator('[data-answer]').inner_text()
+    assert page.locator('[data-answer] a').count() == 1
+    assert page.locator('[data-faq]').is_hidden()
+    assert page.locator('#status').is_hidden()
+    checks.append('1–5 complete multi-message/array-item FAQ texts, original numbering/newlines, clickable URLs and Rental link at 1280/390/320; zero fallback replaces stale results without cards')
+    page.set_viewport_size({'width':1280,'height':1100})
     query('unsafe', '安全呈現')
     assert '<img src=x onerror=alert(1)>' in page.locator('[data-answer]').inner_text()
     assert page.locator('[data-answer] img').count() == 0
@@ -169,7 +186,7 @@ with sync_playwright() as p:
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
         assert page.locator('[data-answer] a').is_visible()
         page.screenshot(path=str(OUT/f'renderer-parity-{width}.png'),full_page=True)
-    page.set_viewport_size({'width':1440,'height':1100})
+    page.set_viewport_size({'width':1280,'height':1100})
     checks.append('synthetic screenshot scenario: semantic bold/labeled link, exact line breaks, no exposed URL or duplicate source; desktop/390/320px PASS')
     additional = 'https://www.etax.nat.gov.tw/'
     render_fixture(text,[{'url':url},{'url':additional,'title':'額外來源'}])
@@ -246,7 +263,7 @@ with sync_playwright() as p:
         if(window.stubHold)await new Promise((resolve,reject)=>{window.acceptStub=resolve;window.failStub=reject;});
         const body={queryInput:{text:{text:query}},queryParams:{...this.params}};
         if(!this.dispatchEvent(new CustomEvent('df-request-sent',{detail:{data:{requestBody:body}},cancelable:true,bubbles:true,composed:true})))return;
-        window.stubRequests.push({session:this.session,...structuredClone(body)});
+        window.stubRequests.push({session:this.session,sdkDefaults:structuredClone(this.params),...structuredClone(body)});
         window.lastStubBody=body;
         if(window.stubDuplicate)this.dispatchEvent(new CustomEvent('df-request-sent',{detail:{data:{requestBody:body}},cancelable:true,bubbles:true,composed:true}));
         if(window.stubHold)await new Promise(resolve=>window.answerStub=resolve);
@@ -258,7 +275,7 @@ with sync_playwright() as p:
     assert page.locator('df-messenger').is_hidden()
     assert page.locator('df-messenger').get_attribute('environment') is None
     assert page.locator('.demo-tools').count() == 0
-    assert page.locator('#status').is_hidden() and page.locator('#reset').is_hidden()
+    assert page.locator('#status').is_hidden() and page.locator('#reset').count() == 0
     assert page.locator('.brand').get_attribute('href') == 'https://tpctax.gov.taipei/'
     assert page.locator('.brand').get_attribute('target') is None
     def business_events():
@@ -302,32 +319,26 @@ with sync_playwright() as p:
         assert business_events() == [['event','ai_query_submit']]*count
     requests = page.evaluate('stubRequests')
     assert business_events() == [['event','ai_query_submit']]*2
-    assert 'currentPlaybook' in requests[0]['queryParams'] and 'currentPlaybook' not in requests[1]['queryParams']
-    checks.append('live bootstrap/sendQuery/event wiring verified with intercepted local SDK stub; no Google request')
-    page.get_by_role('button', name='清除前次問答，重新提問', exact=True).click()
-    assert page.evaluate('stubSessions') == [
-        {'session': 1, 'options': {'retainHistory': False}},
-        {'session': 2, 'options': {'retainHistory': False}},
-    ]
-    assert page.locator('#query').input_value() == ''
-    assert page.locator('#query').evaluate('(e) => e === document.activeElement')
-    assert page.locator('#status').is_hidden() and page.locator('#reset').is_hidden()
-    assert business_events() == [['event','ai_query_submit']]*2
-    page.locator('#query').fill('after real SDK reset');page.locator('#submit').click()
+    assert all(item['queryParams'] == expected_params and item['sdkDefaults'] == expected_params for item in requests)
+    assert all('currentPlaybook' not in item['queryParams'] for item in requests)
+    assert page.locator('#reset, .session-bar').count() == 0
+    assert page.evaluate('stubSessions') == [{'session':1,'options':{'retainHistory':False}}]
+    page.locator('#query').fill('third independent SDK search');page.locator('#submit').click()
     page.locator('#result:not([hidden])').wait_for()
     request = page.evaluate('stubRequests.at(-1)')
-    assert request['session'] == 2 and request['queryParams']['currentPlaybook'].endswith('f0512949-95f2-40c6-95d0-0c139b84b542')
+    assert request['session'] == 1 and request['queryParams'] == expected_params and request['sdkDefaults'] == expected_params
     assert business_events() == [['event','ai_query_submit']]*3
     assert page.locator('#query').input_value() == ''
     assert page.locator('#counter').inner_text() == '0 / 1000'
-    assert page.locator('#result-query').text_content() == 'after real SDK reset'
-    checks.append('citizen reset invokes SDK startNewSession(retainHistory:false) and rearms the next first-turn Playbook')
+    assert page.locator('#result-query').text_content() == 'third independent SDK search'
+    current_page_evidence = [{'ordinal':i+1,'session':item['session'],'queryParams':item['queryParams'],'sdkDefaults':item['sdkDefaults']} for i,item in enumerate(page.evaluate('stubRequests'))]
+    checks.append('SDK first/second/third currentPage bodies and pre-event defaults identical; no currentPlaybook or reset UI; GA counts 1/2/3 with no parameters')
     assert page.locator('script[src*="googletagmanager"]').count() == 0
     page.evaluate('window.pendingAnalytics()')
     page.locator('script[src*="googletagmanager"]').wait_for(state='attached')
     assert business_events() == [['event','ai_query_submit']]*3
-    checks.append('Messenger ready and first/follow-up/post-reset events retained before deferred GA4 loader; eventual official loader')
-    checks.append('accepted first/follow-up/post-reset send clears input/counter; result header retains sent text; accepted error/empty never restores input')
+    checks.append('Messenger ready and first/second/third events retained before deferred GA4 loader; eventual official loader')
+    checks.append('accepted first/second/third send clears input/counter; result header retains sent text; accepted error/empty never restores input')
     page.reload();page.locator('#submit:not([disabled])').wait_for()
     page.evaluate('stubHold=true')
     text = '  延後接受的問題\n第二行  '
@@ -363,6 +374,50 @@ with sync_playwright() as p:
     assert page.locator('#result-title').evaluate('(e)=>e===document.activeElement')
     assert business_events() == [['event','ai_query_submit']]
     checks.append('delayed submit/rejection retains input; acceptance clears before answer with no focus steal; duplicate notification and later answer preserve next draft and original result query')
+    # Technical expiry remains internal; no user reset or extra analytics event.
+    page.reload();page.locator('#submit:not([disabled])').wait_for()
+    page.evaluate('stubHold=true')
+    page.locator('#query').fill('session expires during accepted search');page.locator('#submit').click()
+    page.evaluate('window.acceptStub()')
+    page.wait_for_function('document.querySelector("#query").value === ""')
+    page.evaluate('document.querySelector("df-messenger").dispatchEvent(new CustomEvent("df-session-expired",{bubbles:true,composed:true}))')
+    page.get_by_role('heading',name='本次查詢已結束').wait_for()
+    assert page.locator('#status').get_attribute('role') == 'alert'
+    assert '脈絡' not in page.locator('#status-description').inner_text()
+    assert page.locator('#submit').is_disabled()
+    page.evaluate('window.answerStub()')
+    page.locator('#submit:not([disabled])').wait_for()
+    assert page.locator('#result').is_hidden()
+    assert len(page.evaluate('stubSessions')) == 2
+    assert business_events() == [['event','ai_query_submit']]
+    page.evaluate('stubHold=false')
+    page.locator('#query').fill('complete new search after technical recovery');page.locator('#submit').click()
+    page.locator('#result:not([hidden])').wait_for()
+    assert page.evaluate('stubRequests.at(-1).queryParams') == expected_params
+    assert business_events() == [['event','ai_query_submit']]*2
+    assert page.locator('#reset, .session-bar').count() == 0
+    checks.append('accepted in-flight expiry alerts without conversation-reset language; internal session recovery ignores late answer, next independent currentPage query succeeds, GA adds no recovery event')
+    def short_config(r):
+        r.fulfill(status=200,content_type='text/javascript',body=config_source.replace('requestTimeoutMs: 60000','requestTimeoutMs: 300'))
+    context.route('**/assets/config.js',short_config)
+    page.reload();page.locator('#submit:not([disabled])').wait_for()
+    page.evaluate('stubHold=true')
+    page.locator('#query').fill('accepted timeout fixture');page.locator('#submit').click();page.evaluate('window.acceptStub()')
+    page.get_by_role('heading',name='暫時無法取得解答').wait_for()
+    assert page.locator('#submit').is_disabled()
+    assert page.locator('#query').input_value() == ''
+    assert business_events() == [['event','ai_query_submit']]
+    page.evaluate('window.answerStub()')
+    page.locator('#submit:not([disabled])').wait_for()
+    assert page.locator('#result').is_hidden()
+    assert len(page.evaluate('stubRequests')) == 1
+    page.evaluate('stubHold=false')
+    page.locator('#query').fill('new search after timeout settled');page.locator('#submit').click()
+    page.locator('#result:not([hidden])').wait_for()
+    assert page.evaluate('stubRequests.at(-1).queryParams') == expected_params
+    assert business_events() == [['event','ai_query_submit']]*2
+    context.unroute('**/assets/config.js',short_config)
+    checks.append('timeout keeps SDK operation locked, ignores late answer and never retries; manual new currentPage search works after settle with exactly one GA event')
     # Queries continue when the GA4 script is blocked, with no storage gate.
     context.route('https://www.googletagmanager.com/gtag/js?*', lambda r:r.abort())
     page.evaluate('sessionStorage.clear()')
@@ -387,7 +442,7 @@ with sync_playwright() as p:
     assert page.locator('[data-answer]').inner_text() == 'local SDK stub answer'
     assert business_events() == []
     assert page.locator('#query').input_value() == ''
-    checks.append('GA4 per accepted query including follow-up/post-reset/refresh; no duplicate SDK notification, boot/example/empty/unsolicited/cancelled events; blocked loader/send does not block answers; no content parameters')
+    checks.append('GA4 per accepted query including first/second/third/refresh; no duplicate SDK notification, boot/example/empty/unsolicited/cancelled events; blocked loader/send does not block answers; no content parameters')
     checks.append('index/demo brand is accessible same-tab official agency homepage; demo analytics stays disabled')
     # Validate local module/deferred-loader compatibility without broad CSP rules.
     page.add_init_script('window.cspViolations=[];document.addEventListener("securitypolicyviolation",e=>window.cspViolations.push(e.violatedDirective))')
@@ -412,5 +467,5 @@ with sync_playwright() as p:
     # Loader failure generates a browser resource error, not an application pageerror.
     assert not external and not errors, (external, errors)
     browser.close()
-OUT.joinpath('browser_validation.json').write_text(json.dumps({'status':'PASS','checks':checks,'external_requests':external,'intercepted_analytics_loader_requests':analytics_requests,'page_errors':errors,'production_requests':0},ensure_ascii=False,indent=2))
+OUT.joinpath('browser_validation.json').write_text(json.dumps({'status':'PASS','checks':checks,'external_requests':external,'intercepted_analytics_loader_requests':analytics_requests,'page_errors':errors,'production_requests':0,'current_page_request_evidence':current_page_evidence},ensure_ascii=False,indent=2))
 print(json.dumps({'status':'PASS','checks':len(checks),'external_requests':0,'production_requests':0}))

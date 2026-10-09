@@ -40,7 +40,7 @@ test('queue is available immediately; official async loader waits for core then 
   assert.equal(b.scripts[0].async, true);
   assert.deepEqual(b.events(), [['event', 'ai_query_submit']]);
 });
-test('each accepted query emits only the new event name, including follow-up and post-reset', () => {
+test('each accepted query emits only the new event name, for first, second and third independent searches', () => {
   const b = browser(), analytics = createAnalytics(id, b.runtime);
   analytics.queryAccepted('private question');
   analytics.queryAccepted('private answer');

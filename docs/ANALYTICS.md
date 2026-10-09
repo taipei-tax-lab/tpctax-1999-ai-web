@@ -1,6 +1,6 @@
 # Minimal per-query GA4 measurement
 
-## Current contract — 2026-10-08
+## Current contract — 2026-10-09
 
 The owner-authorized GA4 Web Data Stream ID remains `G-S891SFSMBH` in
 `assets/config.js`. Missing/invalid-looking IDs disable analytics; demo always
@@ -18,7 +18,7 @@ names are never emitted together. Historical GA reports retain the earlier name
 and once-per-tab meaning; use the new event for current per-query reporting.
 
 Every valid user query actually accepted for Messenger sending counts once:
-first query +1, same-session follow-up +1, post-reset query +1. Reset itself,
+first independent search +1, second +1, third +1. Internal session recovery,
 example click alone, page opening, invalid/empty input, unsolicited/cancelled SDK
 requests and a send exception before acceptance count zero. Acceptance does not
 assert a successful answer or GA delivery. No question replay/retry is added.
@@ -28,7 +28,9 @@ pending text-query boundary. A WeakSet of pending request objects prevents a
 duplicate SDK notification from counting the **same query** twice; new requests
 always get their own count. No analytics sessionStorage access or once-per-tab
 in-memory guard remains. Old stored markers are ignored without touching them.
-Renderer, CX transport/session implementation and backend resources are unchanged.
+The direct FAQ Flow cutover changes only query routing; the analytics module,
+accepted boundary, failure isolation and deferred loader remain unchanged.
+No visible reset or additional analytics event exists.
 
 ## Startup and failure isolation
 
@@ -58,13 +60,13 @@ referrer is blank; Google signals/ad personalization signals remain disabled.
 | Metric | Meaning |
 | --- | --- |
 | `page_view` | Page views, including refresh |
-| `ai_query_submit` event count | **查詢次數**: total accepted valid query submissions, including follow-up and post-reset |
+| `ai_query_submit` event count | **查詢次數**: total accepted valid query submissions, including every independent search |
 | GA4 users/sessions filtered to `ai_query_submit` | Separate optional analysis of users/sessions; not the raw query count |
 
 Do not label this event count unique people or「發問人次」. No additional custom
 business event is implemented. Delivery can undercount when analytics is blocked.
 
-## Validation and resource evidence
+## Historical validation and resource evidence — 2026-10-08
 
 - Node: 14 existing + 7 analytics tests PASS (21 total).
 - Offline Chromium: 22 grouped checks PASS; verifies per-query counts 1/2/3, no extra count for reset,
@@ -95,3 +97,14 @@ A trusted browser should observe page measurement, then query events 1/2/3 for
 first/follow-up/post-reset; reset alone adds none, custom payload has no question
 text, and GA failure must leave AI queries usable. A queued fixture call does
 not prove GA receipt.
+
+## FAQ Flow cutover regression — 2026-10-09
+
+First/second/third searches share the exact currentPage in SDK defaults and request
+body, with GA arrays `[['event','ai_query_submit']]` repeated 1/2/3 and no custom
+parameters. Input clearing, duplicate request notification and internal recovery
+add no event. Invalid/rejected/cancelled sends count zero. Demo is disabled.
+Current Node/Chromium counts and live status are recorded in NEXT_TASK and
+PAGES_DEPLOYMENT; historical per-query/Playbook validation above is provenance.
+Trusted-browser receipt/Realtime or DebugView remains required: queued local
+fixtures and HTTPS file parity cannot establish actual GA4 receipt.

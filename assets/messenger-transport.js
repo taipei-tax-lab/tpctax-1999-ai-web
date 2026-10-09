@@ -2,18 +2,16 @@
 export class MessengerTransport {
   constructor(messenger, config, eventRoot = window) {
     this.messenger = messenger;this.config = config;this.eventRoot = eventRoot;
-    this.armed = true;this.pending = null;this.locked = false;this.listeners = [];
+    this.pending = null;this.locked = false;this.listeners = [];
     this.listen('df-request-sent', event => {
       const body = event.detail?.data?.requestBody;
-      // Block unsolicited welcome/events; only user sendQuery requests consume override.
+      // Block unsolicited welcome/events; each user query starts an independent FAQ search.
       if (!this.pending || !body?.queryInput?.text) { event.preventDefault();return; }
       body.queryParams ||= {};
-      if (this.armed) body.queryParams.currentPlaybook = config.initialPlaybook;
-      else delete body.queryParams.currentPlaybook;
+      delete body.queryParams.currentPlaybook;
+      body.queryParams.currentPage = config.faqCurrentPage;
       body.queryParams.timeZone = 'Asia/Taipei';
       this.pending.sent = true;
-      this.armed = false;
-      messenger.setQueryParameters({timeZone: 'Asia/Taipei'});
     });
     this.listen('df-response-received', event => {
       // SDK documents cancelability: suppress its transcript, render only our latest result.
@@ -26,10 +24,10 @@ export class MessengerTransport {
       this.listen(name, () => {
         if (this.pending) this.finish(new Error('session'));
         if (!this.locked) this.reset();
-        else this.rearmAfterSettled = true;
+        else this.recoverAfterSettled = true;
       });
     }
-    this.arm();
+    this.setDefaults();
   }
   listen(name, fn) {
     const handler = event => {
@@ -40,14 +38,10 @@ export class MessengerTransport {
     };
     this.eventRoot.addEventListener(name, handler);this.listeners.push([name, handler]);
   }
-  arm() { this.armed = true;this.messenger.setQueryParameters({timeZone: 'Asia/Taipei', currentPlaybook: this.config.initialPlaybook}); }
+  setDefaults() { this.messenger.setQueryParameters({timeZone: 'Asia/Taipei', currentPage: this.config.faqCurrentPage}); }
   reset() {
     if (this.locked) throw new Error('busy');
-    this.messenger.startNewSession({retainHistory: false});this.arm();
-  }
-  clear() {
-    if (this.locked) throw new Error('busy');
-    this.messenger.clearStorage();this.reset();
+    this.messenger.startNewSession({retainHistory: false});this.setDefaults();
   }
   finish(error, detail) {
     if (!this.pending) return;
@@ -64,7 +58,7 @@ export class MessengerTransport {
         // Keep transport locked until SDK settles, preventing late-result/query mixing.
       }, this.config.requestTimeoutMs);
       let operation;
-      try { operation = this.messenger.sendQuery(query); }
+      try { this.setDefaults();operation = this.messenger.sendQuery(query); }
       catch { this.finish(new Error('service'));this.locked = false;return; }
       Promise.resolve(operation).then(() => {
         if (this.pending === pending) this.finish(new Error('empty'));
@@ -72,7 +66,7 @@ export class MessengerTransport {
         if (this.pending === pending) this.finish(new Error('service'));
       }).finally(() => {
         this.locked = false;
-        if (this.rearmAfterSettled) { this.rearmAfterSettled = false;this.reset(); }
+        if (this.recoverAfterSettled) { this.recoverAfterSettled = false;this.reset(); }
         this.onSettled?.();
       });
     });

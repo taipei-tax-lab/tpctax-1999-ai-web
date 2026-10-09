@@ -132,3 +132,24 @@ Rollback:
 - redeploy.
 
 No Rental/Agent rollback is required for frontend rollback.
+
+## Web implementation evidence — 2026-10-09
+
+Read-only backend main `39e176ed40a4ad81cb9b39b6a7b15687bbcea4bb` matches all
+fixed parameters above. Web main baseline `410db6c` has been cut over in source:
+faqCurrentPage config; each request and SDK default gets same currentPage/timeZone,
+no currentPlaybook; no reset UI. Raw multi-message text is complete and ordered,
+parsed-only fallback retained; existing safe links include backend Rental note.
+Accepted-send clear/GA4 boundary and startup scheduling remain intact.
+
+Node 28 PASS; offline Chromium 26 grouped PASS. First/second/third request bodies
+and pre-event SDK defaults exact; GA1/2/3 without custom parameters. Synthetic
+0–5 FAQ text coverage, 1280/390/320, input/draft/heading, service/timeout/late-answer
+and internal session recovery PASS. No real external/Production fixture requests.
+Backend observed0/2/5 proof remains separate from synthetic frontend counts.
+
+Current source/deployed commit, Actions run, package hash, live blocker and
+rollback disposition are maintained in [NEXT_TASK](../NEXT_TASK.md) and
+[PAGES_DEPLOYMENT](PAGES_DEPLOYMENT.md). Full frozen frontend-only rollback:
+[FAQ_FLOW_ROLLBACK_2026-10-09.md](FAQ_FLOW_ROLLBACK_2026-10-09.md).
+No backend/Rental resources were changed.

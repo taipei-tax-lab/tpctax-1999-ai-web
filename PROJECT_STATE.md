@@ -1,3 +1,22 @@
+## Human acceptance decision — 1999 FAQ Flow web cutover（2026-10-09）
+
+Status: **1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE — GA4 RECEIPT OBSERVATION PENDING (NON-BLOCKING)**
+
+Review:
+- CX backend Flow v1 is already mapped to Production and direct-currentPage Production tests passed.
+- Web runtime is deployed and code review confirms every accepted query uses the fixed FAQ Flow START_PAGE currentPage and removes currentPlaybook.
+- Visible reset conversation UI is removed; each query is an independent semantic search.
+- Multi-message backend text is combined in order and official URLs are linkified.
+- Hosted package/deployment integrity and offline transport/browser tests passed.
+- User live review reported no material functional blocker; GA4 was not visibly observed in the tested browser session.
+- GA4 receipt visibility is explicitly **not a release blocker**. Existing code-level contract remains one parameter-free `ai_query_submit` per accepted query, with no user-entered question/answer/source content.
+- Incognito/private browsing may affect observation depending on browser/privacy settings, but absence from one private session is not treated as evidence that the analytics implementation is broken.
+- Verify GA4 later in a normal trusted browser / Realtime or DebugView as an operational follow-up.
+
+No rollback is required. Rental/Agent/backend remain unchanged.
+
+---
+
 ## CX backend Flow handoff received（2026-10-09）
 
 Backend status: **1999 FAQ FLOW BACKEND READY FOR WEB CUTOVER**

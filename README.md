@@ -70,4 +70,4 @@ replay 不代表新的 live 驗收。GA4 receipt 是 non-blocking operational fo
 - implementation source/evidence commit: `5d58feed72b5758d93a943fca5c96536d71bd0f2`
 - Drive evidence: `1SZCna6cjEhl3TZeUfTLD790p-q6b4y49`
 
-後續 frontend / UI / hosting 工作以本 repo 為準；原 CX repo 只保留歷史證據與 migration pointer。
+後續 frontend／UI／hosting 的原始碼與發布證據以本 Web Repo 為準；**現行 CX Agent／Flow／Playbook／Tool／Data Store／Environment／Versions 仍以 [dialogflow-cx-qa-framework](https://github.com/taipei-tax-lab/dialogflow-cx-qa-framework) 的後端建置與最新驗收證據為準**。原 CX Repo 並非只有歷史備份；其 2026-10-10 [Phase3B](https://github.com/taipei-tax-lab/dialogflow-cx-qa-framework/blob/0426acd0efbfc8a67b0e1ae24760c5b456d11898/docs/GCP_CX_CLEANUP_PHASE3B_LEGACY_RETIREMENT_2026-10-10.md) 與 [清理後驗收](https://github.com/taipei-tax-lab/dialogflow-cx-qa-framework/blob/0426acd0efbfc8a67b0e1ae24760c5b456d11898/docs/GCP_CX_POST_CLEANUP_ACCEPTANCE_2026-10-10.md) 就是目前可追溯的正式基準。

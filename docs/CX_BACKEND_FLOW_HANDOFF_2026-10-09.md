@@ -4,6 +4,10 @@ Date: 2026-10-09
 
 Status: **BACKEND READY / WEB DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING**
 
+> **狀態註記（2026-10-10）：** 此份 Handoff 是 2026-10-09 當時的交接快照，上述 `HUMAN LIVE ACCEPTANCE PENDING` 不代表目前網站狀態。[前端 PROJECT_STATE.md](../PROJECT_STATE.md) 後續已記載 1999 FAQ Flow Web cutover 經人工接受為 `LIVE / USABLE`（GA4 receipt 仍待觀察）。後端 [2026-10-10 retained-service acceptance](https://github.com/taipei-tax-lab/dialogflow-cx-qa-framework/blob/0426acd0efbfc8a67b0e1ae24760c5b456d11898/docs/GCP_CX_POST_CLEANUP_ACCEPTANCE_2026-10-10.md) 完成 1999／Rental 保留服務抽測；同日 [Phase3B](https://github.com/taipei-tax-lab/dialogflow-cx-qa-framework/blob/0426acd0efbfc8a67b0e1ae24760c5b456d11898/docs/GCP_CX_CLEANUP_PHASE3B_LEGACY_RETIREMENT_2026-10-10.md) 已退役部分舊 FAQ versions，原 Handoff 中以舊 FAQ Playbook 為目標的 rollback **已被正式基準取代，不能照舊執行**；請看 [回滾文件警示](FAQ_FLOW_ROLLBACK_2026-10-09.md)。以上僅文件校正，沒有更改前端或後端。
+
+
+
 Backend source of truth:
 `taipei-tax-lab/dialogflow-cx-qa-framework`
 
@@ -117,9 +121,11 @@ Because every query is independent:
 - technical Messenger session reset may remain internal for recovery only;
 - latest query/result replaces the previous displayed result.
 
-## Rollback
+## Rollback (2026-10-09 historical plan; **SUPERSEDED / DO NOT EXECUTE**)
 
-Frontend rollback target is the existing old FAQ Playbook:
+**2026-10-10 authoritative correction:** Backend [Phase3B](https://github.com/taipei-tax-lab/dialogflow-cx-qa-framework/blob/0426acd0efbfc8a67b0e1ae24760c5b456d11898/docs/GCP_CX_CLEANUP_PHASE3B_LEGACY_RETIREMENT_2026-10-10.md) retired the old FAQ Playbook immutable v1/v2 and old Tool v1, detached old FAQ mappings, and adopted the **four-mapping / Rental v3** accepted baseline. The old frontend-only rollback plan below is archived for provenance, **not an executable recovery procedure**. Existing old parent/Draft does not restore a published Production version. A future rollback requires a newly validated and approved plan.
+
+Original 2026-10-09 rollback target (historical only):
 
 ```text
 projects/serviceagent-1150909/locations/asia-northeast1/agents/799426c1-ba69-49dc-85e4-5065985706e2/playbooks/f0512949-95f2-40c6-95d0-0c139b84b542
@@ -131,7 +137,7 @@ Rollback:
 - remove FAQ `currentPage`;
 - redeploy.
 
-No Rental/Agent rollback is required for frontend rollback.
+Historical 2026-10-09 assumption only: no Rental/Agent rollback. This instruction is superseded.
 
 ## Web implementation evidence — 2026-10-09
 
@@ -163,5 +169,5 @@ commit are the same implementation; final reporting HEAD is separate.
 Actual browser 10:39:19 Cloud ERR_CERT_AUTHORITY_INVALID before origin/page JS,
 gtag 10:39:17 CONNECT403. No Production queries/GA receipt. Seven browser checks
 remain PENDING; status is DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING, not Web LIVE.
-Rollback AVAILABLE / NOT EXECUTED; no executable launch-critical failure, no
+Historical 2026-10-09 status: rollback previously labelled AVAILABLE / NOT EXECUTED; **superseded by 2026-10-10 CX Phase3B**. No executable launch-critical failure, no
 Rental/Agent/backend change.

@@ -27,7 +27,7 @@ At the start of every task, read:
 - Never fabricate source metadata.
 - Never put service-account credentials, ADC, access tokens, API secrets, or private keys in browser code or repo files.
 - Do not modify live Messenger settings, CX resources, GCP IAM, Production Environment, or the official Taipei City website from this repo unless separately authorized.
-- `assets/config.js` must remain `liveEnabled: false` until explicit deployment authorization.
+- **現行已上線配置（2026-10-09 已完成授權及人工驗收）：** `assets/config.js` 現為 `liveEnabled: true`，且 1999 FAQ Flow Web cutover 已記錄 `LIVE / USABLE`。不得因本檔的歷史準備期規則而擅自將正式服務改回 `false`；未來改動該 flag、停用服務或重部署都需另取得明確授權。證據見 `PROJECT_STATE.md` 與 `assets/config.js`。
 
 ## UI continuity with official site
 

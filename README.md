@@ -57,8 +57,8 @@ demo ZIP。正式 hosting ZIP 只有 12 檔；使用既有 Actions workflow 部�
 真實 Messenger 視覺確認另記；Cloud TLS／proxy 阻擋時為 PENDING，離線
 replay 不代表新的 live 驗收。GA4 receipt 是 non-blocking operational follow-up，
 不因 Realtime／DebugView 暫不可觀察而阻擋此 UI deployment。
-原 [frontend-only rollback 計畫](docs/FAQ_FLOW_ROLLBACK_2026-10-09.md) 是 2026-10-09 歷史方案；由於 2026-10-10 後端退役部分舊 FAQ immutable versions，
-**此方案已標記 UNVERIFIED / DO NOT EXECUTE**。未來若有實際回滾需求，需先核對當時的 CX 映射與可用目標，另行批准新方案；不得依原文件直接恢復舊 Playbook。
+原 [frontend-only rollback 計畫](docs/FAQ_FLOW_ROLLBACK_2026-10-09.md) 是 2026-10-09 歷史方案。後端在 [2026-10-10 Phase3B](https://github.com/taipei-tax-lab/dialogflow-cx-qa-framework/blob/0426acd0efbfc8a67b0e1ae24760c5b456d11898/docs/GCP_CX_CLEANUP_PHASE3B_LEGACY_RETIREMENT_2026-10-10.md) 已退役舊 FAQ Playbook immutable v1/v2 與舊 Tool v1，並確立現行四項 Production mappings／Rental v3 為正式回滾基準。
+**舊回滾方案已標記 SUPERSEDED / DO NOT EXECUTE。** 若日後發生問題，應依當日已驗證正式 CX 配置另訂方案，而非還原舊 FAQ Playbook。
 
 ## Migration provenance
 

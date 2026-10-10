@@ -1,6 +1,12 @@
 # FAQ Flow Web cutover — frontend-only rollback
 
-Prepared: 2026-10-09. Status: **AVAILABLE / NOT EXECUTED**.
+> **重要：2026-10-10 文件校正（歷史方案，禁止直接執行）**
+>
+> 本文為 2026-10-09 當時尚未實施的 frontend-only rollback 計畫，**不再具有現行可用的回滾認證**。後端 [2026-10-10 Phase3B](https://github.com/taipei-tax-lab/dialogflow-cx-qa-framework/blob/0426acd0efbfc8a67b0e1ae24760c5b456d11898/docs/GCP_CX_CLEANUP_PHASE3B_LEGACY_RETIREMENT_2026-10-10.md) 已退役舊 FAQ Playbook v1/v2 與 Tool v1 immutable versions；[正式保留服務驗收](https://github.com/taipei-tax-lab/dialogflow-cx-qa-framework/blob/0426acd0efbfc8a67b0e1ae24760c5b456d11898/docs/GCP_CX_POST_CLEANUP_ACCEPTANCE_2026-10-10.md) 確認 Production 仍採 1999 FAQ Flow v1／Rental v3／Router v1／Rental Tool v1。舊 Playbook parent／Draft 仍存在，**不能直接推定其路徑一定可用或一定失效**；本輪沒有重新驗證。 
+>
+> 下列 restore 指令、回滾目標與重新發布步驟**僅留作歷史追溯，不得照單執行**。未來確有回滾需求時，必須先核實現行 Web source、正式 CX versions/mappings、可用目標、回歸測試及人為批准，再另外制定新版回滾程序。此次只改文檔，不修改網站前端、CX 或正式部署。
+
+Prepared: 2026-10-09. Historical status: **PREVIOUSLY PLANNED / NOT EXECUTED**. Current applicability: **UNVERIFIED / DO NOT EXECUTE**.
 
 Use only for a demonstrated launch-critical frontend/direct Flow problem.
 Cloud TLS/proxy preventing browser acceptance is PENDING, not a rollback trigger.

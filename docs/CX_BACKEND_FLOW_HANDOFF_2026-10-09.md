@@ -4,6 +4,10 @@ Date: 2026-10-09
 
 Status: **BACKEND READY / WEB DEPLOYED / HUMAN LIVE ACCEPTANCE PENDING**
 
+> **狀態註記（2026-10-10）：** 此份 Handoff 是 2026-10-09 當時的交接快照，上述 `HUMAN LIVE ACCEPTANCE PENDING` 不代表目前網站狀態。[前端 PROJECT_STATE.md](../PROJECT_STATE.md) 後續已記載 1999 FAQ Flow Web cutover 經人工接受為 `LIVE / USABLE`（GA4 receipt 仍待觀察）。後端 [2026-10-10 retained-service acceptance](https://github.com/taipei-tax-lab/dialogflow-cx-qa-framework/blob/0426acd0efbfc8a67b0e1ae24760c5b456d11898/docs/GCP_CX_POST_CLEANUP_ACCEPTANCE_2026-10-10.md) 完成 1999／Rental 保留服務抽測；同日 [Phase3B](https://github.com/taipei-tax-lab/dialogflow-cx-qa-framework/blob/0426acd0efbfc8a67b0e1ae24760c5b456d11898/docs/GCP_CX_CLEANUP_PHASE3B_LEGACY_RETIREMENT_2026-10-10.md) 已退役部分舊 FAQ versions，原 Handoff 中以舊 Playbook 為目標的 rollback 敘述已不保證可用；請看 [回滾文件警示](FAQ_FLOW_ROLLBACK_2026-10-09.md)。以上僅文件校正，沒有更改前端或後端。
+
+
+
 Backend source of truth:
 `taipei-tax-lab/dialogflow-cx-qa-framework`
 

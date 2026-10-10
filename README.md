@@ -57,8 +57,8 @@ demo ZIP。正式 hosting ZIP 只有 12 檔；使用既有 Actions workflow 部�
 真實 Messenger 視覺確認另記；Cloud TLS／proxy 阻擋時為 PENDING，離線
 replay 不代表新的 live 驗收。GA4 receipt 是 non-blocking operational follow-up，
 不因 Realtime／DebugView 暫不可觀察而阻擋此 UI deployment。
-Launch-critical 問題僅依 [frontend rollback](docs/FAQ_FLOW_ROLLBACK_2026-10-09.md)
-恢復舊 Playbook transport 並 redeploy，不修改 Rental／Agent／Production。
+原 [frontend-only rollback 計畫](docs/FAQ_FLOW_ROLLBACK_2026-10-09.md) 是 2026-10-09 歷史方案；由於 2026-10-10 後端退役部分舊 FAQ immutable versions，
+**此方案已標記 UNVERIFIED / DO NOT EXECUTE**。未來若有實際回滾需求，需先核對當時的 CX 映射與可用目標，另行批准新方案；不得依原文件直接恢復舊 Playbook。
 
 ## Migration provenance
 

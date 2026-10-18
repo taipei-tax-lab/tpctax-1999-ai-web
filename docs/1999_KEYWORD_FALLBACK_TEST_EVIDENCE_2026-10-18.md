@@ -352,4 +352,8 @@ docs/1999_KEYWORD_FALLBACK_TEST_EVIDENCE_2026-10-18.md
 
 `.github/workflows/pages.yml`僅main指定runtime/package paths的push或手動dispatch會部署；此次只push研究分支三份Markdown，不觸發既有Pages workflow。scope check亦逐一對照其餘全部tracked檔案。這是研究文件交付，沒有新deployment／實作／PR merge。
 
+提交前實際核對：其餘**43個基準檔案byte-identical**；Pages下載document與原始`index.html` 2,908 bytes完全一致；三份Markdown的credential marker scan與local links PASS，`git diff --cached --check` PASS。測試用local server已停止，`work/`為未提交暫存。
+
+研究內容commit `66e4861cf2ec85ad0ee066f5963a2ac4c1fd8f4c`已push；GitHub GET回讀研究branch ref等於該SHA，main仍為`5f180504c085754256842fa3a2214ab1f0e671bb`。GET `actions/runs?head_sha=66e4861cf2ec85ad0ee066f5963a2ac4c1fd8f4c&per_page=10`回`{"total_count":0,"workflow_runs":[]}`。本段及NEXT_TASK勾選是後續交付回讀文件更新，不變更研究／正式程式內容。
+
 **STOP，待人工及Web ChatGPT審閱。**

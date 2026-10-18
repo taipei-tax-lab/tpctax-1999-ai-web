@@ -20,7 +20,7 @@ Status: **RESEARCH DELIVERED / OFFICIAL SEARCH & CORS BLOCKED / NO IMPLEMENTATIO
 - [x] 離線封存 canonical title index 核對 **623 rows／623 unique URLs／177,656 bytes／hash exact**；信用卡8、房屋稅51、兩個原題各1。索引無答案，不能當完整FAQ副本或官網查詢實測。
 - [x] Gate E：完成 A1／A2／B／C／D 證據、成本、同步與風險比較；最低成本排序 **C → B → A2 → A1 → D**。同頁完整問答以 B 為條件式首選；尚未核准任何實作。
 - [x] 完成[研究報告](docs/1999_KEYWORD_FALLBACK_FEASIBILITY_REPORT_2026-10-18.md)及[測試證據／重現方式](docs/1999_KEYWORD_FALLBACK_TEST_EVIDENCE_2026-10-18.md)；PROJECT_STATE 不變，研究假設不寫成正式現況。
-- [ ] 提交並推送三份 Markdown 至研究分支，核對 remote ref／protected files／無 Pages workflow；不得自行 merge 或實作。
+- [x] 提交並推送三份 Markdown 至研究分支，核對 remote ref／protected files／無 Pages workflow；不得自行 merge 或實作。
 - [ ] 人工／Web ChatGPT 審閱：選 C（現有官網連結、未驗證預填）或補足 B／A2 證據後另開授權。
 
 ### 阻礙與下一輪必要輸入
@@ -31,6 +31,10 @@ Status: **RESEARCH DELIVERED / OFFICIAL SEARCH & CORS BLOCKED / NO IMPLEMENTATIO
 
 本輪交付是可查核的部分研究與阻礙清單，**不是官網整合可上線驗收**。
 既有 LIVE / USABLE、currentPage／GA4 accepted-query 契約不變。
+研究內容 commit `66e4861cf2ec85ad0ee066f5963a2ac4c1fd8f4c` 已成功 push，
+GitHub ref 回讀一致；main 仍為 `5f180504c085754256842fa3a2214ab1f0e671bb`，
+該研究 commit 的 Actions runs `total_count=0`。其餘 **43個基準檔案 byte-identical**，
+三份 Markdown diff／local links／credential marker scan PASS。此交付回讀另以文件 commit 記錄。
 **STOP 等待使用者與 Web ChatGPT 審閱。**
 
 ---
@@ -172,3 +176,4 @@ UI-only rollback：如本輪出現 launch-critical presentation 問題，恢復
 - 官網四組查詢及來源 CORS／完整資料仍 BLOCKED／UNKNOWN，保留未勾項目；不可宣稱 A1／A2 可直接整合。
 - 推薦 C 優先，若需同頁完整結果則 B 條件式優先；報告與證據僅研究建議，正式前後端／資料／UI／部署變更0。
 - 本輪只交付三份 Markdown 研究／交接文件；提交推送後 STOP，未獲新授權前不得實作或 merge。
+- 研究內容 `66e4861` 已推送並回讀，main 不變／Actions runs0／protected baseline files43個完全一致；交付回讀文件提交後維持 STOP。

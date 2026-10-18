@@ -1,4 +1,43 @@
-# NEXT_TASK — FAQ 多候選結果呈現
+# NEXT_TASK — 1999 關鍵字 fallback 唯讀研究
+
+Date: 2026-10-18 (Asia/Taipei)
+Status: **RESEARCH DELIVERED / OFFICIAL SEARCH & CORS BLOCKED / NO IMPLEMENTATION / STOP**
+
+本輪依[研究計畫](docs/1999_KEYWORD_FALLBACK_FEASIBILITY_PLAN_2026-10-18.md)，
+從 Web main `5f180504c085754256842fa3a2214ab1f0e671bb` 分出
+`research/1999-keyword-fallback-2026-10-18`。只交研究與必要交接文件，
+不 merge、不部署、不改 CX／Data Store／前端功能／UI／GA4。
+
+## 本輪研究 checklist（2026-10-18）
+
+- [x] Gate A：依 AGENTS 讀現況與計畫，定位 app／transport／result-model／fixtures／tests／packager／workflow；同步最新 main。
+- [x] 唯讀核對 backend main `63fa97d61b426b09d16302f7ad8d522b9bebb25f` 的最新權威 baseline：2026-10-13 驗證，FAQ Flow v1／v4／623，Tokyo 四 mappings／Rental v3。未重跑 GCP 或 detectIntent。
+- [x] Gate B：執行官網入口 GET；記錄 proxy CONNECT403／origin HTTP000，另取得公開官方索引的標題／內容欄位及 JSON／CSV 候選線索。
+- [ ] Gate B：當日真實 form method／action／field names、信用卡及房屋稅各做標題／內文四組提交、完整問句對照及結果筆數／全文／URL。**BLOCKED：官網入口尚不可讀，未猜 endpoint 或欄位。**
+- [x] Gate C：執行帶 Pages Origin 的 GET／入口 OPTIONS、資料平台 metadata GET、真實 Chromium 導航；區分 proxy403、Pages curl200 與 browser CA／tunnel failure。
+- [ ] Gate C：實際 export／search API 的 GET/必要OPTIONS、匿名 cookie/CSRF／登入／限流、實體資料欄位／筆數／更新日期、真正 Pages-origin browser fetch。**UNKNOWN / BLOCKED：tpctax.gov.taipei／data.taipei 未放行，Pages browser CA 未通過；沒有 CORS PASS/FAIL。**
+- [x] Gate D：既有 Node **37 PASS**、offline Chromium **30 grouped PASS**；7個一次性 normalization 觀察，固定零結果是有效 result，empty／error／timeout 不等於零筆。**Production requests0**。
+- [x] 離線封存 canonical title index 核對 **623 rows／623 unique URLs／177,656 bytes／hash exact**；信用卡8、房屋稅51、兩個原題各1。索引無答案，不能當完整FAQ副本或官網查詢實測。
+- [x] Gate E：完成 A1／A2／B／C／D 證據、成本、同步與風險比較；最低成本排序 **C → B → A2 → A1 → D**。同頁完整問答以 B 為條件式首選；尚未核准任何實作。
+- [x] 完成[研究報告](docs/1999_KEYWORD_FALLBACK_FEASIBILITY_REPORT_2026-10-18.md)及[測試證據／重現方式](docs/1999_KEYWORD_FALLBACK_TEST_EVIDENCE_2026-10-18.md)；PROJECT_STATE 不變，研究假設不寫成正式現況。
+- [ ] 提交並推送三份 Markdown 至研究分支，核對 remote ref／protected files／無 Pages workflow；不得自行 merge 或實作。
+- [ ] 人工／Web ChatGPT 審閱：選 C（現有官網連結、未驗證預填）或補足 B／A2 證據後另開授權。
+
+### 阻礙與下一輪必要輸入
+
+1. 經受支援環境設定取得官方主站與已知資料平台的讀取能力，修復受管 CA 的瀏覽器信任；保留 TLS，不改 proxy 路由、不用第三方 CORS proxy。
+2. 真實表單／匯出 href 取得後再做小量匿名實測，確定 request、完整 Q/A/URL、總筆數、更新日期及 browser CORS。官網或資料集數量不假設等於623。
+3. 若選 B，先確立完整官方資料批次、合法出處、範圍／版本及同步 owner／時效；title-only index 不足。同一題 AI 先查再補查仍付第一次 CX 費用。
+
+本輪交付是可查核的部分研究與阻礙清單，**不是官網整合可上線驗收**。
+既有 LIVE / USABLE、currentPage／GA4 accepted-query 契約不變。
+**STOP 等待使用者與 Web ChatGPT 審閱。**
+
+---
+
+# 歷史 checklist — FAQ 多候選結果呈現（2026-10-09）
+
+以下保留當時原始紀錄；其部署／rollback／待辦不構成本輪執行授權。
 
 Date: 2026-10-09 (Asia/Taipei)
 Status: **UI DEPLOYED / HUMAN RENDERER VISUAL CONFIRMATION PENDING**
@@ -126,3 +165,10 @@ UI-only rollback：如本輪出現 launch-critical presentation 問題，恢復
 - 截圖本機保留，hash／重現方式入 Git；optional Drive upload遭 automatic review 拒絕，未上傳／未重試。
 - Rollback **AVAILABLE / NOT EXECUTED**，無已觀察 launch-critical presentation issue；config/transport/analytics/backend/Rental不變。
 - Final report-only commit 不變更 runtime／hosting ZIP／deployed SHA；最終 main HEAD 與 deployed implementation 分開。Commit/push後 **STOP 等待 Web ChatGPT review**。
+
+## 本輪完成摘要（2026-10-18）
+
+- 已完成唯讀 baseline、公開介面探測、37 Node／30 offline browser、零結果契約與封存標題索引對照，Production requests0。
+- 官網四組查詢及來源 CORS／完整資料仍 BLOCKED／UNKNOWN，保留未勾項目；不可宣稱 A1／A2 可直接整合。
+- 推薦 C 優先，若需同頁完整結果則 B 條件式優先；報告與證據僅研究建議，正式前後端／資料／UI／部署變更0。
+- 本輪只交付三份 Markdown 研究／交接文件；提交推送後 STOP，未獲新授權前不得實作或 merge。

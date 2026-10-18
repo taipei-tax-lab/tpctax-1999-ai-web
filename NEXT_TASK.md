@@ -1,4 +1,39 @@
-# NEXT_TASK — FAQ 多候選結果呈現
+# NEXT_TASK — A1 官網搜尋／iframe 瀏覽器唯讀研究
+
+Date: 2026-10-18 (Asia/Taipei)
+Status: **ENVIRONMENT BLOCKED / ORIGIN CAPABILITY UNKNOWN / MANUAL KIT READY / STOP**
+
+依[A1驗證計畫](docs/1999_A1_OFFICIAL_SEARCH_BROWSER_VERIFICATION_PLAN_2026-10-18.md)，
+從 main `ba649d13ff0723f9d3e606d4c44e374f7b211af1` 建立獨立分支
+`research/1999-a1-browser-verification-2026-10-18`。
+已讀前輪研究分支 pinned `403863f9d529fe32f4bf6e17d99aa9c493368330`
+的報告／證據；前輪尚未合併main，沒有遺失，也不在本輪合併。
+本輪不改正式前端／UI／GA4／CX／Data Store／官網或部署，不擴張至proxy、題庫副本或CSV同步。
+
+## 本輪研究 checklist（2026-10-18）
+
+- [x] Gate 0：依AGENTS讀取現況、A1計畫與前輪完整報告／證據，核對main／前輪SHA、workflow及static packager。
+- [x] Gate 1：單次匿名GET官網F，17:51:53遇proxy CONNECT403／origin HTTP000，記錄環境state=enforced；遇阻後停止該來源重試。
+- [ ] Gate 1：真實origin status／redirect／CORS／XFO／CSP、form action/method/input names、信用卡／房屋稅標題及內容四組搜尋與完整Q/A/URL。**ENVIRONMENT BLOCKED；原站能力UNKNOWN。**
+- [x] Gate 2：Pages curl GET HTTP200、2,908 bytes與index一致；17:52:13起真實Chromium導航Pages遇CA錯誤，未建立origin。未執行官網fetch／OPTIONS。
+- [ ] Gate 2：真正Pages-origin匿名GET讀取已證實的搜尋URL與完整官方結果。**UNKNOWN**，不以首頁／curl200或no-cors替代。
+- [ ] Gate 3：Pages-origin實際iframe可見／手動查詢／mobile／Cookie／top導頁、來源XFO/frame-ancestors與父頁frame-src。**ENVIRONMENT BLOCKED／未執行**，不能寫成官網TECHNICALLY BLOCKED。
+- [ ] Gate 3：真實無session依賴keyword deep link／官方postMessage支援。**UNKNOWN**；未猜參數、未由父頁操作跨origin DOM。
+- [x] Gate 4：交付[Windows Chrome／Edge最小人工程序與三段測試碼](docs/1999_A1_WINDOWS_BROWSER_MANUAL_VERIFICATION_2026-10-18.md)，含固定首頁匿名GET、唯讀form metadata、可移除iframe與去敏回填M0–M9。
+- [x] 測試碼核對：3段`node --check`及**9組offline synthetic browser PASS**，forwarded network0／detectIntent0；不冒充Windows真人或官網PASS。
+- [ ] Windows真人原站補驗／M0–M9回填。尚未執行；沒有要求帳密、HAR、Cookie或放寬Cloud政策。
+- [x] Gate 5：完成[本輪判定報告](docs/1999_A1_OFFICIAL_SEARCH_BROWSER_VERIFICATION_2026-10-18.md)，分開Cloud環境、原站CORS、iframe顯示／操作／keyword；目前**先不選A1a或A1b**。
+- [ ] 三份Markdown提交推送、remote branch/main／workflow回讀；不merge、不deploy。
+- [ ] 使用者／Web ChatGPT審閱與人工補驗後，才決定下一輪；本輪沒有實作授權。
+
+正式LIVE / USABLE宣告及現行currentPage／GA4契約不變，PROJECT_STATE不新增假設。
+**STOP：等待審閱。**
+
+---
+
+# 歷史 checklist — FAQ 多候選結果呈現（2026-10-09）
+
+以下是歷史原始紀錄，不授權本輪執行部署、rollback或舊未決工作。
 
 Date: 2026-10-09 (Asia/Taipei)
 Status: **UI DEPLOYED / HUMAN RENDERER VISUAL CONFIRMATION PENDING**
@@ -126,3 +161,9 @@ UI-only rollback：如本輪出現 launch-critical presentation 問題，恢復
 - 截圖本機保留，hash／重現方式入 Git；optional Drive upload遭 automatic review 拒絕，未上傳／未重試。
 - Rollback **AVAILABLE / NOT EXECUTED**，無已觀察 launch-critical presentation issue；config/transport/analytics/backend/Rental不變。
 - Final report-only commit 不變更 runtime／hosting ZIP／deployed SHA；最終 main HEAD 與 deployed implementation 分開。Commit/push後 **STOP 等待 Web ChatGPT review**。
+
+## 本輪完成摘要（2026-10-18／A1）
+
+- 已取得Cloud proxy／CA阻礙的本輪證據；原站CORS／iframe／keyword沒有足夠證據，維持UNKNOWN，不宣稱產品技術不可行。
+- Windows人工補驗文件與必要測試碼已備妥、3段語法／9組合成檢查通過；原站真人補驗未執行。
+- 只交三份研究／交接Markdown，production frontend／UI／CX／Data Store／官網／GA4／部署mutation0、detectIntent0；不merge、不自行實作，推送後STOP等待審閱。

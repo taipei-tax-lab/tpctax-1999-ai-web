@@ -226,6 +226,8 @@ git diff --exit-code ba649d13ff0723f9d3e606d4c44e374f7b211af1 -- \
 
 研究commit SHA及remote回讀記在本輪`NEXT_TASK.md`交付小節。`work/`未提交，不宣稱整個工作目錄無暫存；正式tracked內容只有上述文件變更。
 
+交付回讀：研究內容commit `8d33e238f3bddcc27b3872a33172c98783aa3da2`已push，GitHub研究ref一致；main仍為`ba649d13ff0723f9d3e606d4c44e374f7b211af1`、前輪研究ref仍為`403863f9d529fe32f4bf6e17d99aa9c493368330`。該commit的Actions runs `total_count=0`。其餘**44個baseline檔案byte-identical**，changed Markdown local links／credential-marker scan／diff check PASS；本機HTML另確認只有一個固定官方iframe、無script。此段與NEXT_TASK勾選為交接文件更新，不新增原站測試結果。
+
 下一個決策輸入是人工補驗M0–M9。最少先有真實官網request及Pages fetch／iframe的Network／Console去敏摘要，才能區分來源限制與使用者端環境；若只測首頁仍不能選A1a搜尋，若iframe只顯示仍不能宣稱keyword帶入。**目前不要求放寬Cloud政策，也不自行取得其他執行環境。**
 
 **STOP：等待使用者與Web ChatGPT審閱及人工補驗，未自行實作、部署或合併。**

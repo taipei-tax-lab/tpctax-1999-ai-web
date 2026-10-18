@@ -23,10 +23,14 @@ Status: **ENVIRONMENT BLOCKED / ORIGIN CAPABILITY UNKNOWN / MANUAL KIT READY / S
 - [x] 測試碼核對：3段`node --check`及**9組offline synthetic browser PASS**，forwarded network0／detectIntent0；不冒充Windows真人或官網PASS。
 - [ ] Windows真人原站補驗／M0–M9回填。尚未執行；沒有要求帳密、HAR、Cookie或放寬Cloud政策。
 - [x] Gate 5：完成[本輪判定報告](docs/1999_A1_OFFICIAL_SEARCH_BROWSER_VERIFICATION_2026-10-18.md)，分開Cloud環境、原站CORS、iframe顯示／操作／keyword；目前**先不選A1a或A1b**。
-- [ ] 三份Markdown提交推送、remote branch/main／workflow回讀；不merge、不deploy。
+- [x] 三份Markdown提交推送、remote branch/main／workflow回讀；不merge、不deploy。
 - [ ] 使用者／Web ChatGPT審閱與人工補驗後，才決定下一輪；本輪沒有實作授權。
 
 正式LIVE / USABLE宣告及現行currentPage／GA4契約不變，PROJECT_STATE不新增假設。
+研究內容commit `8d33e238f3bddcc27b3872a33172c98783aa3da2`已push並由GitHub ref回讀一致；
+main仍為`ba649d13ff0723f9d3e606d4c44e374f7b211af1`、前輪branch仍為`403863f9d529fe32f4bf6e17d99aa9c493368330`。
+該研究commit的Actions runs0，其餘44個baseline檔案byte-identical；diff／local links／credential-marker scan PASS。
+此回讀與勾選另以交接文件commit記錄，未改任何正式功能。
 **STOP：等待審閱。**
 
 ---
@@ -167,3 +171,4 @@ UI-only rollback：如本輪出現 launch-critical presentation 問題，恢復
 - 已取得Cloud proxy／CA阻礙的本輪證據；原站CORS／iframe／keyword沒有足夠證據，維持UNKNOWN，不宣稱產品技術不可行。
 - Windows人工補驗文件與必要測試碼已備妥、3段語法／9組合成檢查通過；原站真人補驗未執行。
 - 只交三份研究／交接Markdown，production frontend／UI／CX／Data Store／官網／GA4／部署mutation0、detectIntent0；不merge、不自行實作，推送後STOP等待審閱。
+- 研究內容`8d33e23`已推送回讀，main／前輪branch不變、Actions runs0；交接回讀文件提交後維持STOP。

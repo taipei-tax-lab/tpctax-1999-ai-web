@@ -1,3 +1,16 @@
+# Current product decision — 2026-10-19｜1999 FAQ 查無結果前端提示
+
+**已核定小改方向，待 Codex 於獨立分支實作；尚未實作、合併或部署。**
+
+- 正式民眾提示：**「暫時沒有找到符合您需求的 1999 常見問答。請試著補充問題的具體情況，讓我們為您搜尋更相關的官方資訊。」**
+- 僅在成功回應且**完整符合固定兩段 FAQ true-zero 契約**時，從前端呈現層替換舊零結果文字；不可將服務錯誤、逾時、空 payload、一般純文字或只有無卡片誤認為 true zero。
+- **保留**原出租專區官方連結、右上角原官網導覽、正常 1～5 題官方原文及來源 URL、每題獨立 currentPage、accepted-send 與 GA4。
+- **不動** Dialogflow CX Flow／Production、623 題 Data Store、FAQ 原始答案、官方網站，不加入傳統關鍵字搜尋、第二題庫、查詢改寫或重試。
+- 詳細執行、測試、停止條件以 [2026-10-19 前端零結果文案計畫](1999_FAQ_ZERO_RESULT_FRONTEND_COPY_PLAN_2026-10-19.md) 為準；實作分支須先交 ChatGPT 審核，**不自動 merge／deploy**。
+- 2026-10-18～19 後端 FAQ short-keyword／NOT_FOUND 診斷只是保留的研究成果，不是本輪前端修改依賴，**研究分支不合併後端 main**。
+
+---
+
 # Current product decision — 2026-10-09
 
 [CX_BACKEND_FLOW_HANDOFF_2026-10-09.md](CX_BACKEND_FLOW_HANDOFF_2026-10-09.md)

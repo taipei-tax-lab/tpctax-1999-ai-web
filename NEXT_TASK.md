@@ -1,3 +1,18 @@
+# NEXT_TASK — 2026-10-19｜FAQ 查無結果提示前端小改版
+
+**狀態：已核定規劃、待 Codex 實作；正式網頁尚未修改。**
+
+詳細執行及驗收規格：[`docs/1999_FAQ_ZERO_RESULT_FRONTEND_COPY_PLAN_2026-10-19.md`](docs/1999_FAQ_ZERO_RESULT_FRONTEND_COPY_PLAN_2026-10-19.md)。
+
+- [ ] Codex 從前端 main 開獨立分支，精確辨識真正 FAQ zero 的固定兩段文字（非一般零 cards 或 service error），只在前端**顯示層**使用新版文案：「暫時沒有找到符合您需求的 1999 常見問答。請試著補充問題的具體情況，讓我們為您搜尋更相關的官方資訊。」
+- [ ] 保留出租專區可點擊連結、原文 FAQ／來源、Messenger／GA4／currentPage 等不變，加入正反例與錯誤／逾時測試。
+- [ ] 執行 `npm test`、可用的離線 browser 測試、打包完整性檢查；提交工作分支後 STOP 交 ChatGPT 審核；**不自行合併 main 或發布 Pages**。
+- [ ] 後端短關鍵字／NOT_FOUND 研究僅留分支，不修改正式 CX 或 Data Store，不因本輪 UI 文案小改另行觸發研究。
+
+下方 2026-10-09 的工作紀錄保留為已完成結果呈現／部署歷史，不代表本輪小改已經執行。
+
+---
+
 # NEXT_TASK — FAQ 多候選結果呈現
 
 Date: 2026-10-09 (Asia/Taipei)

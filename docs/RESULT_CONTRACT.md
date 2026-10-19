@@ -1,5 +1,17 @@
 # 通用回答 normalized model
 
+## FAQ true-zero display — 2026-10-19 candidate
+
+`answer` 保留原始完整文字。只有完整符合已核定固定兩段 zero 文字（允許
+換行、空行與各行首尾空白），且無 raw／parsed info card（含壞卡）、items、
+來源、FAQ metadata、extension answer 或矛盾 parsed text，才加上
+`isFaqZero: true`。Raw 與 parsed 文字同時存在但不一致時採保守 fallback；
+不因 parsed 片段而推測 zero。Extension-only 文字不視為正式 zero 契約。
+Renderer 再核對完整兩段文字，只替換第一段為核定文案，沿用 `appendText`
+的「出租專區」連結。一般空結果／error／timeout／expiry 仍由既有 app／
+transport 分流，不新增 retry 或查詢。此為待審候選，尚未部署；完整規格見
+[2026-10-19 計畫](1999_FAQ_ZERO_RESULT_FRONTEND_COPY_PLAN_2026-10-19.md)。
+
 ```json
 {
   "answer": "CX 回傳的主要文字（必要）",

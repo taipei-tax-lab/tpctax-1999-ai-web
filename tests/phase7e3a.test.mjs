@@ -7,6 +7,44 @@ import {faqTextMessages} from '../demo/mock-messenger.js';
 import {MessengerTransport} from '../assets/messenger-transport.js';
 const official = 'https://tpctax.gov.taipei';
 const raw = messages => ({raw:{queryResult:{responseMessages:messages}}});
+const zeroLead = '找不到可用的 FAQ 搜尋結果，請換個方式描述問題。';
+const rentalNote = '出租房屋租稅優惠專責諮詢，請前往出租專區：https://tpctax.gov.taipei/cp.aspx?n=3A978B4E3ADD88F2';
+const zeroText = `${zeroLead}\n\n${rentalNote}`;
+test('fixed zero raw, combined and SDK parsed-only preserve original answer and mark display only', () => {
+  const variants = [raw(faqTextMessages(0,config)), raw([{text:{text:[zeroText]}}]),
+    raw([{text:{text:[` \r\n${zeroLead} \r\n\r\n ${rentalNote}\n `]}}]),
+    {data:{messages:[{type:'text',text:zeroLead},{type:'text',text:rentalNote}]}},
+    {data:{messages:[{type:'text',text:zeroText}]}}];
+  for (const detail of variants) {
+    const before = structuredClone(detail);
+    const result = normalizeResult(detail,[official]);
+    assert.equal(result.isFaqZero,true);
+    assert.ok(result.answer.includes(zeroLead));
+    assert.equal(result.items,undefined);
+    assert.deepEqual(detail,before);
+  }
+});
+test('incomplete, unknown, generic, extra text, bad/missing cards and contradictory zero stay unchanged', () => {
+  const textCases = ['',zeroLead,rentalNote,'找不到相關資料，請洽服務人員。',
+    `${zeroText}\n額外官方答案`, `${zeroLead}\n${rentalNote.replace('https:', 'http:')}`,
+    `${rentalNote}\n${zeroLead}`, `${zeroText}\n${zeroText}`];
+  const details = textCases.map(text => raw([{text:{text:[text]}}]));
+  for (const card of [{type:'info'}, {type:'info',title:'正面結果',subtitle:'完整答案',actionLink:config.officialFaqUrl}]) {
+    details.push(raw([{text:{text:[zeroText]}},{payload:{richContent:[[card]]}}]));
+    details.push({...raw([{text:{text:[zeroText]}}]),data:{messages:[{type:'customCard',richElements:[card]}]}});
+  }
+  details.push({...raw([{text:{text:[zeroText]}}]),data:{messages:[{type:'text',text:'正面答案'}]}});
+  details.push(raw([{text:{text:[zeroText]}},{payload:{universalAnswer:{schemaVersion:1,answer:'額外答案'}}}]));
+  details.push(raw([{payload:{universalAnswer:{schemaVersion:1,answer:zeroText}}}]));
+  details.push({...raw([{text:{text:[zeroText]}}]),data:{messages:[{type:'citation',url:config.officialFaqUrl}]}});
+  for (const detail of details) {
+    const result = normalizeResult(detail,[official]);
+    assert.equal(result.isFaqZero,undefined);
+    const original = detail.raw.queryResult.responseMessages.flatMap(m=>m.text?.text||[]).join('\n\n');
+    assert.equal(result.answer, original || detail.raw.queryResult.responseMessages[0]?.payload?.universalAnswer?.answer || '');
+  }
+  for (const count of [1,2,5]) assert.equal(normalizeResult(raw(faqTextMessages(count,config)),[official]).isFaqZero,undefined);
+});
 test('answer-only raw response needs no FAQ or sources', () => {
   assert.deepEqual(normalizeResult(raw([{text:{text:['純文字','第二段']}}])),{answer:'純文字\n\n第二段'});
 });

@@ -1,13 +1,29 @@
 # NEXT_TASK — 2026-10-19｜FAQ 查無結果提示前端小改版
 
-**狀態：已核定規劃、待 Codex 實作；正式網頁尚未修改。**
+**狀態：工作分支實作／離線驗證／候選打包完成，待 ChatGPT 審核；未 merge／未部署。**
 
 詳細執行及驗收規格：[`docs/1999_FAQ_ZERO_RESULT_FRONTEND_COPY_PLAN_2026-10-19.md`](docs/1999_FAQ_ZERO_RESULT_FRONTEND_COPY_PLAN_2026-10-19.md)。
 
-- [ ] Codex 從前端 main 開獨立分支，精確辨識真正 FAQ zero 的固定兩段文字（非一般零 cards 或 service error），只在前端**顯示層**使用新版文案：「暫時沒有找到符合您需求的 1999 常見問答。請試著補充問題的具體情況，讓我們為您搜尋更相關的官方資訊。」
-- [ ] 保留出租專區可點擊連結、原文 FAQ／來源、Messenger／GA4／currentPage 等不變，加入正反例與錯誤／逾時測試。
-- [ ] 執行 `npm test`、可用的離線 browser 測試、打包完整性檢查；提交工作分支後 STOP 交 ChatGPT 審核；**不自行合併 main 或發布 Pages**。
-- [ ] 後端短關鍵字／NOT_FOUND 研究僅留分支，不修改正式 CX 或 Data Store，不因本輪 UI 文案小改另行觸發研究。
+- [x] Codex 從前端 main 開獨立分支，精確辨識真正 FAQ zero 的固定兩段文字（非一般零 cards 或 service error），只在前端**顯示層**使用新版文案：「暫時沒有找到符合您需求的 1999 常見問答。請試著補充問題的具體情況，讓我們為您搜尋更相關的官方資訊。」
+- [x] 保留出租專區可點擊連結、原文 FAQ／來源、Messenger／GA4／currentPage 等不變，加入正反例與錯誤／逾時測試。
+- [x] 執行 `npm test`、可用的離線 browser 測試、打包完整性檢查；提交工作分支後 STOP 交 ChatGPT 審核；**不自行合併 main 或發布 Pages**。
+- [x] 後端短關鍵字／NOT_FOUND 研究僅留分支，不修改正式 CX 或 Data Store，不因本輪 UI 文案小改另行觸發研究。
+
+## 2026-10-19 執行證據
+
+- Base：最新 `origin/main` **d8b54de**；分支 `fix/faq-zero-result-copy-2026-10-19`。
+- Runtime 僅改 `assets/result-model.js`：完整兩段白名單辨識，無 raw/parsed info（含壞卡）、items、sources、metadata 或 extension answer／矛盾 parsed text 才標記 `isFaqZero`；renderer 才換文案，原始 answer/detail 不變。未知／不完整格式仍保守 fallback。
+- `npm test`：**39 PASS**（32 model/config/transport + 7 analytics），0 FAIL。
+- `python3 tests/phase7e3a_browser.py --base-url http://127.0.0.1:8765/ --output-dir /workspace/work/faq-zero-copy/browser`：**32 grouped PASS**，0 page errors／外部轉送／Production requests。真正 zero 的 raw、SDK parsed-only、精確可見文案／Rental anchor、1～5 FAQ、一般／未知／多餘文字、安全 DOM、accepted clear／heading／currentPage／GA4、error／timeout／expiry／late-zero／連續替換均通過。
+- 1280／390／320px zero screenshots 無水平溢出；已檢視 320px 截圖，文案完整可讀、出租專區可見。截圖為本機合成 fixture，不是 live 驗收。
+- `python3 tools/package_static.py --output-dir /workspace/work/faq-zero-copy/build-{one,two}`（各執行一次），hosting/demo 各自 byte-identical；hosting **12 entries**／demo **19 entries**，CRC／manifest SHA／source parity／secret scan PASS。
+- `python3 tools/verify_hosting.py packages/hosting.zip --extract /workspace/work/faq-zero-copy/extracted`：PASS；`(cd packages && sha256sum --check hosting.sha256)`：PASS。已同步 committed 候選 hosting ZIP/checksum。
+- Hosting：**216,939 bytes**，SHA-256 `e94fb0a96ed1b7b80f3bd72867f987ad6467fe2666327f167d48eea0804584c3`。
+- Demo：**237,281 bytes**，SHA-256 `88330b25d6e12b29d3ac7a14983f71bae12956e78e23c7fd3c36865dc712d403`。
+- config／app／Messenger transport／analytics／CSS／HTML／mock／Pages workflow／packager／verifier 共 **11 protected files byte-unchanged**。Pages workflow 僅 push main 或人工 dispatch 觸發；本輪只 push 工作分支，未 dispatch。
+- 實際變更：result-model、兩個既有測試檔、RESULT_CONTRACT、PROJECT_STATE、本 checklist、packages/hosting.zip、packages/hosting.sha256。
+- 本機完整證據：`/workspace/work/faq-zero-copy/`（Node log、browser JSON／screenshots、package checks／兩次建置）。未上傳 Drive，無其他 Repo／CX／Data Store／GCP／官方網站修改，**0 新 Production query**。
+- 截圖 SHA-256：1280 `882951cf0d9670c5d8ae7dd96653fb5bfa0a2c09d4cd212f1de413e5fc753e96`；390 `99d87590f87e9f8178f26fd56c3948a64ca403741775314b700bc1095fac5d42`；320 `07ab912ba78f9c9fc9a23fa926911473eee62492d8a2ea4008b6d246c53f03f2`。
 
 下方 2026-10-09 的工作紀錄保留為已完成結果呈現／部署歷史，不代表本輪小改已經執行。
 
@@ -141,3 +157,10 @@ UI-only rollback：如本輪出現 launch-critical presentation 問題，恢復
 - 截圖本機保留，hash／重現方式入 Git；optional Drive upload遭 automatic review 拒絕，未上傳／未重試。
 - Rollback **AVAILABLE / NOT EXECUTED**，無已觀察 launch-critical presentation issue；config/transport/analytics/backend/Rental不變。
 - Final report-only commit 不變更 runtime／hosting ZIP／deployed SHA；最終 main HEAD 與 deployed implementation 分開。Commit/push後 **STOP 等待 Web ChatGPT review**。
+
+## 2026-10-19 Completion summary
+
+True-zero 文案最小顯示層修改、39 Node／32 offline Chromium 與 deterministic
+候選打包完整性檢查 PASS；正式 FAQ、出租導引、Messenger、GA4 保留。
+本輪 commit/push 工作分支後 **STOP 等待 ChatGPT 審核**；未 merge／未部署，
+未查詢 Production，未進行任何後端研究或修改其他 Repo。

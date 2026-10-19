@@ -164,7 +164,20 @@ with sync_playwright() as p:
         assert 'https://' not in page.locator('[data-answer]').text_content()
     checks.append('1–5 separate FAQ list containers, original-title anchors/exact href, full multiline/numbered answers, no naked source URLs, clear 16px+ spacing/thin dividers/no shadow at1280/390/320; Rental footer separate')
     query('fallback', '零結果完整問題')
-    assert page.locator('[data-answer]').inner_text().startswith('找不到可用的 FAQ 搜尋結果，請換個方式描述問題。')
+    zero_old = '找不到可用的 FAQ 搜尋結果，請換個方式描述問題。'
+    zero_new = '暫時沒有找到符合您需求的 1999 常見問答。請試著補充問題的具體情況，讓我們為您搜尋更相關的官方資訊。'
+    rental_note = '出租房屋租稅優惠專責諮詢，請前往出租專區：https://tpctax.gov.taipei/cp.aspx?n=3A978B4E3ADD88F2'
+    zero_text = zero_old + '\n\n' + rental_note
+    zero_detail = {'raw':{'queryResult':{'responseMessages':[{'text':{'text':[zero_old,rental_note]}}]}}}
+    for width in [1280,390,320]:
+        page.set_viewport_size({'width':width,'height':1100})
+        assert page.locator('[data-answer]').text_content() == zero_new + '\n\n出租房屋租稅優惠專責諮詢，請前往出租專區'
+        assert zero_old not in page.locator('#result').inner_text()
+        assert page.locator('[data-answer] a').inner_text() == '出租專區'
+        assert page.locator('[data-answer] a').get_attribute('href') == 'https://tpctax.gov.taipei/cp.aspx?n=3A978B4E3ADD88F2'
+        assert page.locator('[data-answer] a').is_visible()
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        page.screenshot(path=str(OUT/f'faq-zero-{width}.png'),full_page=True)
     assert '合成 FAQ 問題' not in page.locator('[data-answer]').inner_text()
     assert page.locator('[data-answer] a').count() == 1
     assert page.locator('[data-faq]').is_hidden()
@@ -191,6 +204,17 @@ with sync_playwright() as p:
           const root=document.querySelector('#result');renderResult(model,root);root.hidden=false;
           return model;
         }''', {'answer':answer,'citations':citations or [],'metadata':metadata,'normalize':normalize})
+    for candidate in [zero_old, rental_note, '找不到其他資訊。', zero_text + '\n額外答案']:
+        model = render_fixture(candidate)
+        assert 'isFaqZero' not in model
+        assert zero_new not in page.locator('[data-answer]').text_content()
+        assert model['answer'] == candidate
+    model = render_fixture(zero_text)
+    assert model['isFaqZero'] and model['answer'] == zero_text
+    assert page.locator('[data-answer]').text_content().startswith(zero_new)
+    render_fixture('後續一般完整答案')
+    assert page.locator('[data-answer]').text_content() == '後續一般完整答案'
+    checks.append('parsed-only exact zero display preserves original model; partial/generic/extra text stays unchanged and next result clears zero copy')
     model = render_fixture(text,[{'url':url,'title':'duplicate'}])
     assert 'sources' not in model
     assert page.locator('[data-answer] strong').inner_text() == '一、適用條件：'
@@ -394,6 +418,18 @@ with sync_playwright() as p:
     assert page.locator('#result-title').evaluate('(e)=>e===document.activeElement')
     assert business_events() == [['event','ai_query_submit']]
     checks.append('delayed submit/rejection retains input; acceptance clears before answer with no focus steal; duplicate notification and later answer preserve next draft and original result query')
+    # Accepted true zero uses the same send/GA boundary and is a valid non-empty result.
+    page.reload();page.locator('#submit:not([disabled])').wait_for()
+    page.evaluate('(detail)=>window.stubResponse=detail', zero_detail)
+    page.locator('#query').fill('完整零結果問題');page.locator('#submit').click()
+    page.locator('#result:not([hidden])').wait_for()
+    assert page.locator('[data-answer]').text_content().startswith(zero_new)
+    assert page.locator('#result-query').text_content() == '完整零結果問題'
+    assert page.locator('#query').input_value() == ''
+    assert page.locator('#status').is_hidden()
+    assert business_events() == [['event','ai_query_submit']]
+    assert page.evaluate('stubRequests.at(-1).queryParams') == expected_params
+    checks.append('accepted true zero remains non-empty with exact approved copy, original heading/input clear/currentPage and one parameter-free GA event')
     # Technical expiry remains internal; no user reset or extra analytics event.
     page.reload();page.locator('#submit:not([disabled])').wait_for()
     page.evaluate('stubHold=true')
@@ -405,9 +441,12 @@ with sync_playwright() as p:
     assert page.locator('#status').get_attribute('role') == 'alert'
     assert '脈絡' not in page.locator('#status-description').inner_text()
     assert page.locator('#submit').is_disabled()
+    page.evaluate('(detail)=>window.stubResponse=detail', zero_detail)
     page.evaluate('window.answerStub()')
     page.locator('#submit:not([disabled])').wait_for()
     assert page.locator('#result').is_hidden()
+    assert zero_new not in page.locator('body').inner_text()
+    page.evaluate('window.stubResponse=null')
     assert len(page.evaluate('stubSessions')) == 2
     assert business_events() == [['event','ai_query_submit']]
     page.evaluate('stubHold=false')
@@ -427,9 +466,12 @@ with sync_playwright() as p:
     assert page.locator('#submit').is_disabled()
     assert page.locator('#query').input_value() == ''
     assert business_events() == [['event','ai_query_submit']]
+    page.evaluate('(detail)=>window.stubResponse=detail', zero_detail)
     page.evaluate('window.answerStub()')
     page.locator('#submit:not([disabled])').wait_for()
     assert page.locator('#result').is_hidden()
+    assert zero_new not in page.locator('body').inner_text()
+    page.evaluate('window.stubResponse=null')
     assert len(page.evaluate('stubRequests')) == 1
     page.evaluate('stubHold=false')
     page.locator('#query').fill('new search after timeout settled');page.locator('#submit').click()

@@ -82,6 +82,24 @@ const FAQ_INTRO = '以下是本府 1999 常見問答中與您的問題較相關�
 const FAQ_OUTRO = '若以上內容不是您要找的資訊，可以換個方式描述您的問題。';
 const RENTAL_URL = 'https://tpctax.gov.taipei/cp.aspx?n=3A978B4E3ADD88F2';
 const RENTAL_NOTE = `出租房屋租稅優惠專責諮詢，請前往出租專區：${RENTAL_URL}`;
+const FAQ_ZERO = '找不到可用的 FAQ 搜尋結果，請換個方式描述問題。';
+const FAQ_ZERO_DISPLAY = '暫時沒有找到符合您需求的 1999 常見問答。請試著補充問題的具體情況，讓我們為您搜尋更相關的官方資訊。';
+
+// Only the complete frozen two-paragraph response, never a keyword/card count.
+function fixedZeroText(text) {
+  return text.split(/[\r\n]+/).map(line => line.trim()).filter(Boolean).join('\n')
+    === `${FAQ_ZERO}\n${RENTAL_NOTE}`;
+}
+
+function faqZeroResult(answer, rawMessages, parsed, parsedText, presentation, sources, faqMetadata) {
+  if (!fixedZeroText(answer) || presentation.items?.length || sources.length || faqMetadata) return false;
+  if (parsedText.some(text => text.trim()) && !fixedZeroText(parsedText.join('\n\n'))) return false;
+  // Even invalid/partial info cards or an extension answer contradict a pure zero.
+  const rawCards = rawMessages.flatMap(m => Array.isArray(m?.payload?.richContent) ? m.payload.richContent.flat() : []);
+  const parsedCards = parsed.flatMap(m => Array.isArray(m?.richElements) ? m.richElements : []);
+  if ([...rawCards, ...parsedCards].some(card => card?.type === 'info')) return false;
+  return !rawMessages.some(m => m?.payload?.universalAnswer?.answer || m?.payload?.universalAnswer?.faqMetadata);
+}
 
 function officialItem(title, answer, url, origins) {
   url = safeUrl(url);
@@ -165,7 +183,9 @@ export function normalizeResult(detail = {}, officialOrigins = []) {
   const additional = sources.filter(source => !inline.has(source.url));
   // Extension text also must not be hidden by an unrelated card-only payload.
   const presentationText = !segments.some(x => x.trim()) && answer.trim() ? [answer] : segments;
-  return {answer, ...presentationItems(presentationText, rawMessages, parsed, officialOrigins),
+  const presentation = presentationItems(presentationText, rawMessages, parsed, officialOrigins);
+  const isFaqZero = faqZeroResult(answer, rawMessages, parsed, text, presentation, sources, faqMetadata);
+  return {answer, ...presentation, ...(isFaqZero ? {isFaqZero: true} : {}),
     ...(additional.length ? {sources: additional} : {}), ...(faqMetadata ? {faqMetadata} : {})};
 }
 
@@ -215,7 +235,8 @@ export function renderResult(result, root) {
       block.append(body);list.append(block);
     }
     answer.append(list);textBlock('faq-footer', result.trailingText);
-  } else for (const url of appendText(answer, result.answer)) inline.add(url);
+  } else for (const url of appendText(answer, result.isFaqZero && fixedZeroText(result.answer)
+    ? `${FAQ_ZERO_DISPLAY}\n\n${RENTAL_NOTE}` : result.answer)) inline.add(url);
   const sources = root.querySelector('[data-sources]');sources.replaceChildren();
   const faq = root.querySelector('[data-faq]');faq.replaceChildren();faq.hidden = hasItems || !result.faqMetadata;
   if (!hasItems && result.faqMetadata) {

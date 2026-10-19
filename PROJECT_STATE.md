@@ -1,3 +1,11 @@
+## FAQ zero-result copy candidate（2026-10-19）
+
+從 main `d8b54de` 建立 `fix/faq-zero-result-copy-2026-10-19`。
+僅 result-model 的完整固定兩段 true-zero 辨識與顯示文案更新；原始 answer、
+FAQ／Rental／config／Messenger／GA4 不變。候選測試與打包證據見 NEXT_TASK。
+**工作分支待 ChatGPT 審核；未 merge／未部署，正式服務狀態不變。**
+無新 Production query，未修改 CX、Data Store 或其他 Repo。
+
 ## Human acceptance decision — 1999 FAQ Flow web cutover（2026-10-09）
 
 Status: **1999 FAQ SURFACE-DIRECTED FLOW SEARCH LIVE / USABLE — GA4 RECEIPT OBSERVATION PENDING (NON-BLOCKING)**

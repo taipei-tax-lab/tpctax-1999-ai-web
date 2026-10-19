@@ -5,8 +5,9 @@
 `answer` 保留原始完整文字。只有完整符合已核定固定兩段 zero 文字（允許
 換行、空行與各行首尾空白），且無 raw／parsed info card（含壞卡）、items、
 來源、FAQ metadata、extension answer 或矛盾 parsed text，才加上
-`isFaqZero: true`。Raw 與 parsed 文字同時存在但不一致時採保守 fallback；
-不因 parsed 片段而推測 zero。Extension-only 文字不視為正式 zero 契約。
+`isFaqZero: true`。完整 raw true-zero 存在時，parsed 可只含依原順序出現的部分文字片段；
+片段須逐字符合原文（沿用換行／行首尾空白處理），額外、重複、逆序或矛盾
+文字仍保守 fallback。沒有完整 raw 時，parsed-only 仍須完整符合固定兩段。Extension-only 文字不視為正式 zero 契約。
 Renderer 再核對完整兩段文字，只替換第一段為核定文案，沿用 `appendText`
 的「出租專區」連結。一般空結果／error／timeout／expiry 仍由既有 app／
 transport 分流，不新增 retry 或查詢。此為待審候選，尚未部署；完整規格見

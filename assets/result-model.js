@@ -86,14 +86,26 @@ const FAQ_ZERO = '找不到可用的 FAQ 搜尋結果，請換個方式描述問
 const FAQ_ZERO_DISPLAY = '暫時沒有找到符合您需求的 1999 常見問答。請試著補充問題的具體情況，讓我們為您搜尋更相關的官方資訊。';
 
 // Only the complete frozen two-paragraph response, never a keyword/card count.
+function zeroTextContent(text) {
+  return text.split(/[\r\n]+/).map(line => line.trim()).filter(Boolean).join('\n');
+}
+
 function fixedZeroText(text) {
-  return text.split(/[\r\n]+/).map(line => line.trim()).filter(Boolean).join('\n')
-    === `${FAQ_ZERO}\n${RENTAL_NOTE}`;
+  return zeroTextContent(text) === `${FAQ_ZERO}\n${RENTAL_NOTE}`;
 }
 
 function faqZeroResult(answer, rawMessages, parsed, parsedText, presentation, sources, faqMetadata) {
   if (!fixedZeroText(answer) || presentation.items?.length || sources.length || faqMetadata) return false;
-  if (parsedText.some(text => text.trim()) && !fixedZeroText(parsedText.join('\n\n'))) return false;
+  // Raw text is authoritative; the SDK may expose only ordered fragments of it.
+  const complete = zeroTextContent(answer);
+  let offset = 0;
+  for (const text of parsedText) {
+    const fragment = zeroTextContent(text);
+    if (!fragment) continue;
+    const index = complete.indexOf(fragment, offset);
+    if (index < 0) return false;
+    offset = index + fragment.length;
+  }
   // Even invalid/partial info cards or an extension answer contradict a pure zero.
   const rawCards = rawMessages.flatMap(m => Array.isArray(m?.payload?.richContent) ? m.payload.richContent.flat() : []);
   const parsedCards = parsed.flatMap(m => Array.isArray(m?.richElements) ? m.richElements : []);

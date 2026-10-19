@@ -9,6 +9,18 @@
 - [x] 執行 `npm test`、可用的離線 browser 測試、打包完整性檢查；提交工作分支後 STOP 交 ChatGPT 審核；**不自行合併 main 或發布 Pages**。
 - [x] 後端短關鍵字／NOT_FOUND 研究僅留分支，不修改正式 CX 或 Data Store，不因本輪 UI 文案小改另行觸發研究。
 
+## 2026-10-19 ChatGPT review 邊界修正（最新候選，取代下方初版套件／測試數）
+
+- [x] 確認初版 `6dbab8b` 將 raw 完整 true-zero + parsed 第一段誤拒；維持完整 answer 必須符合固定兩段，parsed 改為逐字、依序、不可重複的片段核對。沿用換行／行首尾空白處理；parsed-only 缺段仍不判 zero。
+- [x] Node 正例：raw + parsed 第一段、第二段、段內切片、完整兩段／空白。反例：矛盾答案、片段加額外文字、重複、逆序、錯誤 URL、valid／invalid info cards；原始 detail／answer 不變。
+- [x] 離線 SDK accepted-send 瀏覽器正反例：完整 raw 搭 partial parsed 顯示新文案，矛盾／額外／逆序／FAQ cards 保留原文，Rental exact href／GA4 每題一次不變。
+- [x] `npm test`：**40 PASS**（33 model/config/transport + 7 analytics）。`python3 tests/phase7e3a_browser.py --base-url http://127.0.0.1:8766/ --output-dir /workspace/work/faq-zero-copy/review-browser`：**33 grouped PASS**，含既有 1280／390／320、正常 FAQ、error／timeout／expiry／stale、currentPage／GA4；0 page errors／外部轉送／Production requests。
+- [x] `python3 tools/package_static.py --output-dir /workspace/work/faq-zero-copy/review-build-{one,two}` 各一次；hosting／demo 兩次 byte-identical，12／19 entries CRC／manifest／SHA／source parity／secret scan PASS；`verify_hosting.py` fresh extraction 至 `review-extracted` 與 committed hosting checksum PASS。
+- 最新 hosting：**217,044 bytes**，SHA-256 `ae53cbc164309fc97fcc1dad8de5899cf2109649e45004a6217489ab63a21f47`。
+- 最新 demo：**237,439 bytes**，SHA-256 `8d67254f2e87d535f12d66d631a1d840004a2870503ee080e1d11a268040a5d2`。
+- 實際變更僅 result-model、兩個既有測試、RESULT_CONTRACT、本 checklist 與 hosting ZIP/checksum；11 protected files byte-unchanged。原始回答／Rental／正常 FAQ／error／Messenger／GA4 保留。
+- 本輪仍只提交既有前端工作分支；0 新 Production query、未改 CX／Data Store／其他 Repo，未 merge／未部署。Commit/push 後 STOP 交 ChatGPT 審核。
+
 ## 2026-10-19 執行證據
 
 - Base：最新 `origin/main` **d8b54de**；分支 `fix/faq-zero-result-copy-2026-10-19`。
@@ -164,3 +176,9 @@ True-zero 文案最小顯示層修改、39 Node／32 offline Chromium 與 determ
 候選打包完整性檢查 PASS；正式 FAQ、出租導引、Messenger、GA4 保留。
 本輪 commit/push 工作分支後 **STOP 等待 ChatGPT 審核**；未 merge／未部署，
 未查詢 Production，未進行任何後端研究或修改其他 Repo。
+
+### Review follow-up completion
+
+Raw true-zero + partial parsed 邊界已修正；40 Node／33 offline Chromium／
+候選套件完整性 PASS。最新候選 hash 見頂部 review 區段；僅工作分支提交，
+正式服務不變，STOP 等待 ChatGPT 審核。

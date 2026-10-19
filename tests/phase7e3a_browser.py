@@ -430,6 +430,23 @@ with sync_playwright() as p:
     assert business_events() == [['event','ai_query_submit']]
     assert page.evaluate('stubRequests.at(-1).queryParams') == expected_params
     checks.append('accepted true zero remains non-empty with exact approved copy, original heading/input clear/currentPage and one parameter-free GA event')
+    # Real normalizer/renderer through accepted SDK stub: complete raw + partial parsed.
+    for fragments, card, expected_zero in [([zero_old],None,True), ([rental_note],None,True),
+            ([zero_old,'額外答案'],None,False), (['正常 FAQ 答案'],None,False),
+            ([rental_note,zero_old],None,False), ([zero_old],{'type':'info'},False),
+            ([zero_old],{'type':'info','title':'FAQ','subtitle':'答案','actionLink':'https://tpctax.gov.taipei/News.aspx'},False)]:
+        detail = json.loads(json.dumps(zero_detail))
+        detail['data'] = {'messages':[{'type':'text','text':fragment} for fragment in fragments]}
+        if card: detail['data']['messages'].append({'type':'customCard','richElements':[card]})
+        page.evaluate('(detail)=>window.stubResponse=detail',detail)
+        page.locator('#query').fill('raw 與 parsed 邊界測試');page.locator('#submit').click()
+        page.locator('#result:not([hidden])').wait_for()
+        visible = page.locator('[data-answer]').text_content()
+        assert visible.startswith(zero_new if expected_zero else zero_old)
+        assert page.locator('[data-answer] a').get_attribute('href') == 'https://tpctax.gov.taipei/cp.aspx?n=3A978B4E3ADD88F2'
+        assert page.locator('#status').is_hidden()
+    assert business_events() == [['event','ai_query_submit']]*8
+    checks.append('complete raw plus partial parsed displays new zero copy; contradictory/extra/reordered parsed and invalid/valid FAQ cards retain original answer; same Rental link and one GA event per send')
     # Technical expiry remains internal; no user reset or extra analytics event.
     page.reload();page.locator('#submit:not([disabled])').wait_for()
     page.evaluate('stubHold=true')

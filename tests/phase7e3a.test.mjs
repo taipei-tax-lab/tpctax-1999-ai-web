@@ -24,6 +24,27 @@ test('fixed zero raw, combined and SDK parsed-only preserve original answer and 
     assert.deepEqual(detail,before);
   }
 });
+test('complete raw zero permits ordered partial parsed fragments but rejects contradictions, extras and cards', () => {
+  const partials = [[zeroLead], [rentalNote], [zeroLead.slice(0,12),zeroLead.slice(12)],
+    [zeroLead,rentalNote], [zeroText], ['  \r\n'+zeroLead+' \n']];
+  const negatives = [[zeroLead,'額外答案'], ['找到正常 FAQ 答案'], [zeroLead+'額外內容'],
+    [rentalNote,zeroLead], [zeroLead,zeroLead], [rentalNote.replace('https:', 'http:')]];
+  for (const [variants, expected] of [[partials,true],[negatives,undefined]]) {
+    for (const fragments of variants) {
+      const detail = {...raw([{text:{text:[zeroText]}}]),data:{messages:fragments.map(text=>({type:'text',text}))}};
+      const before = structuredClone(detail);
+      const result = normalizeResult(detail,[official]);
+      assert.equal(result.isFaqZero,expected);
+      assert.equal(result.answer,zeroText);
+      assert.deepEqual(detail,before);
+    }
+  }
+  for (const card of [{type:'info'}, {type:'info',title:'FAQ',subtitle:'正常答案',actionLink:config.officialFaqUrl}]) {
+    const detail = {...raw([{text:{text:[zeroText]}}]),data:{messages:[{type:'text',text:zeroLead},{type:'customCard',richElements:[card]}]}};
+    assert.equal(normalizeResult(detail,[official]).isFaqZero,undefined);
+  }
+  assert.equal(normalizeResult({data:{messages:[{type:'text',text:zeroLead}]}}).isFaqZero,undefined);
+});
 test('incomplete, unknown, generic, extra text, bad/missing cards and contradictory zero stay unchanged', () => {
   const textCases = ['',zeroLead,rentalNote,'找不到相關資料，請洽服務人員。',
     `${zeroText}\n額外官方答案`, `${zeroLead}\n${rentalNote.replace('https:', 'http:')}`,

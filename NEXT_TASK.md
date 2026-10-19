@@ -1,6 +1,13 @@
 # NEXT_TASK — 2026-10-19｜FAQ 查無結果提示前端小改版
 
-**狀態：工作分支實作／離線驗證／候選打包完成，待 ChatGPT 審核；未 merge／未部署。**
+**狀態：程式已核准合併、GitHub Pages 已成功部署；真實網頁 Messenger 操作確認待人工完成。**
+
+- [x] 前端 `main` fast-forward 至 `196be3ea`；無 CX 或 Data Store 修改。
+- [x] [Actions run 39208240640](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/39208240640) Build、Deploy success；正式候選套件檢查於 Actions 通過。
+- [ ] 於實際網站用可信任瀏覽器詢問「信用卡」：顯示核定新版 true-zero 提示及原有「出租專區」連結。
+- [ ] 再詢問「房屋稅可以用信用卡繳嗎？」：確認正常 FAQ 原題、全文、官方來源連結，且舊 zero 結果被替換。
+- [ ] 如果線上行為與預期不同，蒐集去識別化畫面／錯誤並回報；不要自行修改 CX、Data Store、GA4 或其他 Repo。
+- 上述待確認為**人工線上 E2E**，與已通過的 Actions/離線測試不同；本次的主程式已合併部署。下文候選／STOP 紀錄保留其歷史意義。
 
 詳細執行及驗收規格：[`docs/1999_FAQ_ZERO_RESULT_FRONTEND_COPY_PLAN_2026-10-19.md`](docs/1999_FAQ_ZERO_RESULT_FRONTEND_COPY_PLAN_2026-10-19.md)。
 

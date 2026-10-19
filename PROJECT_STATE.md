@@ -1,3 +1,14 @@
+## 2026-10-19｜FAQ true-zero 前端文案已合併並發布
+
+**MERGED / GITHUB PAGES DEPLOYED — 2026-10-19 14:09 Asia/Taipei；真實 Messenger 逐題操作確認 PENDING。**
+
+- 使用者核准後，`fix/faq-zero-result-copy-2026-10-19` fast-forward 合併到前端 `main`，發布程式 commit `196be3ea8e128117935a6cebb4a8e34156092211`；無強制推送。
+- GitHub Actions `Production package Pages`：run [39208240640](https://github.com/taipei-tax-lab/tpctax-1999-ai-web/actions/runs/39208240640)，push 到 main 自動啟動；Build **success**、Deploy **success**、整體 **success**；建置測試／正式候選 ZIP 驗證由 workflow 完成。
+- 網頁仍沿用原有 URL：<https://taipei-tax-lab.github.io/tpctax-1999-ai-web/>。本輪因外部站點存取／瀏覽器工具限制，尚無法直接在已發布網頁實際操作 Messenger；**不能把 Actions success 或離線 browser PASS 當成線上 FAQ 問答驗收**。
+- 待人工在真實瀏覽器確認：查詢「信用卡」顯示核定文案與出租專區可點連結；查詢「房屋稅可以用信用卡繳嗎？」仍顯示正確官方 FAQ 原題、答案與官方連結；第二題替換第一題，輸入框送出後清空。非必要時不重複做後端 REST 測試。
+- 不修改後端 CX、Data Store 或研究分支；原有 GA4 exactly-one-per-accepted-query 契約不變，其實際收件另屬 non-blocking 確認。
+- 下面 **FAQ zero-result copy candidate** 段落是 *合併前* 的歷史紀錄，不代表現在仍停在未部署狀態。
+
 ## FAQ zero-result copy candidate（2026-10-19）
 
 從 main `d8b54de` 建立 `fix/faq-zero-result-copy-2026-10-19`。
